@@ -35,6 +35,7 @@
     "url": "https://github.com/express-go/express-go.git"
   },
   "keywords": [
+    "express-go",
     "express",
     "go",
     "mvc",
