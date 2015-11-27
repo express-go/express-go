@@ -11,6 +11,8 @@ var bodyParser  = require('body-parser');
 var compress    = require('compression');
 var cookieParser= require('cookie-parser');
 var csrf        = require('seasurf');
+var Ddos        = require('ddos')
+var ddos        = new Ddos;
 var favicon     = require('serve-favicon');
 var forceSSL    = require('express-force-ssl');
 var logger      = require('morgan');
@@ -86,6 +88,7 @@ var app = express();
     // uncomment after placing your favicon in /public
     //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
+app.use(ddos.express);
 
     app.disable('x-powered-by');
     app.disable('etag');
