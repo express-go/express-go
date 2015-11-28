@@ -21,12 +21,19 @@ export module Core
             app : any;
             isModule : boolean;
             loadComponents : any;
+            loadOverrideCb : any;
 
             constructor( app : any, isModule? : boolean, loadComponents? : any )
             {
                 this.app = app;
                 this.isModule = isModule;
                 this.loadComponents = loadComponents;
+            }
+
+            public loadOverride( callBack : any )
+            {
+                this.loadOverrideCb = callBack;
+                return this;
             }
 
             public loadPath( loadPath: string, namespaces: any, paramObject? : any )
@@ -50,10 +57,19 @@ export module Core
 
                                 var name = file.substr(0, file.indexOf('.'));
 
-                                if ( paramObject )
-                                    this.app.addObject( namespaces.concat([name]), require( loadPath + '/' + file )( paramObject ) );
+                                if ( typeof this.loadOverrideCb == "function")
+                                {
+                                        this.app.addObject( namespaces.concat([name]), this.loadOverrideCb( loadPath + '/' + file ) );
+                                }
                                 else
-                                    this.app.addObject( namespaces.concat([name]), require( loadPath + '/' + file ) );
+                                {
+                                    if ( paramObject )
+                                        this.app.addObject( namespaces.concat([name]), require( loadPath + '/' + file )( paramObject ) );
+                                    else
+                                        this.app.addObject( namespaces.concat([name]), require( loadPath + '/' + file ) );
+                                }
+
+
                             });
 
                             //console.log(this.app);

@@ -37,23 +37,56 @@ export module Core
 
             private load()
             {
-                this.loadPath( models_path(), ["Models"] );
+                this.loadOverride( this.ormAssociate ).loadPath( models_path(), ["Models"] );
 
             }
 
             private initSequlize = ( app ) =>
             {
-                Object.keys( this.app.tempObject.Models ).forEach((modelName) =>
+                //console.log(sequelize.models);
+                //process.exit();
+                Object.keys( sequelize.models ).forEach((modelName) =>
                 {
-                    if (this.app.tempObject.Models[modelName].associate) {
-                        this.app.tempObject.Models[modelName].associate( this.app.tempObject.Models );
+                    // Loaded object convert to Sequliye
+                    //this.app.tempObject.Models[modelName] = sequelize.import(
+                    //    modelName,
+                    //    this.app.tempObject.Models[modelName]
+                    //);
+
+                    // Models associations
+                    if (sequelize.models[modelName].associate)
+                    {
+                        sequelize.models[modelName].associate( sequelize.models );
                     }
                 });
+
+                /*Object.keys( this.app.tempObject.Models ).forEach((modelName) =>
+                {
+                    // Loaded object convert to Sequliye
+                    //this.app.tempObject.Models[modelName] = sequelize.import(
+                    //    modelName,
+                    //    this.app.tempObject.Models[modelName]
+                    //);
+
+                    // Models associations
+                    if (this.app.tempObject.Models[modelName].associate)
+                    {
+                        this.app.tempObject.Models[modelName].associate( this.app.tempObject.Models );
+                    }
+                });*/
 
                 app.sequelize = sequelize;
                 app.Sequelize = Sequelize;
 
+            };
+
+            private ormAssociate( loadedModel )
+            {
+                //console.log( loadedModel );
+                //process.exit();
+                return  sequelize.import(loadedModel);
             }
+
         }
     }
 }
