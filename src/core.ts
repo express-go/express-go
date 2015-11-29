@@ -1,5 +1,4 @@
 ///<reference path='./typings/tsd.d.ts'/>
-///<reference path='./bootstrap.ts'/>
 ///<reference path='./boot/Boot.ts'/>
 
 //import general = require("./boot/Boot.ts");
