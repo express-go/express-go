@@ -1,0 +1,32 @@
+///<reference path='../typings/tsd.d.ts'/>
+///<reference path='./loader.ts'/>
+
+//import * as Loader from "./loader";
+//import CoreBoot = Core.Boot;
+//import {Core.Boot} as Loader from "./loader";
+//import {Loader} from "./loader";
+
+/**
+ * Boot loader loader
+ */
+module Core.Boot
+{
+    import CoreBoot = Core.Boot.Load.Loader;
+    //export module Boot
+    //{
+        export class Boot
+        {
+            constructor( app : any, isModule? : boolean )
+            {
+                console.log("CoreBoot", CoreBoot);
+                /*new shapes.Core.Boot.Loader([
+                    "Controllers"
+                ]);*/
+                console.log("Boot");
+                process.exit();
+            }
+        }
+    //}
+}
+
+module.exports = Core.Boot;

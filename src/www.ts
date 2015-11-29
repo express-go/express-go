@@ -1,6 +1,7 @@
 ///<reference path='./typings/tsd.d.ts'/>
 
 declare function sockets_path( path? : string );
+declare function app_path( path? : string );
 
 var fs      = require('fs');
 var cluster = require('cluster');
@@ -8,6 +9,7 @@ var http    = require('http');
 var https   = require('https');
 var spdy    = require('spdy');
 var traverse = require('traverse');
+var watch = require('node-watch');
 
 var socketIOAdapter = require('socket.io-redis');
 var socketIOSession = require("socket.io.session");
@@ -102,6 +104,52 @@ export module Core
                     cluster.fork();
                 });
 
+                // Go through all workers
+                function eachWorker(callback) {
+                    for (var id in cluster.workers) {
+                        callback(cluster.workers[id]);
+                    }
+                }
+
+                function restartWorkers()
+                {
+                    console.log("Workers restart");
+
+                    eachWorker(function(worker)
+                    {
+                        worker.kill();
+                        cluster.fork();
+                    });
+
+                }
+
+                // TODO
+                // Any file change
+                var timeOut;
+                var filter = function(pattern, fn) {
+                    return function(filename) {
+                        if (pattern.test(filename)) {
+                            fn(filename);
+                        }
+                    }
+                };
+
+                watch(app_path(), filter(/\.js$|\.ts$/, (file) =>
+                {
+                    if (file)
+                    {
+                        clearTimeout(timeOut);
+
+                        var fileExt = file.substr(file.lastIndexOf('.') + 1);
+                        if (fileExt !== 'js' && fileExt !== 'ts')
+                            return;
+
+                        console.log(' filename provided: ' + file);
+
+                        timeOut = setTimeout(restartWorkers, 2300);
+                    }
+                }));
+
 /*                cluster.on('exit', function(deadWorker, code, signal)
                 {
                     // Restart the worker
@@ -121,6 +169,7 @@ export module Core
             {
                 /**
                  * Model sync
+                 * http://docs.sequelizejs.com/en/1.7.0/articles/heroku/
                  */
                 this.app.sequelize.sync().then(function ()
                 {

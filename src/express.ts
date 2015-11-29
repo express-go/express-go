@@ -1,6 +1,8 @@
 ///<reference path='./typings/tsd.d.ts'/>
 
 declare function public_path( path? : string );
+declare function lang_path( path? : string );
+
 
 var fs = require('fs');
 var path = require('path');
@@ -18,177 +20,238 @@ var nodalytics  = require('nodalytics');
 var Router      = require('named-routes');
 var router      = new Router();
 var session     = require('express-session');
-var i18n        = require('z-i18n');
+//var i18n        = require('z-i18n');
+var i18n        = require('i18next');
 
 var redis       = require('redis');
 var redisClient = redis.createClient();
 var RedisStore  = require("connect-redis")(session);
 
+var sync        = require("sync");
+var debug       = require('debug')('express-go:Express');
 
 // Settings
 var languages = [
-    'en_GB',
-    'hu_HU'
+    'hu',
+    'en'
 ];
 
 
+debug("Express object created");
 var app = express();
 
-    // Set current
-    i18n.init({
-        current_lang : 'en_GB',
-        default_lang : 'en_GB'
-    });
 
-    /**
-     * Session Middleware for Express & Socket.io
-     */
-    app.sessionSettings =
+/**
+ * Session Middleware for Express & Socket.io
+ */
+app.sessionSettings =
+{
+    store: new RedisStore({
+        "client": redisClient,
+        "host": process.env.REDIS_HOST,
+        "port": process.env.REDIS_PORT
+    }),
+    secret: process.env.SECRET,
+    resave: true,
+    saveUninitialized: false,
+    proxy: true,
+    cookie: {
+        "path"      : '/',
+        "secure"    : true,
+        "httpOnly"  : false,
+        "maxAge"    : null
+    },
+    key: 's3ss10n'
+};
+
+
+class ExpressGo
+{
+    constructor( app )
     {
-        store: new RedisStore({
-            "client": redisClient,
-            "host": process.env.REDIS_HOST,
-            "port": process.env.REDIS_PORT
-        }),
-        secret: process.env.SECRET,
-        resave: true,
-        saveUninitialized: false,
-        proxy: true,
-        cookie: {
-            "path"      : '/',
-            "secure"    : true,
-            "httpOnly"  : false,
-            "maxAge"    : null
-        },
-        key: 'connect.sid'
-    };
+        debug("ExpressGo init app");
 
+        debug("ExpressGo init initRouter");
+        this.initRouter();
 
+        debug("ExpressGo init initParsers");
+        this.initParsers();
 
-// Setup router
-    router.extendExpress(app);
-    router.registerAppHelpers(app);
+        debug("ExpressGo init initTranslator");
+        this.initTranslator();
 
+        debug("ExpressGo init initStatics");
+        this.initStatics();
 
-    // Force SSL
-    if ( process.env.FORCE_HTTPS.toLowerCase() == "true" || process.env.FORCE_HTTPS == true )
+        return app;
+    }
+
+    private initParsers()
     {
-        app.set('forceSSLOptions', {
-            //enable301Redirects : true,
-            //trustXFPHeader     : false,
-            httpsPort          : process.env.PORT_HTTPS,
-            //sslRequiredMessage : 'SSL Required.'
+
+        // Force SSL
+        this.initForceSSL();
+
+        // uncomment after placing your favicon in /public
+        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+        app.disable('x-powered-by');
+        app.disable('etag');
+
+
+        app.set('trust proxy', 1);
+        app.use(session(app.sessionSettings));
+
+        app.use(compress());
+        app.use(logger('dev'));
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: false }));
+
+        // Session and Security
+        //app.use(cookieParser());
+
+
+
+
+        //app.use(csrf({ cookie: false }));
+
+        //console.log(app.sessionSettings);
+
+        //app.use(csrf());
+
+
+        app.use((req : any, res : any, next : any) =>
+        {
+            //res.locals.csrfToken = req.csrfToken();
+            res.locals.csrfToken = '123';
+            next();
         });
-        app.use(forceSSL);
+
+
+        /*
+         app.use(function (err : any, req : any, res : any, next : any)
+         {
+         if (err.code !== 'EBADCSRFTOKEN') return next(err)
+
+         // handle CSRF token errors here
+         res.status(403);
+         res.send('session has expired or form tampered with')
+         });
+         */
     }
 
-
-    // uncomment after placing your favicon in /public
-    //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
-
-    app.disable('x-powered-by');
-    app.disable('etag');
-
-
-app.set('trust proxy', 1);
-app.use(session(app.sessionSettings));
-
-app.use(compress());
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-    // Session and Security
-    //app.use(cookieParser());
-
-
-
-
-//app.use(csrf({ cookie: false }));
-
-    //console.log(app.sessionSettings);
-
-    //app.use(csrf());
-
-
-    app.use((req : any, res : any, next : any) =>
+    private initTranslator()
     {
-        //res.locals.csrfToken = req.csrfToken();
-        res.locals.csrfToken = '123';
-        next();
-    });
-
-
-/*
-app.use(function (err : any, req : any, res : any, next : any)
-{
-    if (err.code !== 'EBADCSRFTOKEN') return next(err)
-
-    // handle CSRF token errors here
-    res.status(403);
-    res.send('session has expired or form tampered with')
-});
-*/
-
-app.i18n = i18n;
-
-// Use middleware to set current language
-// /lang/xx_yy
-app.use(function (req : any, res : any, next : any)
-{
-
-    res.locals.i18n = app.i18n;
-    res.locals._t   = app.i18n.__;
-    res.locals.__   = app.i18n.__;
-
-    if (req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0)
-    {
-        app.i18n.setCurrentLang(req.query.lang);
-        req.session.lang = req.query.lang;
-    }
-    else
-    {
-        if ( req.session.lang === undefined )
-        {
-            app.i18n.setCurrentLang(app.i18n.getDefaultLang());
-        }
-        else
-        {
-            app.i18n.setCurrentLang(req.session.lang);
-        }
-
-    }
-    return next();
-
-});
-
-
-//console.log("DáIE");
-//process.exit();
-
-if ( !!process.env.APP_UA && process.env.APP_UA.indexOf("UA-") === 0 )
-    app.use( nodalytics( process.env.APP_UA ) );
-
-if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
-    app.use(express.static(
-        public_path(),
-        {
-            etag    : false,
-            maxAge  : '1y', //365 * 24 * 60 * 60,
-            dotfiles: 'ignore',
-            expires : new Date(Date.now() + (365 * 24 * 60 * 60)),
-            setHeaders: function(res, path)
+        // i18next
+        i18n.init({
+            debug: process.env.APP_DEBUG,
+            //lng: 'en',
+            //supportedLngs: languages,
+            //fallbackLng: 'en',
+            detectLngFromPath : false,
+            forceDetectLngFromPath  : false,
+            //getAsync    : false,
+            saveMissing: true,
+            resSetPath : lang_path("/__lng__/new.__ns__.json"),
+            resGetPath : lang_path("/__lng__/__ns__.json"),
+            preload : languages,
+            ignoreRoutes: ['images/', 'public/', 'css/', 'js/', 'assets/', 'img/'],
+            cookie : false,
+            functions :
             {
-                if (path.indexOf("download") !== -1) {
-                    res.attachment(path)
-                }
-
-                res.setHeader('Expires', new Date(Date.now() + 31536000 * 1000).toUTCString());
+                log : require('debug')('express-go:i18n')
             }
+        });
+        app.i18n = i18n;
+
+
+        // Use middleware to set current language
+        // /lang/xx_yy
+        // app.use(i18n.handle) - not really work
+        app.use(function (req : any, res : any, next : any)
+        {
+            var ignore = i18n.options.ignoreRoutes;
+            for (var i = 0, len = ignore.length; i < len; i++) {
+                if (req.path.indexOf(ignore[i]) > -1) {
+                    return next();
+                }
+            }
+
+            res.locals.i18n = app.i18n;
+            res.locals._t   = app.i18n.t;
+            res.locals.__   = app.i18n.t;
+
+            if (req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0)
+            {
+                req.session.lang = req.query.lang;
+                app.i18n.setLng(req.session.lang);
+            }
+
+            if ( req.session.lang === undefined )
+            {
+                app.i18n.setLng( app.i18n.lng() );
+            }
+            else
+            {
+                app.i18n.setLng(req.session.lang);
+            }
+
+            next();
+        });
+
+    }
+
+    private initRouter()
+    {
+        // Setup router
+        router.extendExpress(app);
+        router.registerAppHelpers(app);
+
+    }
+
+    private initForceSSL()
+    {
+        //
+        if ( process.env.FORCE_HTTPS.toLowerCase() == "true" || process.env.FORCE_HTTPS == true )
+        {
+            app.set('forceSSLOptions', {
+                //enable301Redirects : true,
+                //trustXFPHeader     : false,
+                httpsPort          : process.env.PORT_HTTPS,
+                //sslRequiredMessage : 'SSL Required.'
+            });
+            app.use(forceSSL);
         }
-    ));
+    }
 
+    private initStatics()
+    {
+        //
+        if ( !!process.env.APP_UA && process.env.APP_UA.indexOf("UA-") === 0 )
+            app.use( nodalytics( process.env.APP_UA ) );
 
+        if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
+            app.use(express.static(
+                public_path(),
+                {
+                    etag    : false,
+                    maxAge  : '1y', //365 * 24 * 60 * 60,
+                    dotfiles: 'ignore',
+                    expires : new Date(Date.now() + (365 * 24 * 60 * 60)),
+                    setHeaders: function(res, path)
+                    {
+                        if (path.indexOf("download") !== -1) {
+                            res.attachment(path)
+                        }
 
-module.exports = app;
+                        res.setHeader('Expires', new Date(Date.now() + 31536000 * 1000).toUTCString());
+                    }
+                }
+            ));
+
+    }
+
+}
+
+//module.exports = app;
+module.exports = new ExpressGo(app);

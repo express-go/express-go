@@ -5,28 +5,31 @@
  */
 var fs = require("fs");
 
-export interface AutoloaderInterface
-{
-    init( app? ) : void;
-    load( app? ) : void;
-}
 
-
-export module Core
+module Core.Boot.Load
 {
-    export module Loaders
-    {
-        export class Autoloader
+    //export module Boot
+    //{
+        export class Loader
         {
             app : any;
             isModule : boolean;
             loadComponents : any;
             loadOverrideCb : any;
 
-            constructor( app : any, isModule? : boolean, loadComponents? : any )
+            constructor( loadComponents : any, isModule? : boolean )
+            {
+                this.loadComponents = loadComponents;
+                this.isModule       = !!isModule;
+
+                console.log(loadComponents, isModule);
+                process.exit();
+            }
+
+            constructor_off( app : any, isModule? : boolean, loadComponents? : any )
             {
                 this.app = app;
-                this.isModule = isModule;
+                this.isModule = isModule ? isModule : false;
                 this.loadComponents = loadComponents;
             }
 
@@ -59,7 +62,7 @@ export module Core
 
                                 if ( typeof this.loadOverrideCb == "function")
                                 {
-                                        this.app.addObject( namespaces.concat([name]), this.loadOverrideCb( loadPath + '/' + file ) );
+                                    this.app.addObject( namespaces.concat([name]), this.loadOverrideCb( loadPath + '/' + file ) );
                                 }
                                 else
                                 {
@@ -78,21 +81,23 @@ export module Core
 
                         // TODO
                         // Any file change
-                        fs.watch(loadPath,  (event, file) =>
-                        {
-                            if (file)
+                        if ( !this.isModule )
+                            fs.watch(loadPath,  (event, file) =>
                             {
-                                var fileExt = file.substr(file.lastIndexOf('.') + 1);
-                                if (fileExt !== 'js' && fileExt !== 'ts')
-                                    return;
+                                if (file)
+                                {
+                                    var fileExt = file.substr(file.lastIndexOf('.') + 1);
+                                    if (fileExt !== 'js' && fileExt !== 'ts')
+                                        return;
 
-                                console.log(event + ' filename provided: ' + file);
-                                this.loadComponents( this.isModule );
-                            }
-                            else {
-                                //console.log(event + ' filename not provided');
-                            }
-                        });
+                                    console.log(event + ' filename provided: ' + file);
+                                    readFiles();
+                                    //this.loadComponents( this.isModule );
+                                }
+                                else {
+                                    //console.log(event + ' filename not provided');
+                                }
+                            });
                     }
 
                 } catch(ex) {
@@ -114,5 +119,5 @@ export module Core
 
             }
         }
-    }
+    //}
 }

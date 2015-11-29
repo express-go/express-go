@@ -30,7 +30,7 @@ export module Core
         {
             this.app = app;
             this.appGlobal = appGlobal;
-
+console.log(global, "++++++++");
             this.init();
         }
 
