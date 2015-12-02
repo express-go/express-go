@@ -1,4 +1,6 @@
+///<reference path='../typings/tsd.d.ts'/>
 ///<reference path='Boot.ts'/>
+
 
 declare function app_path( path? : string );
 

@@ -3,7 +3,6 @@
 declare function public_path( path? : string );
 declare function lang_path( path? : string );
 
-
 var fs = require('fs');
 var path = require('path');
 

@@ -1,7 +1,6 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
-
-declare function models_path( path? : string, asb? : boolean );
+import {models_path} from "../typings/express-go";
 
 var fs = require('fs');
 var path = require('path');

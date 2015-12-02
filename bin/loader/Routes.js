@@ -1,3 +1,4 @@
+var express_go_1 = require("../typings/express-go");
 /**
  * Routes loader
  */
@@ -84,7 +85,7 @@ var Loaders;
          * @returns {any}
          */
         Routes.prototype.getLoadPath = function () {
-            return routes_path("", true);
+            return express_go_1.routes_path("", true);
         };
         /**
          * Finding files by postfix

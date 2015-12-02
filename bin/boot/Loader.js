@@ -1,3 +1,4 @@
+///<reference path='../typings/tsd.d.ts'/>
 ///<reference path='Boot.ts'/>
 var fs = require("fs");
 var glob = require("glob");

@@ -1,8 +1,6 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
 
-declare function controllers_path( path? : string, asd? : boolean );
-
 /**
  * Controller loader
  */

@@ -1,3 +1,5 @@
+var express_go_1 = require("../typings/express-go");
+var express_go_2 = require("../typings/express-go");
 var fs = require('fs');
 var path = require('path');
 var cons = require('consolidate');
@@ -31,7 +33,7 @@ var Loaders;
             // Assets
             app.locals.assetPath = function (text) {
                 // read in our manifest file
-                var manifest = JSON.parse(fs.readFileSync(public_path('assets/build/rev-manifest.json'), 'utf8'));
+                var manifest = JSON.parse(fs.readFileSync(express_go_2.public_path('assets/build/rev-manifest.json'), 'utf8'));
                 return [process.env.CDN_ASSETS + 'assets/build', manifest[text]].join('/');
             };
         };
@@ -78,17 +80,17 @@ var Loaders;
             var tmpPaths = [];
             if (Array.isArray(tmpViews)) {
                 tmpPaths = tmpViews;
-                tmpPaths.push(views_path());
+                tmpPaths.push(express_go_1.views_path());
             }
             else if (typeof tmpViews === "string") {
                 tmpPaths.push(tmpViews);
             }
             else {
                 tmpPaths = [];
-                tmpPaths.push(views_path());
+                tmpPaths.push(express_go_1.views_path());
             }
-            if (tmpPaths.indexOf(views_path()) < 0)
-                tmpPaths.push(views_path());
+            if (tmpPaths.indexOf(express_go_1.views_path()) < 0)
+                tmpPaths.push(express_go_1.views_path());
             // Update Views path
             app.set('views', tmpPaths);
         };
