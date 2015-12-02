@@ -34,7 +34,6 @@
     "spdy": "^2.0.5",
     "spdy-referrer-push": "0.0.2",
     "swig": "^1.4.2",
-    "sync": "^0.2.5",
     "traverse": "^0.6.6",
     "tsd": "^0.6.5"
   },

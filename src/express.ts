@@ -23,7 +23,6 @@ var redis       = require('redis');
 var redisClient = redis.createClient();
 var RedisStore  = require("connect-redis")(session);
 
-var sync        = require("sync");
 var debug       = require('debug')('express-go:Express');
 
 // Settings
