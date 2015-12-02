@@ -1,6 +1,9 @@
 ///<reference path='./typings/tsd.d.ts'/>
 
 import {app_path} from "typings/express-go";
+import {Worker} from "cluster";
+
+
 
 
 var fs      = require('fs');
@@ -89,7 +92,7 @@ export module Core
                  */
                 console.log('start cluster with %s workers', process.env.WORKERS);
 
-                for (var i = 0; i < process.env.WORKERS; ++i)
+                for ( var i = 0; i < process.env.WORKERS; i++ )
                 {
                     var worker = cluster.fork();
                     console.log('worker %s started.', worker.process.pid);
@@ -98,7 +101,7 @@ export module Core
                 /**
                  * Restart process.
                  */
-                cluster.on('death', function(worker)
+                cluster.on('death', function(worker : Worker)
                 {
                     console.log('worker %s died. restart...', worker.process.pid);
                     cluster.fork();
@@ -115,7 +118,7 @@ export module Core
                 {
                     console.log("Workers restart");
 
-                    eachWorker(function(worker)
+                    eachWorker(function(worker : Worker)
                     {
                         worker.kill();
                         cluster.fork();

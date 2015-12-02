@@ -2,7 +2,6 @@
 import {public_path} from "typings/express-go";
 import {lang_path} from "typings/express-go";
 
-
 var fs = require('fs');
 var path = require('path');
 
@@ -98,7 +97,7 @@ class ExpressGo
         // Session and Security
         app.use(cookieParser());
         app.use(session(app.sessionSettings));
-        app.use(csrf());
+        app.use(csrf({}));
         app.use((req : any, res : any, next : any) =>
         {
             res.locals.csrfToken = req.csrfToken();
@@ -106,7 +105,7 @@ class ExpressGo
         });
 
         // Source manipulation
-        app.use(compress());
+        app.use(compress({}));
         app.use(logger('dev'));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));

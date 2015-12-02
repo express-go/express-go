@@ -74,13 +74,13 @@ var ExpressGo = (function () {
         // Session and Security
         app.use(cookieParser());
         app.use(session(app.sessionSettings));
-        app.use(csrf());
+        app.use(csrf({}));
         app.use(function (req, res, next) {
             res.locals.csrfToken = req.csrfToken();
             next();
         });
         // Source manipulation
-        app.use(compress());
+        app.use(compress({}));
         app.use(logger('dev'));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));

@@ -43,7 +43,7 @@ var Core;
                      * Fork process.
                      */
                     console.log('start cluster with %s workers', process.env.WORKERS);
-                    for (var i = 0; i < process.env.WORKERS; ++i) {
+                    for (var i = 0; i < process.env.WORKERS; i++) {
                         var worker = cluster.fork();
                         console.log('worker %s started.', worker.process.pid);
                     }
