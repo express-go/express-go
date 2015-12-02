@@ -16,8 +16,6 @@
     "ddos": "^0.1.7",
     "express": "~4.13.1",
     "express-force-ssl": "^0.3.0",
-    "express-handlebars": "^2.0.1",
-    "express-hbs": "^0.8.4",
     "express-session": "^1.12.1",
     "force-ssl": "^1.0.5",
     "i18next": "^1.10.6",

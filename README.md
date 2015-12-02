@@ -38,7 +38,7 @@ Please, see [express-go-project](https://github.com/express-go/express-go-projec
     * *~~Redis cache~~*
 * Views
     * *~~Redis cache~~ [future feature]*
-    * Template engine support
+    * Mulliple template engine support
         * [Swig](https://www.npmjs.com/package/swig)
         * *~~Handlebars~~*
         * *~~Twig~~*

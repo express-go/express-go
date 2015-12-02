@@ -3,7 +3,7 @@
 
 var debug  = require('debug')('express-go:Boot');
 
-var Loader = require('./Loader.ts').Boot.Loader;
+var Loader = require('./Loader').Boot.Loader;
 
 export module Boot
 {

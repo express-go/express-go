@@ -52,7 +52,7 @@ export namespace Boot
             for ( var key in this._components )
             {
                 var val = {
-                    path     : fs.realpathSync( __dirname + '/../loader/'+ key +'.ts'),
+                    path     : __dirname + '/../loader/'+ key, //fs.realpathSync( __dirname + '/../loader/'+ key +'.ts'),
                     source   : null,
                     instance : null,
                     objects  : {}

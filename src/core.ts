@@ -19,13 +19,13 @@ module.exports = function( /*app : Express.Application,*/ appGlobal : any )
 
 
     debug("Express initalizing");
-    var theApp = require("./express.ts");
+    var theApp = require("./express");
 
 
     // Application boot
     debug("application booting");
     debug("boot path: %s", app_path());
-    require("./boot/Boot.ts").Boot.Main( theApp, appGlobal.App );
+    require("./boot/Boot").Boot.Main( theApp, appGlobal.App );
 
 
     // Modules boot
@@ -48,7 +48,7 @@ module.exports = function( /*app : Express.Application,*/ appGlobal : any )
 
         debug("boot path: %s", path.dirname(file));
 
-        require("./boot/Boot.ts").Boot.Main( theApp, appGlobal.Modules, path.dirname(file) );
+        require("./boot/Boot").Boot.Main( theApp, appGlobal.Modules, path.dirname(file) );
 
     });
 
