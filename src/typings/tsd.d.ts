@@ -10,3 +10,7 @@
 /// <reference path="lodash/lodash.d.ts" />
 /// <reference path="sequelize/sequelize.d.ts" />
 /// <reference path="validator/validator.d.ts" />
+/// <reference path="i18next/i18next.d.ts" />
+/// <reference path="jquery/jquery.d.ts" />
+/// <reference path="redis/redis.d.ts" />
+/// <reference path="csurf/csurf.d.ts" />

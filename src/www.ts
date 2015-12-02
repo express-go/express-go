@@ -1,7 +1,7 @@
 ///<reference path='./typings/tsd.d.ts'/>
 
-declare function sockets_path( path? : string );
-declare function app_path( path? : string );
+import {app_path} from "typings/express-go";
+
 
 var fs      = require('fs');
 var cluster = require('cluster');

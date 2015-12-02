@@ -24,7 +24,6 @@
     "nodalytics": "^1.1.0",
     "node-watch": "^0.3.4",
     "redis": "^2.3.0",
-    "seasurf": "^0.1.0",
     "sequelize": "^3.13.0",
     "sequelize-cli": "^2.1.0",
     "serve-favicon": "~2.3.0",

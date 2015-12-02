@@ -1,15 +1,12 @@
 ///<reference path='./typings/tsd.d.ts'/>
 ///<reference path='./boot/Boot.ts'/>
 
-//import general = require("./boot/Boot.ts");
+import {app_modules} from "typings/express-go";
+import {app_path} from "typings/express-go";
 
 var glob  = require("glob");
 var path  = require("path");
 var debug = require('debug')('express-go:core');
-
-//declare var global : any;
-declare function app_modules( path? : string );
-declare function app_path(path? : string );
 
 module.exports = function( /*app : Express.Application,*/ appGlobal : any )
 {

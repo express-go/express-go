@@ -1,4 +1,6 @@
-///<reference path='./typings/tsd.d.ts'/>
+///<reference path='typings/tsd.d.ts'/>
+var express_go_1 = require("typings/express-go");
+var express_go_2 = require("typings/express-go");
 var fs = require('fs');
 var path = require('path');
 var express = require('express');
@@ -97,8 +99,8 @@ var ExpressGo = (function () {
             forceDetectLngFromPath: false,
             //getAsync    : false,
             saveMissing: true,
-            resSetPath: lang_path("/__lng__/new.__ns__.json"),
-            resGetPath: lang_path("/__lng__/__ns__.json"),
+            resSetPath: express_go_2.lang_path("/__lng__/new.__ns__.json"),
+            resGetPath: express_go_2.lang_path("/__lng__/__ns__.json"),
             preload: languages,
             ignoreRoutes: ['images/', 'public/', 'css/', 'js/', 'assets/', 'img/'],
             cookie: false,
@@ -165,7 +167,7 @@ var ExpressGo = (function () {
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
         if (!process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/') {
-            app.use(express.static(public_path(), {
+            app.use(express.static(express_go_1.public_path(), {
                 etag: false,
                 maxAge: '1y',
                 dotfiles: 'ignore',

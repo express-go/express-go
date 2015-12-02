@@ -1,7 +1,7 @@
-///<reference path='./typings/tsd.d.ts'/>
+///<reference path='typings/tsd.d.ts'/>
+import {public_path} from "typings/express-go";
+import {lang_path} from "typings/express-go";
 
-declare function public_path( path? : string );
-declare function lang_path( path? : string );
 
 var fs = require('fs');
 var path = require('path');

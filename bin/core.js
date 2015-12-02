@@ -1,6 +1,7 @@
 ///<reference path='./typings/tsd.d.ts'/>
 ///<reference path='./boot/Boot.ts'/>
-//import general = require("./boot/Boot.ts");
+var express_go_1 = require("typings/express-go");
+var express_go_2 = require("typings/express-go");
 var glob = require("glob");
 var path = require("path");
 var debug = require('debug')('express-go:core');
@@ -12,12 +13,12 @@ module.exports = function (/*app : Express.Application,*/ appGlobal) {
     var theApp = require("./express");
     // Application boot
     debug("application booting");
-    debug("boot path: %s", app_path());
+    debug("boot path: %s", express_go_2.app_path());
     require("./boot/Boot").Boot.Main(theApp, appGlobal.App);
     // Modules boot
     debug("application modules booting");
     var orgAppPath = appGlobal.app_path;
-    var files = glob.sync(app_modules("**/module.json"));
+    var files = glob.sync(express_go_1.app_modules("**/module.json"));
     files.forEach(function (file) {
         /*
                 console.log("+++", file);
