@@ -3,9 +3,13 @@
  *
  * @param app
  */
-module.exports = function( appBase, basePath, appGlobal )
+module.exports = function( appBase, basePath, appGlobal, loadFromSource )
 {
-    var wwwObject = require("./src/www.ts");
+    if ( !!loadFromSource )
+        var wwwObject = require("./src/www");
+    else
+        var wwwObject = require("./bin/www");
+
 
     return new wwwObject.Core.Www( appBase, basePath, appGlobal );
 

@@ -3,7 +3,10 @@
  *
  * @param app
  */
-module.exports = function( appGlobal )
+module.exports = function( appGlobal, loadFromSource )
 {
-    return require("./src/core.ts")( appGlobal );
+    if ( !!loadFromSource )
+        return require("./src/core")( appGlobal );
+
+    return require("./bin/core")( appGlobal );
 };
