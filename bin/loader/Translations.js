@@ -2,6 +2,7 @@ var express_go_1 = require("../typings/express-go");
 var fs = require('fs');
 var glob = require("glob");
 var redis = require('redis').createClient();
+// TODO
 var languageRedisCache = 'LANGUAGE_CACHE_REDIS';
 /**
  * Controller loader
@@ -19,8 +20,6 @@ var Loaders;
             app.locals.i18n = app.i18n;
             app.locals._t = app.i18n.t;
             app.locals.__ = app.i18n.t;
-            //console.log(app._t("ars"));
-            //process.exit();
             this.app = app;
         };
         /**
@@ -41,13 +40,6 @@ var Loaders;
                 }
             }
             catch (ex) { }
-            //this.addMiddleware();
-            /*
-                        console.log(this.app.i18n.__("m_user_name_label"));
-                        console.log( this.app.i18n.getDefaultLang() );
-                        console.log( this.app.i18n.getCurrentLang() );
-                        process.exit();
-            */
             return false;
         };
         /**
@@ -76,19 +68,6 @@ var Loaders;
         Translations.prototype.getLoadNamespace = function () {
             //return ["Http", "Controllers"];
             return null;
-        };
-        Translations.prototype.addMiddleware = function () {
-            // Init
-            if (this.app.get('env') == 'production') {
-                redis.get(languageRedisCache, function (error, result) {
-                    if (result == null) {
-                        redis.set(languageRedisCache, JSON.stringify(this.app.i18n.getTranslation()), redis.print);
-                    }
-                    else {
-                        this.app.i18n.setTranslation(result);
-                    }
-                });
-            }
         };
         return Translations;
     })();
