@@ -12,15 +12,13 @@ var express     = require('express');
 var bodyParser  = require('body-parser');
 var compress    = require('compression');
 var cookieParser= require('cookie-parser');
-var csrf        = require('seasurf');
+var csrf        = require('csurf');
 var favicon     = require('serve-favicon');
 var forceSSL    = require('express-force-ssl');
 var logger      = require('morgan');
 var nodalytics  = require('nodalytics');
-var Router      = require('named-routes');
-var router      = new Router();
+var router      = require('named-routes')();
 var session     = require('express-session');
-//var i18n        = require('z-i18n');
 var i18n        = require('i18next');
 
 var redis       = require('redis');
@@ -86,60 +84,39 @@ class ExpressGo
         return app;
     }
 
+    /**
+     * Default parsers and middlewares
+     */
     private initParsers()
     {
-
         // Force SSL
         this.initForceSSL();
 
-        // uncomment after placing your favicon in /public
-        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
         app.disable('x-powered-by');
         app.disable('etag');
-
-
         app.set('trust proxy', 1);
-        app.use(session(app.sessionSettings));
 
+        // Session and Security
+        app.use(cookieParser());
+        app.use(session(app.sessionSettings));
+        app.use(csrf());
+        app.use((req : any, res : any, next : any) =>
+        {
+            res.locals.csrfToken = req.csrfToken();
+            next();
+        });
+
+        // Source manipulation
         app.use(compress());
         app.use(logger('dev'));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
 
-        // Session and Security
-        //app.use(cookieParser());
-
-
-
-
-        //app.use(csrf({ cookie: false }));
-
-        //console.log(app.sessionSettings);
-
-        //app.use(csrf());
-
-
-        app.use((req : any, res : any, next : any) =>
-        {
-            //res.locals.csrfToken = req.csrfToken();
-            res.locals.csrfToken = '123';
-            next();
-        });
-
-
-        /*
-         app.use(function (err : any, req : any, res : any, next : any)
-         {
-         if (err.code !== 'EBADCSRFTOKEN') return next(err)
-
-         // handle CSRF token errors here
-         res.status(403);
-         res.send('session has expired or form tampered with')
-         });
-         */
     }
 
+    /**
+     * Translator i18next
+     */
     private initTranslator()
     {
         // i18next
@@ -166,7 +143,7 @@ class ExpressGo
 
 
         // Use middleware to set current language
-        // /lang/xx_yy
+        // ?lang=xx_yy
         // app.use(i18n.handle) - not really work
         app.use(function (req : any, res : any, next : any)
         {
@@ -201,6 +178,9 @@ class ExpressGo
 
     }
 
+    /**
+     * Named-router
+     */
     private initRouter()
     {
         // Setup router
@@ -209,6 +189,9 @@ class ExpressGo
 
     }
 
+    /**
+     * Force SSL redirect from HTTP
+     */
     private initForceSSL()
     {
         //
@@ -224,13 +207,22 @@ class ExpressGo
         }
     }
 
+    /**
+     * Static files serving
+     */
     private initStatics()
     {
         //
         if ( !!process.env.APP_UA && process.env.APP_UA.indexOf("UA-") === 0 )
             app.use( nodalytics( process.env.APP_UA ) );
 
+
+        // uncomment after placing your favicon in /public
+        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
+
         if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
+        {
             app.use(express.static(
                 public_path(),
                 {
@@ -248,10 +240,10 @@ class ExpressGo
                     }
                 }
             ));
+        }
 
     }
 
 }
 
-//module.exports = app;
 module.exports = new ExpressGo(app);
