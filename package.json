@@ -4,7 +4,7 @@
   "description": "Express-go the Node.js Express based MVC framework engine.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --compilers ts:typescript-require --reporter spec test"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -34,6 +34,10 @@
     "spdy": "^2.0.5",
     "spdy-referrer-push": "0.0.2",
     "traverse": "^0.6.6"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.4",
+    "typescript-require": "^0.2.9-1"
   },
   "repository": {
     "type": "git",

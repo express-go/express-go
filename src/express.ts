@@ -19,7 +19,7 @@ var forceSSL    = require('express-force-ssl');
 var logger      = require('morgan');
 var nodalytics  = require('nodalytics');
 var Router      = require('named-routes');
-var router      = new Router();
+var router      = new Router({});
 var session     = require('express-session');
 var i18nxt      = require('i18next');
 

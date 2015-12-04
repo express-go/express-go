@@ -14,3 +14,4 @@
 /// <reference path="jquery/jquery.d.ts" />
 /// <reference path="redis/redis.d.ts" />
 /// <reference path="csurf/csurf.d.ts" />
+/// <reference path="mocha/mocha.d.ts" />
