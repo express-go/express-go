@@ -14,18 +14,9 @@ var Loaders;
          */
         Views.prototype.boot = function (app) {
             //.setDefaults({ cache : false });
-            app.engine('html', cons.swig);
-            app.set('view engine', 'html');
-            //console.log(cons);
-            /*
-             // View default engine
-             app.set(
-             'view engine',
-             this.engines.indexOf(process.env.VIEW_ENGINE) > -1
-             ? process.env.VIEW_ENGINE
-             : 'html'
-             );
-             */
+            app.engine(process.env.VIEW_FILES, cons[process.env.VIEW_ENGINE]);
+            app.set('view engine', process.env.VIEW_FILES);
+            // Set paths
             this.setViewsPaths(app);
             this.setViewsCache(app);
             // Assets

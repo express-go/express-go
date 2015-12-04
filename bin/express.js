@@ -15,7 +15,7 @@ var nodalytics = require('nodalytics');
 var Router = require('named-routes');
 var router = new Router();
 var session = require('express-session');
-var i18n = require('i18next');
+var i18nxt = require('i18next');
 var redis = require('redis');
 var redisClient = redis.createClient();
 var RedisStore = require("connect-redis")(session);
@@ -90,7 +90,7 @@ var ExpressGo = (function () {
      */
     ExpressGo.prototype.initTranslator = function () {
         // i18next
-        i18n.init({
+        i18nxt.init({
             debug: process.env.APP_DEBUG,
             //lng: 'en',
             //supportedLngs: languages,
@@ -108,29 +108,29 @@ var ExpressGo = (function () {
                 log: require('debug')('express-go:i18n')
             }
         });
-        app.i18n = i18n;
+        app.i18n = i18nxt;
         // Use middleware to set current language
         // ?lang=xx_yy
-        // app.use(i18n.handle) - not really work
+        // app.use(i18nxt.handle) - not really work
         app.use(function (req, res, next) {
-            var ignore = i18n.options.ignoreRoutes;
+            var ignore = i18nxt.options.ignoreRoutes;
             for (var i = 0, len = ignore.length; i < len; i++) {
                 if (req.path.indexOf(ignore[i]) > -1) {
                     return next();
                 }
             }
-            res.locals.i18n = app.i18n;
-            res.locals._t = app.i18n.t;
-            res.locals.__ = app.i18n.t;
+            res.locals.i18n = app.i18nxt;
+            res.locals._t = app.i18nxt.t;
+            res.locals.__ = app.i18nxt.t;
             if (req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0) {
                 req.session.lang = req.query.lang;
-                app.i18n.setLng(req.session.lang);
+                app.i18nxt.setLng(req.session.lang);
             }
             if (req.session.lang === undefined) {
-                app.i18n.setLng(app.i18n.lng());
+                app.i18nxt.setLng(app.i18n.lng());
             }
             else {
-                app.i18n.setLng(req.session.lang);
+                app.i18nxt.setLng(req.session.lang);
             }
             next();
         });
