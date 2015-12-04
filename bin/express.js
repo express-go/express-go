@@ -119,18 +119,18 @@ var ExpressGo = (function () {
                     return next();
                 }
             }
-            res.locals.i18n = app.i18nxt;
-            res.locals._t = app.i18nxt.t;
-            res.locals.__ = app.i18nxt.t;
+            res.locals.i18n = app.i18n;
+            res.locals._t = app.i18n.t;
+            res.locals.__ = app.i18n.t;
             if (req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0) {
                 req.session.lang = req.query.lang;
-                app.i18nxt.setLng(req.session.lang);
+                app.i18n.setLng(req.session.lang);
             }
             if (req.session.lang === undefined) {
-                app.i18nxt.setLng(app.i18n.lng());
+                app.i18n.setLng(app.i18n.lng());
             }
             else {
-                app.i18nxt.setLng(req.session.lang);
+                app.i18n.setLng(req.session.lang);
             }
             next();
         });
