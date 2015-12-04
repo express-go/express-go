@@ -295,20 +295,6 @@ module.exports = function( appBase, basePath )
                     });
                 }
             },
-            /*'tsd' : {
-             'description' : "Typescript definitions",
-             'callMethod'  : function(cb)
-             {
-             var tmp = exec('"./node_modules/.bin/tsd" update -os', puts);
-             tmp.stdout.on('data', function(data) {
-             console.log(data);
-             });
-             tmp.on('exit', function (code) {
-             console.log('Exiting... ', code);
-             cb();
-             });
-             }
-             }*/
         },
         'updates' :
         {

@@ -33,9 +33,7 @@
     "socket.io.session": "^1.0.13",
     "spdy": "^2.0.5",
     "spdy-referrer-push": "0.0.2",
-    "swig": "^1.4.2",
-    "traverse": "^0.6.6",
-    "tsd": "^0.6.5"
+    "traverse": "^0.6.6"
   },
   "repository": {
     "type": "git",

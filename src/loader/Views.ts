@@ -26,21 +26,10 @@ export module Loaders
 		public boot( app : any ) : void
 		{
 			//.setDefaults({ cache : false });
-			app.engine('html', cons.swig);
-			app.set('view engine', 'html');
+			app.engine(process.env.VIEW_FILES, cons[ process.env.VIEW_ENGINE ]);
+			app.set('view engine', process.env.VIEW_FILES);
 
-			//console.log(cons);
-
-			/*
-			 // View default engine
-			 app.set(
-			 'view engine',
-			 this.engines.indexOf(process.env.VIEW_ENGINE) > -1
-			 ? process.env.VIEW_ENGINE
-			 : 'html'
-			 );
-			 */
-
+			// Set paths
 			this.setViewsPaths( app );
 			this.setViewsCache( app );
 
