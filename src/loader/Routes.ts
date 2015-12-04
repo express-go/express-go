@@ -1,6 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
-import {routes_path} from "../typings/express-go";
+//import {routes_path} from "../typings/express-go";
+declare function routes_path (innerPath?: string, getRelative?: boolean)  : string;
 
 /**
  * Routes loader

@@ -1,8 +1,8 @@
 ///<reference path='./typings/tsd.d.ts'/>
 
-import {app_path} from "typings/express-go";
+//import {app_path} from "typings/express-go";
 import {Worker} from "cluster";
-
+declare function app_path (innerPath?: string, getRelative?: boolean)  : string;
 
 
 

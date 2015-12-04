@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
-import {lang_path} from "../typings/express-go";
-
+//import {lang_path} from "../typings/express-go";
+declare function lang_path (innerPath?: string, getRelative?: boolean)  : string;
 declare function t( path? : string );
 
 var fs   = require('fs');

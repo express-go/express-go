@@ -1,8 +1,9 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
-import {views_path} from "../typings/express-go";
-import {public_path} from "../typings/express-go";
-
+//import {views_path} from "../typings/express-go";
+//import {public_path} from "../typings/express-go";
+declare function views_path (innerPath?: string, getRelative?: boolean)  : string;
+declare function public_path (innerPath?: string, getRelative?: boolean)  : string;
 
 var fs   = require('fs');
 var path = require('path');

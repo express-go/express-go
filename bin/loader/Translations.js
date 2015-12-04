@@ -1,4 +1,3 @@
-var express_go_1 = require("../typings/express-go");
 var fs = require('fs');
 var glob = require("glob");
 var redis = require('redis').createClient();
@@ -31,8 +30,8 @@ var Loaders;
         Translations.prototype.load = function (loadPath) {
             // Loading translation files
             try {
-                if (fs.statSync(express_go_1.lang_path())) {
-                    var files = glob.sync(express_go_1.lang_path("**/*.json"));
+                if (fs.statSync(lang_path())) {
+                    var files = glob.sync(lang_path("**/*.json"));
                     files.forEach(function (file) {
                         var partials = file.split('.');
                         this.app.i18n.add(file, partials[partials.length - 2]);

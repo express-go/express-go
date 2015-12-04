@@ -1,4 +1,3 @@
-var express_go_1 = require("../typings/express-go");
 var fs = require('fs');
 var path = require('path');
 var db = {};
@@ -39,7 +38,7 @@ var Loaders;
          * @param loadPath
          */
         Models.prototype.load = function (loadPath) {
-            console.log("LOADPATH", loadPath, express_go_1.models_path());
+            console.log("LOADPATH", loadPath, models_path());
             return sequelize.import(loadPath);
         };
         /**
@@ -49,7 +48,7 @@ var Loaders;
          * @returns {any}
          */
         Models.prototype.getLoadPath = function () {
-            return express_go_1.models_path("", true);
+            return models_path("", true);
         };
         /**
          * Finding files by postfix

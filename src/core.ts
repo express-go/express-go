@@ -1,8 +1,9 @@
 ///<reference path='./typings/tsd.d.ts'/>
 ///<reference path='./boot/Boot.ts'/>
 
-import {app_modules} from "typings/express-go";
-import {app_path} from "typings/express-go";
+//import {global} from 'typings/express-go';
+declare function app_path (innerPath?: string, getRelative?: boolean)  : string;
+declare function app_modules (innerPath?: string, getRelative?: boolean)  : string;
 
 var glob  = require("glob");
 var path  = require("path");

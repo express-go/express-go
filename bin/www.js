@@ -1,5 +1,4 @@
 ///<reference path='./typings/tsd.d.ts'/>
-var express_go_1 = require("typings/express-go");
 var fs = require('fs');
 var cluster = require('cluster');
 var http = require('http');
@@ -77,7 +76,7 @@ var Core;
                             }
                         };
                     };
-                    watch(express_go_1.app_path(), filter(/\.js$|\.ts$/, function (file) {
+                    watch(app_path(), filter(/\.js$|\.ts$/, function (file) {
                         if (file) {
                             clearTimeout(timeOut);
                             var fileExt = file.substr(file.lastIndexOf('.') + 1);

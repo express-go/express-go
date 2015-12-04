@@ -1,6 +1,9 @@
 ///<reference path='typings/tsd.d.ts'/>
-import {public_path} from "typings/express-go";
-import {lang_path} from "typings/express-go";
+//import {public_path} from "typings/express-go";
+//import {lang_path} from "typings/express-go";
+
+declare function public_path (innerPath?: string, getRelative?: boolean)  : string;
+declare function lang_path (innerPath?: string, getRelative?: boolean)  : string;
 
 var fs = require('fs');
 var path = require('path');
@@ -15,7 +18,8 @@ var favicon     = require('serve-favicon');
 var forceSSL    = require('express-force-ssl');
 var logger      = require('morgan');
 var nodalytics  = require('nodalytics');
-var router      = require('named-routes')();
+var Router      = require('named-routes');
+var router      = new Router();
 var session     = require('express-session');
 var i18n        = require('i18next');
 

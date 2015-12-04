@@ -1,6 +1,6 @@
 ///<reference path='typings/tsd.d.ts'/>
-var express_go_1 = require("typings/express-go");
-var express_go_2 = require("typings/express-go");
+//import {public_path} from "typings/express-go";
+//import {lang_path} from "typings/express-go";
 var fs = require('fs');
 var path = require('path');
 var express = require('express');
@@ -12,13 +12,13 @@ var favicon = require('serve-favicon');
 var forceSSL = require('express-force-ssl');
 var logger = require('morgan');
 var nodalytics = require('nodalytics');
-var router = require('named-routes')();
+var Router = require('named-routes');
+var router = new Router();
 var session = require('express-session');
 var i18n = require('i18next');
 var redis = require('redis');
 var redisClient = redis.createClient();
 var RedisStore = require("connect-redis")(session);
-var sync = require("sync");
 var debug = require('debug')('express-go:Express');
 // Settings
 var languages = [
@@ -99,8 +99,8 @@ var ExpressGo = (function () {
             forceDetectLngFromPath: false,
             //getAsync    : false,
             saveMissing: true,
-            resSetPath: express_go_2.lang_path("/__lng__/new.__ns__.json"),
-            resGetPath: express_go_2.lang_path("/__lng__/__ns__.json"),
+            resSetPath: lang_path("/__lng__/new.__ns__.json"),
+            resGetPath: lang_path("/__lng__/__ns__.json"),
             preload: languages,
             ignoreRoutes: ['images/', 'public/', 'css/', 'js/', 'assets/', 'img/'],
             cookie: false,
@@ -167,7 +167,7 @@ var ExpressGo = (function () {
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
         if (!process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/') {
-            app.use(express.static(express_go_1.public_path(), {
+            app.use(express.static(public_path(), {
                 etag: false,
                 maxAge: '1y',
                 dotfiles: 'ignore',

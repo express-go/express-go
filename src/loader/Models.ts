@@ -1,6 +1,8 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
-import {models_path} from "../typings/express-go";
+//import {models_path} from "../typings/express-go";
+declare function models_path (innerPath?: string, getRelative?: boolean) : string;
+
 
 var fs = require('fs');
 var path = require('path');
