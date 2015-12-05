@@ -3,6 +3,7 @@
 //import {lang_path} from "typings/express-go";
 var fs = require('fs');
 var path = require('path');
+var glob = require('glob');
 var express = require('express');
 var bodyParser = require('body-parser');
 var compress = require('compression');
@@ -90,6 +91,15 @@ var ExpressGo = (function () {
      * Translator i18next
      */
     ExpressGo.prototype.initTranslator = function () {
+        // Read language files for namespaces
+        var langNs = ["translation"];
+        var files = glob.sync(lang_path("**/*.json"));
+        files.forEach(function (file) {
+            var tmpFile = path.basename(file).split('.');
+            var tmpNs = tmpFile[0] != 'new' ? tmpFile[0] : tmpFile[1];
+            if (langNs.indexOf(tmpNs) === -1)
+                langNs.push(tmpNs);
+        });
         // i18next
         i18nxt.init({
             debug: process.env.APP_DEBUG,
@@ -107,6 +117,10 @@ var ExpressGo = (function () {
             cookie: false,
             functions: {
                 log: require('debug')('express-go:i18n')
+            },
+            ns: {
+                namespaces: langNs,
+                defaultNs: "translation"
             }
         });
         app.i18n = i18nxt;
