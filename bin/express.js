@@ -13,8 +13,9 @@ var forceSSL = require('express-force-ssl');
 var logger = require('morgan');
 var nodalytics = require('nodalytics');
 var Router = require('named-routes');
-var router = new Router();
+var router = new Router({});
 var session = require('express-session');
+var spdyPush = require('spdy-referrer-push');
 var i18nxt = require('i18next');
 var redis = require('redis');
 var redisClient = redis.createClient();
@@ -142,6 +143,9 @@ var ExpressGo = (function () {
         // Setup router
         router.extendExpress(app);
         router.registerAppHelpers(app);
+        // SPDY referrer setup
+        if (!!process.env.SPDY_HTTPS)
+            app.use(spdyPush.referrer());
     };
     /**
      * Force SSL redirect from HTTP

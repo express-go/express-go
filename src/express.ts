@@ -5,8 +5,9 @@
 declare function public_path (innerPath?: string, getRelative?: boolean)  : string;
 declare function lang_path (innerPath?: string, getRelative?: boolean)  : string;
 
-var fs = require('fs');
-var path = require('path');
+var fs          = require('fs');
+var path        = require('path');
+var glob        = require('glob');
 
 var express     = require('express');
 
@@ -21,6 +22,7 @@ var nodalytics  = require('nodalytics');
 var Router      = require('named-routes');
 var router      = new Router({});
 var session     = require('express-session');
+var spdyPush    = require('spdy-referrer-push');
 var i18nxt      = require('i18next');
 
 var redis       = require('redis');
@@ -120,6 +122,19 @@ class ExpressGo
      */
     private initTranslator()
     {
+        // Read language files for namespaces
+        var langNs = ["translation"];
+        var files = glob.sync( lang_path("**/*.json") );
+
+        files.forEach(( file ) =>
+        {
+            var tmpFile = path.basename(file).split('.');
+            var tmpNs   = tmpFile[0] != 'new' ? tmpFile[0] : tmpFile[1];
+
+            if ( langNs.indexOf( tmpNs ) === -1 )
+                langNs.push( tmpNs );
+        });
+
         // i18next
         i18nxt.init({
             debug: process.env.APP_DEBUG,
@@ -138,6 +153,10 @@ class ExpressGo
             functions :
             {
                 log : require('debug')('express-go:i18n')
+            },
+            ns : {
+                namespaces : langNs,
+                defaultNs  : "translation"
             }
         });
         app.i18n = i18nxt;
@@ -187,6 +206,10 @@ class ExpressGo
         // Setup router
         router.extendExpress(app);
         router.registerAppHelpers(app);
+
+        // SPDY referrer setup
+        if ( !!process.env.SPDY_HTTPS )
+            app.use(spdyPush.referrer());
 
     }
 

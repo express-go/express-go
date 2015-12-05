@@ -15,22 +15,15 @@ module.exports = function (/*app : Express.Application,*/ appGlobal) {
     require("./boot/Boot").Boot.Main(theApp, appGlobal.App);
     // Modules boot
     debug("application modules booting");
-    var orgAppPath = appGlobal.app_path;
     var files = glob.sync(app_modules("**/module.json"));
     files.forEach(function (file) {
-        /*
-                console.log("+++", file);
-                // Overwiting application path for modules loading
-                appGlobal.app_path = function( innerPath )
-                {
-                    innerPath = typeof innerPath === 'string' ? innerPath : '';
-                    return path.dirname(file) + '/' + innerPath;
-                };
-        */
-        debug("boot path: %s", path.dirname(file));
-        require("./boot/Boot").Boot.Main(theApp, appGlobal.Modules, path.dirname(file));
+        debug("boot module path: %s", path.dirname(file));
+        var moduleName = path.dirname(file).replace(/\\\//g, "/").split('/').pop().toLowerCase();
+        moduleName = moduleName.substring(0, 1).toUpperCase() + moduleName.substring(1).toLowerCase();
+        debug("boot module : %s", moduleName);
+        appGlobal.Modules[moduleName] = {};
+        require("./boot/Boot").Boot.Main(theApp, appGlobal.Modules[moduleName], path.dirname(file));
     });
-    appGlobal.app_path = orgAppPath;
     //    console.log(require("./boot/Boot.ts").Boot());
     //    require("./boot/Boot.ts").Boot( theApp );
     //require("./ExpressGo.ts").Main( theApp );

@@ -20,7 +20,7 @@ Please, see [express-go-project](https://github.com/express-go/express-go-projec
     * [Redis support](https://www.npmjs.com/package/socket.io-redis)
     * [Shared sessions between workers and application](https://www.npmjs.com/package/socket.io.session)
     * *~~[Binary transfers](https://www.npmjs.com/package/socket.io-stream)~~ (in progress)*
-* Automatic service restart if project files are changed
+* Automatic cluster restart when project files are changed
 
 
 ### MVC support ###
@@ -34,15 +34,15 @@ Please, see [express-go-project](https://github.com/express-go/express-go-projec
     * Listing routes in CLI
     * Resource controller
     * *~~Auto resource controller~~ [future feature]*
-* [*~~Translations~~*](https://www.npmjs.com/package/i18next) (in progress)
-    * *~~Namespaced language files~~*
+* [Translations](https://www.npmjs.com/package/i18next)
+    * Namespaced language files
     * *~~Redis cache~~*
 * Views
     * [Mulliple template engine support](https://www.npmjs.com/package/consolidate)
     * *~~Redis cache~~ [future feature]*
 
 ### Security support ###
-* CSRF verification
+* [CSRF verification](https://www.npmjs.com/package/csurf)
 * [DDOS prevention](https://www.npmjs.com/package/ddos)
 * [XSS filter](https://www.npmjs.com/package/xss)
 
@@ -52,5 +52,3 @@ Please, see [express-go-project](https://github.com/express-go/express-go-projec
 * Migrations
 * Seeders
 * Configurations
-* Reload app and modules in runtime
-* Separate gulp file
