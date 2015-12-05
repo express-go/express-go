@@ -46,7 +46,7 @@ app.sessionSettings =
         cookie: {
             "path": '/',
             "secure": true,
-            "httpOnly": false,
+            "httpOnly": true,
             "maxAge": null
         },
         key: 's3ss10n'
@@ -115,39 +115,57 @@ var ExpressGo = (function () {
             preload: languages,
             ignoreRoutes: ['images/', 'public/', 'css/', 'js/', 'assets/', 'img/'],
             cookie: false,
+            useCookie: false,
             functions: {
                 log: require('debug')('express-go:i18n')
             },
             ns: {
                 namespaces: langNs,
                 defaultNs: "translation"
-            }
+            },
+            useLocalStorage: true
         });
         app.i18n = i18nxt;
         // Use middleware to set current language
         // ?lang=xx_yy
-        // app.use(i18nxt.handle) - not really work
+        //app.use(i18nxt.handle); //- not really work
         app.use(function (req, res, next) {
+            // Session lang init
+            if (!req.session.lang) {
+                req.session.lang = app.i18n.lng();
+                var detectLangs = app.i18n.functions.toLanguages(app.i18n.detectLanguage(req, res));
+                for (var lngKey in detectLangs) {
+                    if (languages.indexOf(detectLangs[lngKey]) > -1) {
+                        req.session.lang = detectLangs[lngKey];
+                        break;
+                    }
+                }
+            }
+            // URL ignoring
             var ignore = i18nxt.options.ignoreRoutes;
             for (var i = 0, len = ignore.length; i < len; i++) {
                 if (req.path.indexOf(ignore[i]) > -1) {
                     return next();
                 }
             }
+            // Query land settings
+            if (req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0) {
+                req.session.lang = req.query.lang;
+            }
+            // Vars
+            req.locale = req.lng = req.language = req.session.lang;
             res.locals.i18n = app.i18n;
             res.locals._t = app.i18n.t;
             res.locals.__ = app.i18n.t;
-            if (req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0) {
-                req.session.lang = req.query.lang;
-                app.i18n.setLng(req.session.lang);
-            }
-            if (req.session.lang === undefined) {
-                app.i18n.setLng(app.i18n.lng());
+            // Set lang if need
+            if (req.session.lang != app.i18n.lng()) {
+                app.i18n.setLng(req.session.lang, function () {
+                    next();
+                });
             }
             else {
-                app.i18n.setLng(req.session.lang);
+                next();
             }
-            next();
         });
     };
     /**
@@ -157,9 +175,6 @@ var ExpressGo = (function () {
         // Setup router
         router.extendExpress(app);
         router.registerAppHelpers(app);
-        // SPDY referrer setup
-        if (!!process.env.SPDY_HTTPS)
-            app.use(spdyPush.referrer());
     };
     /**
      * Force SSL redirect from HTTP

@@ -22,6 +22,7 @@ var nodalytics  = require('nodalytics');
 var Router      = require('named-routes');
 var router      = new Router({});
 var session     = require('express-session');
+var spdyPush    = require('spdy-referrer-push');
 var i18nxt      = require('i18next');
 
 var redis       = require('redis');
@@ -58,7 +59,7 @@ app.sessionSettings =
     cookie: {
         "path"      : '/',
         "secure"    : true,
-        "httpOnly"  : false,
+        "httpOnly"  : true,
         "maxAge"    : null
     },
     key: 's3ss10n'
@@ -149,6 +150,7 @@ class ExpressGo
             preload : languages,
             ignoreRoutes: ['images/', 'public/', 'css/', 'js/', 'assets/', 'img/'],
             cookie : false,
+            useCookie : false,
             functions :
             {
                 log : require('debug')('express-go:i18n')
@@ -156,43 +158,70 @@ class ExpressGo
             ns : {
                 namespaces : langNs,
                 defaultNs  : "translation"
-            }
+            },
+            useLocalStorage : true
         });
         app.i18n = i18nxt;
 
-
         // Use middleware to set current language
         // ?lang=xx_yy
-        // app.use(i18nxt.handle) - not really work
+        //app.use(i18nxt.handle); //- not really work
         app.use(function (req : any, res : any, next : any)
         {
+            // Session lang init
+            if ( !req.session.lang )
+            {
+                req.session.lang = app.i18n.lng();
+
+                var detectLangs  = app.i18n.functions.toLanguages(
+                    app.i18n.detectLanguage(req,res)
+                );
+
+                for ( var lngKey in detectLangs)
+                {
+                    if (languages.indexOf(detectLangs[lngKey]) > -1)
+                    {
+                        req.session.lang = detectLangs[lngKey];
+                        break;
+                    }
+                }
+            }
+
+
+            // URL ignoring
             var ignore = i18nxt.options.ignoreRoutes;
-            for (var i = 0, len = ignore.length; i < len; i++) {
-                if (req.path.indexOf(ignore[i]) > -1) {
+            for (var i = 0, len = ignore.length; i < len; i++)
+            {
+                if (req.path.indexOf(ignore[i]) > -1)
+                {
                     return next();
                 }
             }
 
+            // Query land settings
+            if ( req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0 )
+            {
+                req.session.lang = req.query.lang;
+            }
+
+            // Vars
+            req.locale 		= req.lng = req.language = req.session.lang;
             res.locals.i18n = app.i18n;
             res.locals._t   = app.i18n.t;
             res.locals.__   = app.i18n.t;
 
-            if (req.query.lang != undefined && languages.indexOf(req.query.lang) >= 0)
+            // Set lang if need
+            if ( req.session.lang != app.i18n.lng() )
             {
-                req.session.lang = req.query.lang;
-                app.i18n.setLng(req.session.lang);
-            }
-
-            if ( req.session.lang === undefined )
-            {
-                app.i18n.setLng( app.i18n.lng() );
+                app.i18n.setLng(req.session.lang, function() {
+                    next();
+                });
             }
             else
             {
-                app.i18n.setLng(req.session.lang);
+                next();
             }
 
-            next();
         });
 
     }
@@ -205,7 +234,6 @@ class ExpressGo
         // Setup router
         router.extendExpress(app);
         router.registerAppHelpers(app);
-
     }
 
     /**
