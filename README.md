@@ -36,7 +36,7 @@ Please, see [express-go-project](https://github.com/express-go/express-go-projec
     * *~~Auto resource controller~~ [future feature]*
 * [Translations](https://www.npmjs.com/package/i18next)
     * Namespaced language files
-    * *~~Redis cache~~*
+    * *~~Redis cache~~ [future feature]*
 * Views
     * [Mulliple template engine support](https://www.npmjs.com/package/consolidate)
     * *~~Redis cache~~ [future feature]*
