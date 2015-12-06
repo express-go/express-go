@@ -57,7 +57,6 @@ export module Loaders
 		 */
 		public load( loadPath? : string ) : any
 		{
-			console.log( "LOADPATH", loadPath, models_path() );
 			return sequelize.import( loadPath );
 		}
 
