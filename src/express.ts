@@ -109,16 +109,16 @@ class ExpressGo
         app.use(helmet.noSniff());
         app.use(helmet.frameguard());
         app.use(helmet.xssFilter());
+
+        // Session and CSRF
+        app.use(cookieParser());
+        app.use(session(app.sessionSettings));
         app.use(csrf({}));
         app.use((req : any, res : any, next : any) =>
         {
             res.locals.csrfToken = req.csrfToken();
             next();
         });
-
-        // Session
-        app.use(cookieParser());
-        app.use(session(app.sessionSettings));
 
     }
 

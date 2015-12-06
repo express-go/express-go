@@ -83,18 +83,14 @@ var ExpressGo = (function () {
         app.use(helmet.noSniff());
         app.use(helmet.frameguard());
         app.use(helmet.xssFilter());
-        app.use(helmet.xframe());
-        app.use(helmet.iexss());
-        app.use(helmet.contentTypeOptions());
-        app.use(helmet.cacheControl());
+        // Session and CSRF
+        app.use(cookieParser());
+        app.use(session(app.sessionSettings));
         app.use(csrf({}));
         app.use(function (req, res, next) {
             res.locals.csrfToken = req.csrfToken();
             next();
         });
-        // Session
-        app.use(cookieParser());
-        app.use(session(app.sessionSettings));
     };
     /**
      * Translator i18next
