@@ -11,6 +11,7 @@ var cookieParser = require('cookie-parser');
 var csrf = require('csurf');
 var favicon = require('serve-favicon');
 var forceSSL = require('express-force-ssl');
+var helmet = require('helmet');
 var logger = require('morgan');
 var nodalytics = require('nodalytics');
 var Router = require('named-routes');
@@ -69,23 +70,31 @@ var ExpressGo = (function () {
      */
     ExpressGo.prototype.initParsers = function () {
         // Force SSL
+        app.enable('trust proxy');
         this.initForceSSL();
-        app.disable('x-powered-by');
-        app.disable('etag');
-        app.set('trust proxy', 1);
-        // Session and Security
-        app.use(cookieParser());
-        app.use(session(app.sessionSettings));
-        app.use(csrf({}));
-        app.use(function (req, res, next) {
-            res.locals.csrfToken = req.csrfToken();
-            next();
-        });
         // Source manipulation
         app.use(compress({}));
         app.use(logger('dev'));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({ extended: false }));
+        // Security
+        app.disable('x-powered-by');
+        app.disable('etag');
+        app.use(helmet.noSniff());
+        app.use(helmet.frameguard());
+        app.use(helmet.xssFilter());
+        app.use(helmet.xframe());
+        app.use(helmet.iexss());
+        app.use(helmet.contentTypeOptions());
+        app.use(helmet.cacheControl());
+        app.use(csrf({}));
+        app.use(function (req, res, next) {
+            res.locals.csrfToken = req.csrfToken();
+            next();
+        });
+        // Session
+        app.use(cookieParser());
+        app.use(session(app.sessionSettings));
     };
     /**
      * Translator i18next

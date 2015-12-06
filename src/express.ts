@@ -17,6 +17,7 @@ var cookieParser= require('cookie-parser');
 var csrf        = require('csurf');
 var favicon     = require('serve-favicon');
 var forceSSL    = require('express-force-ssl');
+var helmet      = require('helmet');
 var logger      = require('morgan');
 var nodalytics  = require('nodalytics');
 var Router      = require('named-routes');
@@ -93,15 +94,21 @@ class ExpressGo
     private initParsers()
     {
         // Force SSL
+        app.enable('trust proxy');
         this.initForceSSL();
 
+        // Source manipulation
+        app.use(compress({}));
+        app.use(logger('dev'));
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: false }));
+
+        // Security
         app.disable('x-powered-by');
         app.disable('etag');
-        app.set('trust proxy', 1);
-
-        // Session and Security
-        app.use(cookieParser());
-        app.use(session(app.sessionSettings));
+        app.use(helmet.noSniff());
+        app.use(helmet.frameguard());
+        app.use(helmet.xssFilter());
         app.use(csrf({}));
         app.use((req : any, res : any, next : any) =>
         {
@@ -109,11 +116,9 @@ class ExpressGo
             next();
         });
 
-        // Source manipulation
-        app.use(compress({}));
-        app.use(logger('dev'));
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({ extended: false }));
+        // Session
+        app.use(cookieParser());
+        app.use(session(app.sessionSettings));
 
     }
 
