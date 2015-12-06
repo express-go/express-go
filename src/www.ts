@@ -17,6 +17,8 @@ var socketIOAdapter = require( 'socket.io-redis' );
 var socketIOSession = require( "socket.io.session" );
 var socketSession   = null;
 
+var debug = require( 'debug' )( 'express-go:Www' );
+
 export module Core
 {
 	export class Www
@@ -83,12 +85,12 @@ export module Core
 				/**
 				 * Fork process.
 				 */
-				console.log( 'start cluster with %s workers', process.env.WORKERS );
+				debug( 'start cluster with %s workers', process.env.WORKERS );
 
 				for ( var i = 0; i < process.env.WORKERS; i++ )
 				{
 					var worker = cluster.fork();
-					console.log( 'worker %s started.', worker.process.pid );
+					debug( 'worker %s started.', worker.process.pid );
 				}
 
 				/**
@@ -96,7 +98,7 @@ export module Core
 				 */
 				cluster.on( 'death', function ( worker : Worker )
 				{
-					console.log( 'worker %s died. restart...', worker.process.pid );
+					debug( 'worker %s died. restart...', worker.process.pid );
 					cluster.fork();
 				} );
 
@@ -111,7 +113,7 @@ export module Core
 
 				function restartWorkers()
 				{
-					console.log( "Workers restart" );
+					debug( "Workers restart" );
 
 					eachWorker( function ( worker : Worker )
 					{
@@ -145,7 +147,7 @@ export module Core
 						if ( fileExt !== 'js' && fileExt !== 'ts' )
 							return;
 
-						console.log( ' filename provided: ' + file );
+						debug( ' filename provided: ' + file );
 
 						timeOut = setTimeout( restartWorkers, 2300 );
 					}
@@ -161,8 +163,8 @@ export module Core
 				 var oldPID = deadWorker.process.pid;
 
 				 // Log the event
-				 console.log('worker '+oldPID+' died.');
-				 console.log('worker '+newPID+' born.');
+				 debug('worker '+oldPID+' died.');
+				 debug('worker '+newPID+' born.');
 				 });*/
 
 			}
@@ -181,7 +183,7 @@ export module Core
 					callFunction();
 				} );
 
-				console.log( 'Worker %d running!', cluster.worker.id );
+				debug( 'Worker %d running!', cluster.worker.id );
 
 			}
 		};
@@ -308,7 +310,7 @@ export module Core
 				: 'port ' + addr.port;
 
 			//debug('Listening on ' + bind);
-			console.log( 'Listening on ' + bind );
+			debug( 'Listening on ' + bind );
 		}
 
 		private onServeError( error, port )
@@ -343,12 +345,12 @@ export module Core
 
 			io.sockets.on( "connection", function ( socket )
 			{
-				console.log( 'Connection made. socket.id=' + socket.id + ' . pid = ' + process.pid );
+				debug( 'Connection made. socket.id=' + socket.id + ' . pid = ' + process.pid );
 			} );
 
 			io.on( 'disconnect', function ( socket )
 			{
-				console.log( 'Lost a socket. socket.id=' + socket.id + ' . pid = ' + process.pid );
+				debug( 'Lost a socket. socket.id=' + socket.id + ' . pid = ' + process.pid );
 			} );
 
 		}

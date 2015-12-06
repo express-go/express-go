@@ -19,18 +19,7 @@ export namespace Boot
 		 * @type {{Configs: null, Translations: null, Models: null, Views: null, Controllers: null, Sockets: null, Middlewares: null, Routes: null}}
 		 * @private
 		 */
-		private _components =
-		{
-			"Configs"      : null,
-			"Translations" : null,
-			"Models"       : null,
-			"Views"        : null,
-			"Controllers"  : null,
-			"Sockets"      : null,
-			"Middlewares"  : null,
-			"Routes"       : null
-		};
-
+		private _components = {};
 
 		private app : any;
 		private global : any;
@@ -52,140 +41,184 @@ export namespace Boot
 			this.global     = appGlobal;
 			this.modulePath = modulePath;
 
-			this.bootComponents();
-			this.loadComponents();
-
 		}
+
+		/**
+		 * Set load components list
+		 *
+		 * @param components
+		 */
+		public setComponents( components : any )
+		{
+			this._components = components;
+		}
+
+		/**
+		 * Boot component
+		 *
+		 * @param key
+		 * @param isLoading
+		 */
+		public bootComponent( key : string, isLoading : boolean )
+		{
+			var val = {
+				path     : __dirname + '/../loader/' + key,
+				source   : null,
+				instance : null,
+				loading	 : !!isLoading,
+				loaded	 : false,
+				objects  : {},
+			};
+
+			val.source   = require( val.path ).Loaders[ key ];
+			val.instance = new val.source();
+
+			val.instance.boot( this.app );
+
+			this._components[ key ] = val;
+
+			debug( "Booted: %s", key );
+		}
+
+		/**
+		 * Load booted component
+		 *
+		 * @param key
+		 * @param val
+		 */
+		public loadComponent( key : string, val? : any )
+		{
+			val = !val ? this._components[ key ] : val;
+			var loadPath = !!this.modulePath
+					? this.modulePath + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
+					: app_path() + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '');
+
+			var files : any;
+
+			debug( "Load path: %s", loadPath );
+
+			try
+			{
+				if ( fs.statSync( loadPath ) )
+				{
+					var realPath = fs.realpathSync( loadPath );
+					files        = this.readFilesByPostfix(
+							realPath,
+							val.instance.getLoadPostfix()
+					);
+				}
+
+			}
+			catch ( e )
+			{
+				files = [];
+			}
+
+
+			if ( files.length > 0 )
+			{
+				files.forEach( ( filePath ) =>
+				{
+					// Manual loader function
+					var tempObjects  = {};
+					var loadFunction = ( typeof val.instance.load === "function" )
+							? val.instance.load( filePath )
+							: null;
+
+					// File path => namespace array
+					filePath = path.normalize( filePath );
+					var ns   = filePath.replace( path.normalize( loadPath ), "" );
+					ns       = ns.replace( /\\\\|\\/g, '/' );
+
+					debug( "File path: %s", ns );
+
+					ns = ns.split( "/" );
+
+					// Filename parameters
+					var fileElem = ns[ ns.length - 1 ];
+					var fileExt  = fileElem.substr( fileElem.lastIndexOf( '.' ) + 1 );
+					var fileName = fileElem.substr( 0, fileElem.indexOf( '.' ) );
+
+					// File path => Class name
+					ns.pop();
+					ns.push( fileName );
+
+					// Remove empty prefix
+					if ( !ns[ 0 ] || ns[ 0 ] == '' )
+					{
+						ns.shift();
+					}
+
+					// Append ns prefix
+					var nsPrefix = val.instance.getLoadNamespace();
+					if ( nsPrefix && typeof nsPrefix == "object" && nsPrefix.length > 0 )
+					{
+						ns = nsPrefix.concat( ns );
+					}
+
+					// Loading objects
+					if ( !!loadFunction )
+					{
+						this.arrayToObject( ns, tempObjects, loadFunction );
+
+						debug( "Loaded by loadFunction" );
+					}
+					else if ( loadFunction !== false )
+					{
+						var tmpObject = require( filePath );
+						tmpObject     = (typeof tmpObject === "function")
+								? tmpObject( this.app )
+								: tmpObject;
+
+						this.arrayToObject( ns, tempObjects, tmpObject );
+
+						debug( "Loaded by require" );
+					}
+
+					this.MergeRecursive( val.objects, tempObjects );
+					this.MergeRecursive( this.global, val.objects )
+
+
+				} );
+
+				val.loaded = true;
+				this._components[ key ] = val;
+			}
+		}
+
 
 		/**
 		 * Booting each defined components
 		 */
-		private bootComponents()
+		public bootComponents()
 		{
+			// Each components list
 			for ( var key in this._components )
 			{
-				var val = {
-					path     : __dirname + '/../loader/' + key,
-					source   : null,
-					instance : null,
-					objects  : {}
-				};
+				debug( "Boot %s", key );
+				var val = this._components[ key ];
 
-				val.source   = require( val.path ).Loaders[ key ];
-				val.instance = new val.source();
-
-				val.instance.boot( this.app );
-
-				this._components[ key ] = val;
-
-				debug( "Booted: %s", key );
+				// Boot component
+				this.bootComponent( key, val );
 			}
+
+			debug( "Boot ready!" );
 		}
 
 		/**
 		 * Loading booted components
 		 */
-		private loadComponents()
+		public loadComponents()
 		{
+			// Each components list
 			for ( var key in this._components )
 			{
 				debug( "Load %s", key );
+				var val = this._components[ key ];
 
-				var val      = this._components[ key ];
-				var loadPath = !!this.modulePath
-						? this.modulePath + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
-						: app_path() + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '');
-
-				var files : any;
-
-				debug( "Load path: %s", loadPath );
-
-				try
-				{
-					if ( fs.statSync( loadPath ) )
-					{
-						var realPath = fs.realpathSync( loadPath );
-						files        = this.readFilesByPostfix(
-								realPath,
-								val.instance.getLoadPostfix()
-						);
-					}
-
-				}
-				catch ( e )
-				{
-					files = [];
-				}
-
-
-				if ( files.length > 0 )
-				{
-					files.forEach( ( filePath ) =>
-					{
-						// Manual loader function
-						var tempObjects  = {};
-						var loadFunction = ( typeof val.instance.load === "function" )
-								? val.instance.load( filePath )
-								: null;
-
-						// File path => namespace array
-						filePath = path.normalize( filePath );
-						var ns   = filePath.replace( path.normalize( loadPath ), "" );
-						ns       = ns.replace( /\\\\|\\/g, '/' );
-
-						debug( "File path: %s", ns );
-
-						ns = ns.split( "/" );
-
-						// Filename parameters
-						var fileElem = ns[ ns.length - 1 ];
-						var fileExt  = fileElem.substr( fileElem.lastIndexOf( '.' ) + 1 );
-						var fileName = fileElem.substr( 0, fileElem.indexOf( '.' ) );
-
-						// File path => Class name
-						ns.pop();
-						ns.push( fileName );
-
-						// Remove empty prefix
-						if ( !ns[ 0 ] || ns[ 0 ] == '' )
-						{
-							ns.shift();
-						}
-
-						// Append ns prefix
-						var nsPrefix = val.instance.getLoadNamespace();
-						if ( nsPrefix && typeof nsPrefix == "object" && nsPrefix.length > 0 )
-						{
-							ns = nsPrefix.concat( ns );
-						}
-
-						// Loading objects
-						if ( !!loadFunction )
-						{
-							this.arrayToObject( ns, tempObjects, loadFunction );
-
-							debug( "Loaded by loadFunction" );
-						}
-						else if ( loadFunction !== false )
-						{
-							var tmpObject = require( filePath );
-							tmpObject     = (typeof tmpObject === "function")
-									? tmpObject( this.app )
-									: tmpObject;
-
-							this.arrayToObject( ns, tempObjects, tmpObject );
-
-							debug( "Loaded by require" );
-						}
-
-						this.MergeRecursive( val.objects, tempObjects );
-						this.MergeRecursive( this.global, val.objects )
-
-
-					} );
-
-					this._components[ key ] = val;
-				}
+				// Load component
+				if ( val.loading === true )
+					this.loadComponent( key, val );
 			}
 
 			debug( "Load ready!" );
@@ -211,16 +244,6 @@ export namespace Boot
 			}
 
 			return [];
-		}
-
-		private setNamespaces( object, namespaces, src )
-		{
-
-		}
-
-		private readFilesByNamespace()
-		{
-
 		}
 
 		/**

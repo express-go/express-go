@@ -13,7 +13,19 @@ export module Boot
         {
             debug("boot init");
 
-            new Loader( app, appGlobal, modulePath );
+            var load = new Loader( app, appGlobal, modulePath );
+            load.setComponents({
+                "Configs"      : true,
+                "Translations" : true,
+                "Models"       : true,
+                "Views"        : true,
+                "Controllers"  : true,
+                "Middlewares"  : true,
+                "Routes"       : true,
+                "Sockets"      : false, // No load, just boot
+            });
+            load.bootComponents();
+            load.loadComponents();
         }
     }
 }
