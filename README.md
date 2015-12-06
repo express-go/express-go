@@ -45,6 +45,7 @@ Please, see [express-go-project](https://github.com/express-go/express-go-projec
 * [CSRF verification](https://www.npmjs.com/package/csurf)
 * [DDOS prevention](https://www.npmjs.com/package/ddos)
 * [XSS filter](https://www.npmjs.com/package/xss)
+* [Security package](https://www.npmjs.com/package/helmet)
 
 ### Roadmap ###
 * LTS support
