@@ -6,6 +6,11 @@ Express-go the Node.js Express based MVC framework engine, inspirated by Laravel
 ### Example project ###
 Please, see [express-go-project](https://github.com/express-go/express-go-project/) page for sample usage.
 
+### Installation ###
+```
+$ npm install express-go --save
+```
+
 ### Supported features ###
 * Command-line interface
 * Core source files written in TypeScript
