@@ -6,7 +6,7 @@
 module.exports = function( appBase, basePath, appGlobal, loadFromSource )
 {
     if ( !!loadFromSource )
-        var wwwObject = require("./src/www");
+        var wwwObject = require("./lib/www");
     else
         var wwwObject = require("./bin/www");
 
