@@ -21,20 +21,20 @@ export namespace Boot
 		 */
 		private _components =
 		{
-			"Configs"		: null,
-			"Translations"	: null,
-			"Models"       	: null,
-			"Views"        	: null,
-			"Controllers"  	: null,
-			"Sockets"      	: null,
-			"Middlewares"  	: null,
-			"Routes"       	: null
+			"Configs"      : null,
+			"Translations" : null,
+			"Models"       : null,
+			"Views"        : null,
+			"Controllers"  : null,
+			"Sockets"      : null,
+			"Middlewares"  : null,
+			"Routes"       : null
 		};
 
 
-		private app 		: any;
-		private global 		: any;
-		private modulePath 	: string;
+		private app : any;
+		private global : any;
+		private modulePath : string;
 
 		/**
 		 * Constructor
@@ -93,8 +93,8 @@ export namespace Boot
 
 				var val      = this._components[ key ];
 				var loadPath = !!this.modulePath
-					? this.modulePath + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
-					: app_path() + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '');
+						? this.modulePath + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
+						: app_path() + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '');
 
 				var files : any;
 
@@ -106,8 +106,8 @@ export namespace Boot
 					{
 						var realPath = fs.realpathSync( loadPath );
 						files        = this.readFilesByPostfix(
-							realPath,
-							val.instance.getLoadPostfix()
+								realPath,
+								val.instance.getLoadPostfix()
 						);
 					}
 
@@ -125,8 +125,8 @@ export namespace Boot
 						// Manual loader function
 						var tempObjects  = {};
 						var loadFunction = ( typeof val.instance.load === "function" )
-							? val.instance.load( filePath )
-							: null;
+								? val.instance.load( filePath )
+								: null;
 
 						// File path => namespace array
 						filePath = path.normalize( filePath );
@@ -146,6 +146,19 @@ export namespace Boot
 						ns.pop();
 						ns.push( fileName );
 
+						// Remove empty prefix
+						if ( !ns[ 0 ] || ns[ 0 ] == '' )
+						{
+							ns.shift();
+						}
+
+						// Append ns prefix
+						var nsPrefix = val.instance.getLoadNamespace();
+						if ( nsPrefix && typeof nsPrefix == "object" && nsPrefix.length > 0 )
+						{
+							ns = nsPrefix.concat( ns );
+						}
+
 						// Loading objects
 						if ( !!loadFunction )
 						{
@@ -157,8 +170,8 @@ export namespace Boot
 						{
 							var tmpObject = require( filePath );
 							tmpObject     = (typeof tmpObject === "function")
-								? tmpObject( this.app )
-								: tmpObject;
+									? tmpObject( this.app )
+									: tmpObject;
 
 							this.arrayToObject( ns, tempObjects, tmpObject );
 
