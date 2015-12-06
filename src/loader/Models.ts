@@ -1,14 +1,14 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
 //import {models_path} from "../typings/express-go";
-declare function models_path (innerPath?: string, getRelative?: boolean) : string;
+declare function models_path( innerPath? : string, getRelative? : boolean ) : string;
 
 
-var fs = require('fs');
-var path = require('path');
-var db = {};
+var fs   = require( 'fs' );
+var path = require( 'path' );
+var db   = {};
 
-var Sequelize = require('sequelize');
+var Sequelize = require( 'sequelize' );
 
 if ( !!process.env.DB_ENV )
 	var sequelize = new Sequelize( process.env.DB_ENV );
@@ -17,7 +17,7 @@ else
 		"host"    : process.env.DB_HOST,
 		"port"    : process.env.DB_PORT,
 		"dialect" : process.env.DB_TYPE
-	});
+	} );
 
 
 /**
@@ -36,14 +36,14 @@ export module Loaders
 		 */
 		public boot( app : any ) : void
 		{
-			Object.keys( sequelize.models ).forEach((modelName) =>
+			Object.keys( sequelize.models ).forEach( ( modelName ) =>
 			{
 				// Models associations
-				if (sequelize.models[modelName].associate)
+				if ( sequelize.models[ modelName ].associate )
 				{
-					sequelize.models[modelName].associate( sequelize.models );
+					sequelize.models[ modelName ].associate( sequelize.models );
 				}
-			});
+			} );
 
 			app.sequelize = sequelize;
 			app.Sequelize = Sequelize;
@@ -57,7 +57,7 @@ export module Loaders
 		 */
 		public load( loadPath? : string ) : any
 		{
-			console.log("LOADPATH", loadPath, models_path());
+			console.log( "LOADPATH", loadPath, models_path() );
 			return sequelize.import( loadPath );
 		}
 
@@ -69,7 +69,7 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			return models_path("", true);
+			return models_path( "", true );
 		}
 
 		/**

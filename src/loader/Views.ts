@@ -2,12 +2,12 @@
 import {LoaderInterface} from "../typings/express-go";
 //import {views_path} from "../typings/express-go";
 //import {public_path} from "../typings/express-go";
-declare function views_path (innerPath?: string, getRelative?: boolean)  : string;
-declare function public_path (innerPath?: string, getRelative?: boolean)  : string;
+declare function views_path( innerPath? : string, getRelative? : boolean ) : string;
+declare function public_path( innerPath? : string, getRelative? : boolean ) : string;
 
-var fs   = require('fs');
-var path = require('path');
-var cons = require('consolidate');
+var fs   = require( 'fs' );
+var path = require( 'path' );
+var cons = require( 'consolidate' );
 
 /**
  * Controller loader
@@ -26,22 +26,22 @@ export module Loaders
 		public boot( app : any ) : void
 		{
 			//.setDefaults({ cache : false });
-			app.engine(process.env.VIEW_FILES, cons[ process.env.VIEW_ENGINE ]);
-			app.set('view engine', process.env.VIEW_FILES);
+			app.engine( process.env.VIEW_FILES, cons[ process.env.VIEW_ENGINE ] );
+			app.set( 'view engine', process.env.VIEW_FILES );
 
 			// Set paths
 			this.setViewsPaths( app );
 			this.setViewsCache( app );
 
 			// Assets
-			app.locals.assetPath = function( text )
+			app.locals.assetPath = function ( text )
 			{
 				// read in our manifest file
 				var manifest = JSON.parse(
-						fs.readFileSync( public_path('assets/build/rev-manifest.json'), 'utf8' )
+					fs.readFileSync( public_path( 'assets/build/rev-manifest.json' ), 'utf8' )
 				);
 
-				return [ process.env.CDN_ASSETS + 'assets/build', manifest[text]].join('/');
+				return [ process.env.CDN_ASSETS + 'assets/build', manifest[ text ] ].join( '/' );
 			};
 		}
 
@@ -93,7 +93,7 @@ export module Loaders
 		private setViewsPaths( app )
 		{
 			// Get actual views path
-			var tmpViews = app.get('views');
+			var tmpViews = app.get( 'views' );
 			var tmpPaths = [];
 			if ( Array.isArray( tmpViews ) )
 			{
@@ -114,7 +114,7 @@ export module Loaders
 				tmpPaths.push( views_path() );
 
 			// Update Views path
-			app.set('views', tmpPaths);
+			app.set( 'views', tmpPaths );
 
 		}
 
@@ -123,7 +123,7 @@ export module Loaders
 			// Setup cache
 			app.set(
 				'view cache',
-				!!process.env.VIEW_CACHE ? true : 'production' === app.get('env')
+				!!process.env.VIEW_CACHE ? true : 'production' === app.get( 'env' )
 			);
 
 		}

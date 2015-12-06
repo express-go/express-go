@@ -2,349 +2,355 @@
 
 //import {app_path} from "typings/express-go";
 import {Worker} from "cluster";
-declare function app_path (innerPath?: string, getRelative?: boolean)  : string;
+declare function app_path( innerPath? : string, getRelative? : boolean ) : string;
 
 
+var fs       = require( 'fs' );
+var cluster  = require( 'cluster' );
+var http     = require( 'http' );
+var https    = require( 'https' );
+var spdy     = require( 'spdy' );
+var traverse = require( 'traverse' );
+var watch    = require( 'node-watch' );
 
-var fs      = require('fs');
-var cluster = require('cluster');
-var http    = require('http');
-var https   = require('https');
-var spdy    = require('spdy');
-var traverse = require('traverse');
-var watch = require('node-watch');
-
-var socketIOAdapter = require('socket.io-redis');
-var socketIOSession = require("socket.io.session");
+var socketIOAdapter = require( 'socket.io-redis' );
+var socketIOSession = require( "socket.io.session" );
 var socketSession   = null;
 
 export module Core
 {
-    export class Www
-    {
-        app : any;
-        options =
-        {
-            // HTTP-specific options
-            http :
-            {
+	export class Www
+	{
+		app : any;
+		options =
+		{
+			// HTTP-specific options
+			http : {},
 
-            },
+			// HTTPS-specific options
+			https : {
+				// SSL-specific options for https and spdy
+				cert : null,
+				ca   : null,
+				key  : null,
 
-            // HTTPS-specific options
-            https:
-            {
-                // SSL-specific options for https and spdy
-                cert : null,
-                ca   : null,
-                key  : null,
+				// SPDY-specific options
+				spdy : {
+					//protocols: [ 'h2', 'spdy/3.1', ..., 'http/1.1' ],
+					plain : false,
 
-                // SPDY-specific options
-                spdy :
-                {
-                    //protocols: [ 'h2', 'spdy/3.1', ..., 'http/1.1' ],
-                    plain: false,
+					connection : {
+						windowSize : 1024 * 1024, // Server's window size
 
-                    connection:
-                    {
-                        windowSize: 1024 * 1024, // Server's window size
+						// **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
+						autoSpdy31 : false
+					}
+				}
+			},
+		};
+		appGlobal : any;
 
-                        // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
-                        autoSpdy31: false
-                    }
-                }
-            },
-        };
-        appGlobal : any;
+		constructor( appBase, basePath, appGlobal )
+		{
+			this.app       = appBase;
+			this.appGlobal = appGlobal;
+			socketSession  = socketIOSession( this.app.sessionSettings );
+			this.updateOptions( basePath );
+		}
 
-        constructor( appBase, basePath, appGlobal )
-        {
-            this.app = appBase;
-            this.appGlobal = appGlobal;
-            socketSession = socketIOSession( this.app.sessionSettings );
-            this.updateOptions( basePath );
-        }
+		private updateOptions( basePath )
+		{
+			// SSL
+			this.options.https.cert = !!this.options.https.cert
+				? this.options.https.cert
+				: fs.readFileSync( basePath + '/' + process.env.SSL_CERT );
 
-        private updateOptions( basePath )
-        {
-            // SSL
-            this.options.https.cert  = !!this.options.https.cert
-                ? this.options.https.cert
-                : fs.readFileSync( basePath + '/' + process.env.SSL_CERT );
+			this.options.https.ca = !!this.options.https.ca
+				? this.options.https.ca
+				: fs.readFileSync( basePath + '/' + process.env.SSL_CSR );
 
-            this.options.https.ca    = !!this.options.https.ca
-                ? this.options.https.ca
-                : fs.readFileSync( basePath + '/' + process.env.SSL_CSR  );
+			this.options.https.key = !!this.options.https.key
+				? this.options.https.key
+				: fs.readFileSync( basePath + '/' + process.env.SSL_KEY );
 
-            this.options.https.key   = !!this.options.https.key
-                ? this.options.https.key
-                : fs.readFileSync( basePath + '/' + process.env.SSL_KEY  );
+		}
 
-        }
+		public serveCluster = ( callFunction ) =>
+		{
+			// Master cluster
+			if ( cluster.isMaster )
+			{
+				/**
+				 * Fork process.
+				 */
+				console.log( 'start cluster with %s workers', process.env.WORKERS );
 
-        public serveCluster = ( callFunction ) =>
-        {
-            // Master cluster
-            if (cluster.isMaster)
-            {
-                /**
-                 * Fork process.
-                 */
-                console.log('start cluster with %s workers', process.env.WORKERS);
+				for ( var i = 0; i < process.env.WORKERS; i++ )
+				{
+					var worker = cluster.fork();
+					console.log( 'worker %s started.', worker.process.pid );
+				}
 
-                for ( var i = 0; i < process.env.WORKERS; i++ )
-                {
-                    var worker = cluster.fork();
-                    console.log('worker %s started.', worker.process.pid);
-                }
+				/**
+				 * Restart process.
+				 */
+				cluster.on( 'death', function ( worker : Worker )
+				{
+					console.log( 'worker %s died. restart...', worker.process.pid );
+					cluster.fork();
+				} );
 
-                /**
-                 * Restart process.
-                 */
-                cluster.on('death', function(worker : Worker)
-                {
-                    console.log('worker %s died. restart...', worker.process.pid);
-                    cluster.fork();
-                });
+				// Go through all workers
+				function eachWorker( callback )
+				{
+					for ( var id in cluster.workers )
+					{
+						callback( cluster.workers[ id ] );
+					}
+				}
 
-                // Go through all workers
-                function eachWorker(callback) {
-                    for (var id in cluster.workers) {
-                        callback(cluster.workers[id]);
-                    }
-                }
+				function restartWorkers()
+				{
+					console.log( "Workers restart" );
 
-                function restartWorkers()
-                {
-                    console.log("Workers restart");
+					eachWorker( function ( worker : Worker )
+					{
+						worker.kill();
+						cluster.fork();
+					} );
 
-                    eachWorker(function(worker : Worker)
-                    {
-                        worker.kill();
-                        cluster.fork();
-                    });
+				}
 
-                }
+				// TODO
+				// Any file change
+				var timeOut;
+				var filter = function ( pattern, fn )
+				{
+					return function ( filename )
+					{
+						if ( pattern.test( filename ) )
+						{
+							fn( filename );
+						}
+					}
+				};
 
-                // TODO
-                // Any file change
-                var timeOut;
-                var filter = function(pattern, fn) {
-                    return function(filename) {
-                        if (pattern.test(filename)) {
-                            fn(filename);
-                        }
-                    }
-                };
+				watch( app_path(), filter( /\.js$|\.ts$/, ( file ) =>
+				{
+					if ( file )
+					{
+						clearTimeout( timeOut );
 
-                watch(app_path(), filter(/\.js$|\.ts$/, (file) =>
-                {
-                    if (file)
-                    {
-                        clearTimeout(timeOut);
+						var fileExt = file.substr( file.lastIndexOf( '.' ) + 1 );
+						if ( fileExt !== 'js' && fileExt !== 'ts' )
+							return;
 
-                        var fileExt = file.substr(file.lastIndexOf('.') + 1);
-                        if (fileExt !== 'js' && fileExt !== 'ts')
-                            return;
+						console.log( ' filename provided: ' + file );
 
-                        console.log(' filename provided: ' + file);
+						timeOut = setTimeout( restartWorkers, 2300 );
+					}
+				} ) );
 
-                        timeOut = setTimeout(restartWorkers, 2300);
-                    }
-                }));
+				/*                cluster.on('exit', function(deadWorker, code, signal)
+				 {
+				 // Restart the worker
+				 var worker = cluster.fork();
 
-/*                cluster.on('exit', function(deadWorker, code, signal)
-                {
-                    // Restart the worker
-                    var worker = cluster.fork();
+				 // Note the process IDs
+				 var newPID = worker.process.pid;
+				 var oldPID = deadWorker.process.pid;
 
-                    // Note the process IDs
-                    var newPID = worker.process.pid;
-                    var oldPID = deadWorker.process.pid;
+				 // Log the event
+				 console.log('worker '+oldPID+' died.');
+				 console.log('worker '+newPID+' born.');
+				 });*/
 
-                    // Log the event
-                    console.log('worker '+oldPID+' died.');
-                    console.log('worker '+newPID+' born.');
-                });*/
+			}
+			else
+			{
+				/**
+				 * Model sync
+				 * http://docs.sequelizejs.com/en/1.7.0/articles/heroku/
+				 */
+				this.app.sequelize.sync().then( function ()
+				{
 
-            }
-            else
-            {
-                /**
-                 * Model sync
-                 * http://docs.sequelizejs.com/en/1.7.0/articles/heroku/
-                 */
-                this.app.sequelize.sync().then(function ()
-                {
+					/**
+					 * Create HTTP server.
+					 */
+					callFunction();
+				} );
 
-                    /**
-                     * Create HTTP server.
-                     */
-                    callFunction();
-                });
+				console.log( 'Worker %d running!', cluster.worker.id );
 
-                console.log('Worker %d running!', cluster.worker.id);
+			}
+		};
 
-            }
-        };
+		public serveService()
+		{
+			if ( !!process.env.PORT_HTTP )
+				this.serveHttp();
 
-        public serveService()
-        {
-            if ( !!process.env.PORT_HTTP )
-                this.serveHttp();
+			if ( !!process.env.PORT_HTTPS )
+			{
+				if ( !!process.env.SPDY_HTTPS )
+					this.serveSpdy();
+				else
+					this.serveHttps();
+			}
 
-            if ( !!process.env.PORT_HTTPS )
-            {
-                if ( !!process.env.SPDY_HTTPS )
-                    this.serveSpdy();
-                else
-                    this.serveHttps();
-            }
+		}
 
-        }
+		public serveHttp()
+		{
+			if ( !process.env.FORCE_HTTPS )
+				this.app.set( 'port', this.normalizePort( process.env.PORT_HTTP ) );
 
-        public serveHttp()
-        {
-            if ( !process.env.FORCE_HTTPS )
-                this.app.set('port', this.normalizePort( process.env.PORT_HTTP ) );
+			var server = http.createServer( this.app );
 
-            var server = http.createServer( this.app );
+			this.serveSocket( server );
+			this.serveListen( server, process.env.PORT_HTTP )
+		}
 
-            this.serveSocket( server );
-            this.serveListen( server, process.env.PORT_HTTP )
-        }
+		public serveHttps()
+		{
+			if ( !!process.env.FORCE_HTTPS )
+				this.app.set( 'port', this.normalizePort( process.env.PORT_HTTPS ) );
 
-        public serveHttps()
-        {
-            if ( !!process.env.FORCE_HTTPS )
-                this.app.set('port', this.normalizePort( process.env.PORT_HTTPS ) );
+			var server = https.createServer( this.options.https, this.app );
 
-            var server = https.createServer( this.options.https, this.app );
+			this.serveSocket( server );
+			this.serveListen( server, process.env.PORT_HTTPS )
+		}
 
-            this.serveSocket( server );
-            this.serveListen( server, process.env.PORT_HTTPS )
-        }
+		public serveSpdy()
+		{
+			if ( !!process.env.FORCE_HTTPS )
+				this.app.set( 'port', this.normalizePort( process.env.PORT_HTTPS ) );
 
-        public serveSpdy()
-        {
-            if ( !!process.env.FORCE_HTTPS )
-                this.app.set('port', this.normalizePort( process.env.PORT_HTTPS ) );
+			var server = spdy.createServer( this.options.https, this.app );
 
-            var server = spdy.createServer( this.options.https, this.app );
+			this.serveSocket( server );
+			this.serveListen( server, process.env.PORT_HTTPS )
+		};
 
-            this.serveSocket( server );
-            this.serveListen( server, process.env.PORT_HTTPS )
-        };
+		private serveSocket( server )
+		{
+			var io = require( 'socket.io' ).listen( server );
 
-        private serveSocket( server )
-        {
-            var io = require('socket.io').listen( server );
+			io.adapter( socketIOAdapter( {
+				host : process.env.REDIS_HOST,
+				port : process.env.REDIS_PORT
+			} ) );
 
-            io.adapter(socketIOAdapter({
-                host: process.env.REDIS_HOST,
-                port: process.env.REDIS_PORT
-            }));
+			//parse the "/" namespace
+			io.use( socketSession.parser );
 
-            //parse the "/" namespace
-            io.use( socketSession.parser );
-
-            this.onSocketEvents( io );
+			this.onSocketEvents( io );
 
 
-            // Module sockets reading
-            try
-            {
-                traverse(this.appGlobal.App.Http.Sockets).forEach(function ( httpSocket, key )
-                {
-                    if ( typeof httpSocket == "function" )
-                    {
-                        httpSocket( io );
-                    }
-                });
+			// Module sockets reading
+			try
+			{
+				traverse( this.appGlobal.App.Http.Sockets ).forEach( function ( httpSocket, key )
+				{
+					if ( typeof httpSocket == "function" )
+					{
+						httpSocket( io );
+					}
+				} );
 
-            } catch(ex) {}
+			}
+			catch ( ex )
+			{
+			}
 
-        }
+		}
 
-        private serveListen( server, port )
-        {
-            //
-            server.listen(port);
-            server.on('error', () =>{
-                this.onServeError( server, port );
-            });
-            server.on('listening', () =>
-            {
-                this.onServeListening( server, port );
-            });
-        }
+		private serveListen( server, port )
+		{
+			//
+			server.listen( port );
+			server.on( 'error', () =>
+			{
+				this.onServeError( server, port );
+			} );
+			server.on( 'listening', () =>
+			{
+				this.onServeListening( server, port );
+			} );
+		}
 
-        private normalizePort(val) : any
-        {
-            var port = parseInt(val, 10);
+		private normalizePort( val ) : any
+		{
+			var port = parseInt( val, 10 );
 
-            if (isNaN(port)) {
-                // named pipe
-                return val;
-            }
+			if ( isNaN( port ) )
+			{
+				// named pipe
+				return val;
+			}
 
-            if (port >= 0) {
-                // port number
-                return port;
-            }
+			if ( port >= 0 )
+			{
+				// port number
+				return port;
+			}
 
-            return false;
-        }
+			return false;
+		}
 
-        private onServeListening( server, port )
-        {
-            var addr = server.address();
-            var bind = typeof addr === 'string'
-                ? 'pipe ' + addr
-                : 'port ' + addr.port;
+		private onServeListening( server, port )
+		{
+			var addr = server.address();
+			var bind = typeof addr === 'string'
+				? 'pipe ' + addr
+				: 'port ' + addr.port;
 
-            //debug('Listening on ' + bind);
-            console.log('Listening on ' + bind);
-        }
+			//debug('Listening on ' + bind);
+			console.log( 'Listening on ' + bind );
+		}
 
-        private onServeError( error, port )
-        {
-            if (error.syscall !== 'listen') {
-                throw error;
-            }
+		private onServeError( error, port )
+		{
+			if ( error.syscall !== 'listen' )
+			{
+				throw error;
+			}
 
-            var bind = typeof port === 'string'
-                ? 'Pipe ' + port
-                : 'Port ' + port;
+			var bind = typeof port === 'string'
+				? 'Pipe ' + port
+				: 'Port ' + port;
 
-            // handle specific listen errors with friendly messages
-            switch (error.code) {
-                case 'EACCES':
-                    console.error(bind + ' requires elevated privileges');
-                    process.exit(1);
-                    break;
-                case 'EADDRINUSE':
-                    console.error(bind + ' is already in use');
-                    process.exit(1);
-                    break;
-                default:
-                    throw error;
-            }
-        }
+			// handle specific listen errors with friendly messages
+			switch ( error.code )
+			{
+				case 'EACCES':
+					console.error( bind + ' requires elevated privileges' );
+					process.exit( 1 );
+					break;
+				case 'EADDRINUSE':
+					console.error( bind + ' is already in use' );
+					process.exit( 1 );
+					break;
+				default:
+					throw error;
+			}
+		}
 
-        private onSocketEvents( io )
-        {
+		private onSocketEvents( io )
+		{
 
-            io.sockets.on("connection", function(socket)
-            {
-                console.log('Connection made. socket.id='+socket.id+' . pid = '+process.pid);
-            });
+			io.sockets.on( "connection", function ( socket )
+			{
+				console.log( 'Connection made. socket.id=' + socket.id + ' . pid = ' + process.pid );
+			} );
 
-            io.on('disconnect', function(socket)
-            {
-                console.log('Lost a socket. socket.id='+socket.id+' . pid = '+process.pid);
-            });
+			io.on( 'disconnect', function ( socket )
+			{
+				console.log( 'Lost a socket. socket.id=' + socket.id + ' . pid = ' + process.pid );
+			} );
 
-        }
-    }
+		}
+	}
 }

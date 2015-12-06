@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
 import {LoaderInterface} from "../typings/express-go";
 //import {routes_path} from "../typings/express-go";
-declare function routes_path (innerPath?: string, getRelative?: boolean)  : string;
+declare function routes_path( innerPath? : string, getRelative? : boolean ) : string;
 
 /**
  * Routes loader
@@ -21,7 +21,7 @@ export module Loaders
 		 */
 		public boot( app : any ) : void
 		{
-			this.app = app;
+			this.app          = app;
 			this.app.resource = this.setResourceRoutes;
 		}
 
@@ -43,7 +43,7 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			return routes_path("", true);
+			return routes_path( "", true );
 		}
 
 		/**
@@ -63,76 +63,76 @@ export module Loaders
 		 */
 		public getLoadNamespace() : any
 		{
-			return ["Http", "Routes"];
+			return [ "Http", "Routes" ];
 		}
 
 		private setResourceRoutes = ( name, object ) =>
 		{
-			name    = object.name   || name;
-			name    = name.charAt(0) == '/' ? name.slice(1) : name;
-			var prefix  = object.prefix || '';
+			name       = object.name || name;
+			name       = name.charAt( 0 ) == '/' ? name.slice( 1 ) : name;
+			var prefix = object.prefix || '';
 			var method;
 			var path;
 
-			for (var key in object)
+			for ( var key in object )
 			{
 				// "reserved" exports
-				if (~['name', 'prefix', 'engine'].indexOf(key)) continue;
+				if ( ~[ 'name', 'prefix', 'engine' ].indexOf( key ) ) continue;
 
 				// route exports
 				switch ( key )
 				{
 					case 'index':
 						method = 'get';
-						path = '/' + name + 's';
+						path   = '/' + name + 's';
 						break;
 
 					case 'create':
 						method = 'get';
-						path = '/' + name + '/create';
+						path   = '/' + name + '/create';
 						break;
 
 					case 'store':
 						method = 'post';
-						path = '/' + name + 's';
+						path   = '/' + name + 's';
 						break;
 
 					case 'show':
 						method = 'get';
-						path = '/' + name + '/:' + name + '_id';
+						path   = '/' + name + '/:' + name + '_id';
 						break;
 
 					case 'edit':
 						method = 'get';
-						path = '/' + name + '/:' + name + '_id/edit';
+						path   = '/' + name + '/:' + name + '_id/edit';
 						break;
 
 					case 'update':
 						method = 'put';
-						path = '/' + name + '/:' + name + '_id';
+						path   = '/' + name + '/:' + name + '_id';
 						break;
 
 					case 'destroy':
 						method = 'delete';
-						path = '/' + name + '/:' + name + '_id';
+						path   = '/' + name + '/:' + name + '_id';
 						break;
 				}
 
-				if ( method && path && object[key] )
+				if ( method && path && object[ key ] )
 				{
-					path = prefix + path;
+					path          = prefix + path;
 					var routeName = name + '.' + key;
 
 					// Module prefixing
 					//if ( this.isModule && routeName.substr(7) != "module." )
-						//routeName = "module." + routeName;
+					//routeName = "module." + routeName;
 
 					// Middleware
-					if (object.before)
-						this.app[method](path, routeName, object.before);
+					if ( object.before )
+						this.app[ method ]( path, routeName, object.before );
 
 					// Controller
-					this.app[method](path, routeName, object[key]);
+					this.app[ method ]( path, routeName, object[ key ] );
 				}
 			}
 
