@@ -59,7 +59,7 @@ export module Loaders
 		 */
 		public getLoadNamespace() : any
 		{
-			return [ "Config" ];
+			return [ "config" ];
 		}
 
 	}
