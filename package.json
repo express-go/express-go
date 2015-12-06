@@ -1,6 +1,6 @@
 {
   "name": "express-go",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Express-go the Node.js Express based MVC framework engine.",
   "main": "index.js",
   "scripts": {
@@ -60,5 +60,6 @@
   "bugs": {
     "url": "https://github.com/express-go/express-go/issues"
   },
-  "homepage": "https://github.com/express-go/express-go"
+  "homepage": "https://github.com/express-go/express-go",
+  "readmeFilename": "README.md"
 }
