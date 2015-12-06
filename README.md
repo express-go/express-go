@@ -24,6 +24,7 @@ Please, see [express-go-project](https://github.com/express-go/express-go-projec
 
 
 ### MVC support ###
+* Configurations
 * Controllers
 * Middlewares
 * Models
