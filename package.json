@@ -4,7 +4,8 @@
   "description": "Express-go the Node.js Express based MVC framework engine.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers ts:typescript-require --reporter spec test"
+    "test": "mocha --compilers ts:typescript-require --reporter spec test",
+    "build":"node bin/build"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
