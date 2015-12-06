@@ -15,4 +15,3 @@
 /// <reference path="redis/redis.d.ts" />
 /// <reference path="csurf/csurf.d.ts" />
 /// <reference path="helmet/helmet.d.ts" />
-undefined

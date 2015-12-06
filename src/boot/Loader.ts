@@ -21,7 +21,7 @@ export namespace Boot
 		 */
 		private _components =
 		{
-			//"Configs"		: null,
+			"Configs"		: null,
 			"Translations"	: null,
 			"Models"       	: null,
 			"Views"        	: null,
