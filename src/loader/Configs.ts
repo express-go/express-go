@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
-import {LoaderInterface} from "../typings/express-go";
 
-declare function config_path( innerPath? : string, getRelative? : boolean ) : string;
+import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGoGlobal;
 
 /**
  * Controller loader
@@ -39,7 +39,7 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			return config_path( "", true );
+			return global.config_path( "", true );
 		}
 
 		/**

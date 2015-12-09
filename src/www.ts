@@ -1,9 +1,8 @@
 ///<reference path='./typings/tsd.d.ts'/>
 
-//import {app_path} from "typings/express-go";
 import {Worker} from "cluster";
-declare function app_path( innerPath? : string, getRelative? : boolean ) : string;
-
+import {ExpressGoGlobal} from "./typings/express-go";
+declare var global : ExpressGoGlobal;
 
 var fs       = require( 'fs' );
 var cluster  = require( 'cluster' );
@@ -137,7 +136,7 @@ export module Core
 					}
 				};
 
-				watch( app_path(), filter( /\.js$|\.ts$/, ( file ) =>
+				watch( global.app_path(), filter( /\.js$|\.ts$/, ( file ) =>
 				{
 					if ( file )
 					{

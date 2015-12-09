@@ -1,8 +1,8 @@
 ///<reference path='../typings/tsd.d.ts'/>
 ///<reference path='Boot.ts'/>
 
-
-declare function app_path( path? : string );
+import {ExpressGoGlobal} from "../typings/express-go";
+declare var global : ExpressGoGlobal;
 
 var fs    = require( "fs" );
 var glob  = require( "glob" );
@@ -35,7 +35,7 @@ export namespace Boot
 		 */
 		constructor( app, appGlobal, modulePath? : string )
 		{
-			debug( "Boot Loader init %s", modulePath || app_path() );
+			debug( "Boot Loader init %s", modulePath || global.app_path() );
 
 			this.app        = app;
 			this.global     = appGlobal;
@@ -91,7 +91,7 @@ export namespace Boot
 			val = !val ? this._components[ key ] : val;
 			var loadPath = !!this.modulePath
 					? this.modulePath + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
-					: app_path() + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '');
+					: global.app_path() + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '');
 
 			var files : any;
 

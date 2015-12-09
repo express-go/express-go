@@ -22,7 +22,7 @@ export module Boot
                 "Controllers"  : true,
                 "Middlewares"  : true,
                 "Routes"       : true,
-                "Sockets"      : false, // No load, just boot
+                "Sockets"      : false,
             });
             load.bootComponents();
             load.loadComponents();

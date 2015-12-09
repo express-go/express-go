@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
-import {LoaderInterface} from "../typings/express-go";
-//import {lang_path} from "../typings/express-go";
-declare function lang_path( innerPath? : string, getRelative? : boolean ) : string;
+
+import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGoGlobal;
 declare function t( path? : string );
 
 var fs    = require( 'fs' );
@@ -48,9 +48,9 @@ export module Loaders
 			// Loading translation files
 			try
 			{
-				if ( fs.statSync( lang_path() ) )
+				if ( fs.statSync( global.lang_path() ) )
 				{
-					var files = glob.sync( lang_path( "**/*.json" ) );
+					var files = glob.sync( global.lang_path( "**/*.json" ) );
 					files.forEach( function ( file )
 					{
 						var partials = file.split( '.' );
@@ -73,7 +73,6 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			//return controllers_path();
 			return null;
 		}
 
@@ -84,7 +83,7 @@ export module Loaders
 		 */
 		public getLoadPostfix() : string
 		{
-			return "Controller";
+			return null;
 		}
 
 		/**
@@ -94,7 +93,6 @@ export module Loaders
 		 */
 		public getLoadNamespace() : any
 		{
-			//return ["Http", "Controllers"];
 			return null;
 		}
 

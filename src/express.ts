@@ -1,9 +1,7 @@
 ///<reference path='typings/tsd.d.ts'/>
-//import {public_path} from "typings/express-go";
-//import {lang_path} from "typings/express-go";
 
-declare function public_path( innerPath? : string, getRelative? : boolean ) : string;
-declare function lang_path( innerPath? : string, getRelative? : boolean ) : string;
+import {ExpressGoGlobal} from "./typings/express-go";
+declare var global : ExpressGoGlobal;
 
 var fs   = require( 'fs' );
 var path = require( 'path' );
@@ -129,7 +127,7 @@ class ExpressGo
 	{
 		// Read language files for namespaces
 		var langNs = [ "translation" ];
-		var files  = glob.sync( lang_path( "**/*.json" ) );
+		var files  = glob.sync( global.lang_path( "**/*.json" ) );
 
 		files.forEach( ( file ) =>
 		{
@@ -150,8 +148,8 @@ class ExpressGo
 			forceDetectLngFromPath : false,
 			//getAsync    : false,
 			saveMissing            : true,
-			resSetPath             : lang_path( "/__lng__/new.__ns__.json" ),
-			resGetPath             : lang_path( "/__lng__/__ns__.json" ),
+			resSetPath             : global.lang_path( "/__lng__/new.__ns__.json" ),
+			resGetPath             : global.lang_path( "/__lng__/__ns__.json" ),
 			preload                : languages,
 			ignoreRoutes           : [ 'images/', 'public/', 'css/', 'js/', 'assets/', 'img/' ],
 			cookie                 : false,
@@ -276,7 +274,7 @@ class ExpressGo
 		if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
 		{
 			app.use( express.static(
-				public_path(),
+				global.public_path(),
 				{
 					etag       : false,
 					maxAge : '1y', //365 * 24 * 60 * 60,

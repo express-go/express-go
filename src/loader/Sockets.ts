@@ -1,6 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
-import {LoaderInterface} from "../typings/express-go";
 
+import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGoGlobal;
 
 /**
  * Controller loader

@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
-import {LoaderInterface} from "../typings/express-go";
-//import {models_path} from "../typings/express-go";
-declare function models_path( innerPath? : string, getRelative? : boolean ) : string;
+
+import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGoGlobal;
 
 
 var fs   = require( 'fs' );
@@ -68,7 +68,7 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			return models_path( "", true );
+			return global.models_path( "", true );
 		}
 
 		/**

@@ -1,9 +1,8 @@
 ///<reference path='./typings/tsd.d.ts'/>
 ///<reference path='./boot/Boot.ts'/>
 
-//import {global} from 'typings/express-go';
-declare function app_path( innerPath? : string, getRelative? : boolean ) : string;
-declare function app_modules( innerPath? : string, getRelative? : boolean ) : string;
+import {ExpressGoGlobal} from "./typings/express-go";
+declare var global : ExpressGoGlobal;
 
 var glob  = require( "glob" );
 var path  = require( "path" );
@@ -11,9 +10,12 @@ var debug = require( 'debug' )( 'express-go:core' );
 
 module.exports = function ( /*app : Express.Application,*/ appGlobal : any )
 {
+	global = appGlobal;
+
 	debug( "core initalizing" );
-	appGlobal.App     = {};
-	appGlobal.Modules = {};
+
+	global.App     = {};
+	global.Modules = {};
 
 	debug( "Express initalizing" );
 	var theApp = require( "./express" );
@@ -21,13 +23,13 @@ module.exports = function ( /*app : Express.Application,*/ appGlobal : any )
 
 	// Application boot
 	debug( "application booting" );
-	debug( "boot path: %s", app_path() );
-	require( "./boot/Boot" ).Boot.Main( theApp, appGlobal.App );
+	debug( "boot path: %s", global.app_path() );
+	require( "./boot/Boot" ).Boot.Main( theApp, global.App );
 
 
 	// Modules boot
 	debug( "application modules booting" );
-	var files = glob.sync( app_modules( "**/module.json" ) );
+	var files = glob.sync( global.app_modules( "**/module.json" ) );
 
 	files.forEach( ( file ) =>
 	{
@@ -37,9 +39,9 @@ module.exports = function ( /*app : Express.Application,*/ appGlobal : any )
 
 		debug( "boot module : %s", moduleName );
 
-		appGlobal.Modules[ moduleName ] = {};
+		global.Modules[ moduleName ] = {};
 
-		require( "./boot/Boot" ).Boot.Main( theApp, appGlobal.Modules[ moduleName ], path.dirname( file ) );
+		require( "./boot/Boot" ).Boot.Main( theApp, global.Modules[ moduleName ], path.dirname( file ) );
 	} );
 
 	return theApp;

@@ -1,9 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
-import {LoaderInterface} from "../typings/express-go";
-//import {views_path} from "../typings/express-go";
-//import {public_path} from "../typings/express-go";
-declare function views_path( innerPath? : string, getRelative? : boolean ) : string;
-declare function public_path( innerPath? : string, getRelative? : boolean ) : string;
+
+import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGoGlobal;
 
 var fs   = require( 'fs' );
 var path = require( 'path' );
@@ -38,7 +36,7 @@ export module Loaders
 			{
 				// read in our manifest file
 				var manifest = JSON.parse(
-					fs.readFileSync( public_path( 'assets/build/rev-manifest.json' ), 'utf8' )
+					fs.readFileSync( global.public_path( 'assets/build/rev-manifest.json' ), 'utf8' )
 				);
 
 				return [ process.env.CDN_ASSETS + 'assets/build', manifest[ text ] ].join( '/' );
@@ -65,7 +63,6 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			//return controllers_path();
 			return null;
 		}
 
@@ -98,7 +95,7 @@ export module Loaders
 			if ( Array.isArray( tmpViews ) )
 			{
 				tmpPaths = tmpViews;
-				tmpPaths.push( views_path() );
+				tmpPaths.push( global.views_path() );
 			}
 			else if ( typeof tmpViews === "string" )
 			{
@@ -107,11 +104,11 @@ export module Loaders
 			else
 			{
 				tmpPaths = [];
-				tmpPaths.push( views_path() );
+				tmpPaths.push( global.views_path() );
 			}
 
-			if ( tmpPaths.indexOf( views_path() ) < 0 )
-				tmpPaths.push( views_path() );
+			if ( tmpPaths.indexOf( global.views_path() ) < 0 )
+				tmpPaths.push( global.views_path() );
 
 			// Update Views path
 			app.set( 'views', tmpPaths );
