@@ -6,7 +6,6 @@ Express-go the Node.js Express based MVC framework engine, inspirated by Laravel
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Build Status][travis-image]][travis-url]
-[![Test Coverage][coveralls-image]][coveralls-url]
 
 ### Example project ###
 Please, see [express-go-project](https://github.com/express-go/express-go-project/) page for sample usage.
@@ -64,3 +63,14 @@ $ npm install express-go --save
 * Migrations
 * Seeders
 * Configurations
+
+## License
+
+  [GNU](LICENSE)
+
+[npm-image]: https://img.shields.io/npm/v/express-go.svg
+[npm-url]: https://npmjs.org/package/express-go
+[downloads-image]: https://img.shields.io/npm/dm/express-go.svg
+[downloads-url]: https://npmjs.org/package/express-go
+[travis-image]: https://img.shields.io/travis/express-go/express-go/master.svg?label=linux
+[travis-url]: https://travis-ci.org/express-go/express-go
