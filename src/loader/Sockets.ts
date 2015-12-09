@@ -39,7 +39,6 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			//return controllers_path();
 			return null;
 		}
 
@@ -60,7 +59,6 @@ export module Loaders
 		 */
 		public getLoadNamespace() : any
 		{
-			//return ["Http", "Sockets"];
 			return null;
 		}
 
