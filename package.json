@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --compilers ts:typescript-require --reporter spec test",
-    "build":"node bin/build"
+    "build": "node bin/build"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
