@@ -6,7 +6,7 @@
 module.exports = function( appGlobal, loadFromSource )
 {
     if ( !!loadFromSource )
-        return require("./lib/core")( appGlobal );
+        return require("./src/core")( appGlobal );
 
-    return require("./bin/core")( appGlobal );
+    return require("./lib/core")( appGlobal );
 };

@@ -6,9 +6,9 @@
 module.exports = function( appBase, basePath, appGlobal, loadFromSource )
 {
     if ( !!loadFromSource )
-        var wwwObject = require("./lib/www");
+        var wwwObject = require("./src/www");
     else
-        var wwwObject = require("./bin/www");
+        var wwwObject = require("./lib/www");
 
 
     return new wwwObject.Core.Www( appBase, basePath, appGlobal );
