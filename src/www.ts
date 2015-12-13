@@ -49,12 +49,10 @@ export module Core
 				}
 			},
 		};
-		appGlobal : any;
 
-		constructor( appBase, basePath, appGlobal )
+		constructor( appBase, basePath )
 		{
 			this.app       = appBase;
-			this.appGlobal = appGlobal;
 			socketSession  = socketIOSession( this.app.sessionSettings );
 			this.updateOptions( basePath );
 		}
@@ -63,16 +61,16 @@ export module Core
 		{
 			// SSL
 			this.options.https.cert = !!this.options.https.cert
-				? this.options.https.cert
-				: fs.readFileSync( basePath + '/' + process.env.SSL_CERT );
+					? this.options.https.cert
+					: fs.readFileSync( basePath + '/' + process.env.SSL_CERT );
 
 			this.options.https.ca = !!this.options.https.ca
-				? this.options.https.ca
-				: fs.readFileSync( basePath + '/' + process.env.SSL_CSR );
+					? this.options.https.ca
+					: fs.readFileSync( basePath + '/' + process.env.SSL_CSR );
 
 			this.options.https.key = !!this.options.https.key
-				? this.options.https.key
-				: fs.readFileSync( basePath + '/' + process.env.SSL_KEY );
+					? this.options.https.key
+					: fs.readFileSync( basePath + '/' + process.env.SSL_KEY );
 
 		}
 
@@ -253,14 +251,14 @@ export module Core
 			// Module sockets reading
 			try
 			{
-				traverse( this.appGlobal.App.Http.Sockets ).forEach( function ( httpSocket, key )
+				traverse( global.App.Http.Sockets ).forEach( function ( httpSocket, key )
 				{
 					if ( typeof httpSocket == "function" )
 					{
-						httpSocket( io );
+						var socketPrefix = this.key == "index" ? "" : this.key;
+						httpSocket( io.of("/" + socketPrefix) );
 					}
 				} );
-
 			}
 			catch ( ex )
 			{
@@ -305,8 +303,8 @@ export module Core
 		{
 			var addr = server.address();
 			var bind = typeof addr === 'string'
-				? 'pipe ' + addr
-				: 'port ' + addr.port;
+					? 'pipe ' + addr
+					: 'port ' + addr.port;
 
 			//debug('Listening on ' + bind);
 			debug( 'Listening on ' + bind );
@@ -320,8 +318,8 @@ export module Core
 			}
 
 			var bind = typeof port === 'string'
-				? 'Pipe ' + port
-				: 'Port ' + port;
+					? 'Pipe ' + port
+					: 'Port ' + port;
 
 			// handle specific listen errors with friendly messages
 			switch ( error.code )

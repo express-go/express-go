@@ -86,8 +86,9 @@ export namespace Boot
 		 * @param key
 		 * @param val
 		 */
-		public loadComponent( key : string, val? : any )
+		public loadComponent( key : string, val? : any, needLoad? : boolean )
 		{
+			needLoad = (typeof needLoad === "undefined") ? true : !!needLoad;
 			val = !val ? this._components[ key ] : val;
 			var loadPath = !!this.modulePath
 					? this.modulePath + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
@@ -157,23 +158,37 @@ export namespace Boot
 					}
 
 					// Loading objects
-					if ( !!loadFunction )
+					if ( needLoad )
 					{
-						this.arrayToObject( ns, tempObjects, loadFunction );
 
-						debug( "Loaded by loadFunction" );
+						// Declared loader
+						if ( !!loadFunction )
+						{
+							this.arrayToObject( ns, tempObjects, loadFunction );
+
+							debug( "Loaded by loadFunction" );
+						}
+
+						// Default loader
+						else if ( loadFunction !== false )
+						{
+							var tmpObject = require( filePath );
+							tmpObject     = (typeof tmpObject === "function")
+									? tmpObject( this.app )
+									: tmpObject;
+
+							this.arrayToObject( ns, tempObjects, tmpObject );
+
+							debug( "Loaded by require" );
+						}
 					}
-					else if ( loadFunction !== false )
+
+					// Empty load
+					else
 					{
-						var tmpObject = require( filePath );
-						tmpObject     = (typeof tmpObject === "function")
-								? tmpObject( this.app )
-								: tmpObject;
-
-						this.arrayToObject( ns, tempObjects, tmpObject );
-
-						debug( "Loaded by require" );
+						this.arrayToObject( ns, tempObjects, require( filePath ) );
 					}
+
 
 					this.MergeRecursive( val.objects, tempObjects );
 					this.MergeRecursive( this.global, val.objects )
@@ -217,8 +232,7 @@ export namespace Boot
 				var val = this._components[ key ];
 
 				// Load component
-				if ( val.loading === true )
-					this.loadComponent( key, val );
+				this.loadComponent( key, val, ( val.loading === true ) );
 			}
 
 			debug( "Load ready!" );

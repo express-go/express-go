@@ -44,6 +44,11 @@ $ npm install express-go --save
     * Listing routes in CLI
     * Resource controller
     * *~~Auto resource controller~~ [future feature]*
+* Sockets
+    * *~~Listing sockets in CLI~~ [future feature]*
+    * Prefixed channels
+        * index.js => /
+        * foo.js   => /foo
 * [Translations](https://www.npmjs.com/package/i18next)
     * Namespaced language files
     * *~~Redis cache~~ [future feature]*

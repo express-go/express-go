@@ -11,6 +11,6 @@ module.exports = function( appBase, basePath, appGlobal, loadFromSource )
         var wwwObject = require("./lib/www");
 
 
-    return new wwwObject.Core.Www( appBase, basePath, appGlobal );
+    return new wwwObject.Core.Www( appBase, basePath );
 
 };

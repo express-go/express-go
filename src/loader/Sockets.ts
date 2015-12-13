@@ -39,7 +39,7 @@ export module Loaders
 		 */
 		public getLoadPath() : string
 		{
-			return null;
+			return global.sockets_path( "", true );
 		}
 
 		/**
@@ -49,7 +49,8 @@ export module Loaders
 		 */
 		public getLoadPostfix() : string
 		{
-			return "Socket";
+			return null;
+			//return "Socket";
 		}
 
 		/**
@@ -59,7 +60,7 @@ export module Loaders
 		 */
 		public getLoadNamespace() : any
 		{
-			return null;
+			return ["Http", "Sockets"];
 		}
 
 	}
