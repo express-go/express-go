@@ -35,25 +35,29 @@ $ npm install express-go --save
 ### MVC support ###
 * Configurations
 * Controllers
+    * *~~Listing controllers in CLI~~ [future feature]*
 * Middlewares
+    * *~~Listing middlewares in CLI~~ [future feature]*
 * Models
+    * *~~Listing models in CLI~~ [future feature]*
     * [ORM based library](https://www.npmjs.com/package/sequelize)
     * Multiple drivers (PostgreSQL, MySQL, MariaDB, SQLite, MSSQL, ...)
 * Routes
-    * [Named routing](https://www.npmjs.com/package/named-routes)
     * Listing routes in CLI
+    * [Named routing](https://www.npmjs.com/package/named-routes)
     * Resource controller
     * *~~Auto resource controller~~ [future feature]*
 * Sockets
     * *~~Listing sockets in CLI~~ [future feature]*
     * Prefixed channels
-        * index.js => /
-        * foo.js   => /foo
+        * index.js => wss://localhost/
+        * foo.js   => wss://localhost/foo
 * [Translations](https://www.npmjs.com/package/i18next)
-    * Namespaced language files
+    * *~~Listing translations in CLI~~ [future feature]*
+    * Namespace language files
     * *~~Redis cache~~ [future feature]*
 * Views
-    * [Mulliple template engine support](https://www.npmjs.com/package/consolidate)
+    * [Multiple template engine support](https://www.npmjs.com/package/consolidate)
     * *~~Redis cache~~ [future feature]*
 
 ### Security support ###
