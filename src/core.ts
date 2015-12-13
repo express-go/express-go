@@ -29,7 +29,7 @@ module.exports = function ( /*app : Express.Application,*/ appGlobal : any )
 
 	// Modules boot
 	debug( "application modules booting" );
-	var files = glob.sync( global.app_modules( "**/module.json" ) );
+	var files = glob.sync( global.app_modules( "**/module-go.json" ) );
 
 	files.forEach( ( file ) =>
 	{
