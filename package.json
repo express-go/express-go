@@ -1,6 +1,6 @@
 {
   "name": "express-go",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "Express-go the Node.js Express based MVC framework engine.",
   "main": "index.js",
   "scripts": {

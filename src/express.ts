@@ -21,7 +21,6 @@ var nodalytics   = require( 'nodalytics' );
 var Router       = require( 'named-routes' );
 var router       = new Router( {} );
 var session      = require( 'express-session' );
-var spdyPush     = require( 'spdy-referrer-push' );
 var i18nxt       = require( 'i18next' );
 
 var redis       = require( 'redis' );
@@ -266,11 +265,17 @@ class ExpressGo
 		if ( !!process.env.APP_UA && process.env.APP_UA.indexOf( "UA-" ) === 0 )
 			app.use( nodalytics( process.env.APP_UA ) );
 
+		// Favicon
+		try
+		{
+			if ( fs.statSync( global.public_path("favicon.ico") ) )
+			{
+				app.use(favicon( global.public_path("favicon.ico") ));
+			}
+		}
+		catch ( e ) {}
 
-		// uncomment after placing your favicon in /public
-		//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
-
+		// Static files
 		if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
 		{
 			app.use( express.static(
