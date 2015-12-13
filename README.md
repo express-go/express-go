@@ -17,12 +17,12 @@ $ npm install express-go --save
 
 ### Supported features ###
 * Command-line interface
-* Core source files written in TypeScript
-* Modules support
+* TypeScript source files
+* Module support
     * MVC file structure
-    * module.json file
+    * module-go.json file
     * *~~Loading from npm vendors (node_modules) directory~~ [future feature]*
-* [Clusters and workers](https://nodejs.org/api/cluster.htmlo)
+* [Clusters and workers](https://nodejs.org/api/cluster.html)
 * [Google Analytics](https://www.npmjs.com/package/nodalytics)
 * [Google SPDY](https://www.npmjs.com/package/spdy)
 * [Socket.io](https://www.npmjs.com/package/socket.io)
