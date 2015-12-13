@@ -21,7 +21,7 @@ $ npm install express-go --save
 * Module support
     * MVC file structure
     * module-go.json file
-    * *~~Loading from npm vendors (node_modules) directory~~ [future feature]*
+    * Loading from npm vendors (node_modules) directory
 * [Clusters and workers](https://nodejs.org/api/cluster.html)
 * [Google Analytics](https://www.npmjs.com/package/nodalytics)
 * [Google SPDY](https://www.npmjs.com/package/spdy)
