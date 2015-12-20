@@ -20,7 +20,7 @@
     "express-session": "^1.12.1",
     "force-ssl": "^1.0.5",
     "helmet": "^0.15.0",
-    "i18next": "^1.10.6",
+    "i18next": "^2.0.4",
     "morgan": "~1.6.1",
     "named-routes": "^2.0.1",
     "nodalytics": "^1.1.0",
