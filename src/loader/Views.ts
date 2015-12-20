@@ -36,7 +36,7 @@ export module Loaders
 			{
 				// read in our manifest file
 				var manifest = JSON.parse(
-					fs.readFileSync( global.public_path( 'assets/build/rev-manifest.json' ), 'utf8' )
+						fs.readFileSync( global.public_path( 'assets/build/rev-manifest.json' ), 'utf8' )
 				);
 
 				return [ process.env.CDN_ASSETS + 'assets/build', manifest[ text ] ].join( '/' );
@@ -117,11 +117,28 @@ export module Loaders
 
 		private setViewsCache( app )
 		{
+			process.env.VIEW_CACHE
+					= process.env.VIEW_CACHE == "true"
+					? true
+					: 'production' === app.get( 'env' );
+
 			// Setup cache
 			app.set(
 				'view cache',
-				!!process.env.VIEW_CACHE ? true : 'production' === app.get( 'env' )
+				process.env.VIEW_CACHE
 			);
+
+			// TODO
+			// Doesn't work
+			if ( !process.env.VIEW_CACHE )
+			{
+				app.use( function ( req : any, res : any, next : any )
+				{
+					cons.clearCache();
+					next();
+
+				});
+			}
 
 		}
 	}
