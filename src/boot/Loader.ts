@@ -91,7 +91,7 @@ export namespace Boot
 			needLoad = (typeof needLoad === "undefined") ? true : !!needLoad;
 			val = !val ? this._components[ key ] : val;
 			var loadPath = !!this.modulePath
-					? this.modulePath + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
+					? this.modulePath+'/src/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '')
 					: global.app_path() + '/' + (!!val.instance.getLoadPath() ? val.instance.getLoadPath() : '');
 
 			var files : any;

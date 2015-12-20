@@ -24,7 +24,6 @@ var session      = require( 'express-session' );
 var i18nxt       = require( 'i18next' );
 var i18nxtFSB 	 = require('i18next-node-fs-backend');
 var i18nxtSprintf= require('i18next-sprintf-postprocessor');
-var i18nxtMiddle = require('i18next-express-middleware');
 
 var redis       = require( 'redis' );
 var redisClient = redis.createClient();
@@ -34,6 +33,7 @@ var debug = require( 'debug' )( 'express-go:Express' );
 
 // Settings
 var languages = [
+	'dev',
 	'hu',
 	'en'
 ];
@@ -138,63 +138,60 @@ class ExpressGo
 
 			if ( langNs.indexOf( tmpNs ) === -1 )
 				langNs.push( tmpNs );
+
 		} );
 
 		// i18next
 		i18nxt
-			.use(i18nxtMiddle.LanguageDetector)
-			.use(i18nxtFSB)
-			.use(i18nxtSprintf)
-			.init( {
-			debug                  : process.env.APP_DEBUG,
-			//lng: 'en',
-			//supportedLngs: languages,
-			//fallbackLng: 'en',
-			detectLngFromPath      : false,
-			forceDetectLngFromPath : false,
-			//getAsync    : false,
-			saveMissing            : true,
-			resSetPath             : global.lang_path( "/__lng__/new.__ns__.json" ),
-			resGetPath             : global.lang_path( "/__lng__/__ns__.json" ),
-			preload                : languages,
-			ignoreRoutes           : [ 'images/', 'public/', 'css/', 'js/', 'assets/', 'img/' ],
-			cookie                 : false,
-			useCookie              : false,
-			functions              : {
-				log : require( 'debug' )( 'express-go:i18n' )
-			},
-			ns                     : {
-				namespaces : langNs,
-				defaultNs  : "translation"
-			},
-			useLocalStorage        : true
-		} );
+				.use(i18nxtFSB)
+				.use(i18nxtSprintf)
+				.init( {
+					debug                  	: process.env.APP_DEBUG,
+
+					lng						: 'en',
+					fallbackLng				: ['dev'],
+
+					ns                     	: langNs,
+					defaultNS				: "translation",
+					fallbackNS				: "translation",
+
+					whitelist 				: languages,
+					preload					: languages,
+
+
+					keySeparator			: ".",
+					nsSeparator				: ":",
+
+					saveMissing				: true,
+					saveMissingTo			: "fallback",	// all, fallback, current
+
+					// V2.x
+					backend					:
+					{
+						loadPath 	: global.lang_path( "/{{lng}}/{{ns}}.json" ),
+						addPath  	: global.lang_path( "/{{lng}}/new.{{ns}}.json" ),
+						jsonIndent	: 2
+					},
+					ignoreRoutes	: [ 'images/', 'public/', 'css/', 'js/', 'assets/', 'img/' ],
+
+					// right now there is only the integrated console logger available.
+					/*functions              : {
+					 log : require( 'debug' )( 'express-go:i18n' )
+					 },*/
+				});
+
+
 		app.i18n = i18nxt;
 
 		// Use middleware to set current language
 		// ?lang=xx_yy
-		//app.use(i18nxt.handle); //- not really work
 		app.use( function ( req : any, res : any, next : any )
 		{
 			// Session lang init
 			if ( !req.session.lang )
 			{
-				req.session.lang = app.i18n.lng();
-
-				var detectLangs = app.i18n.functions.toLanguages(
-					app.i18n.detectLanguage( req, res )
-				);
-
-				for ( var lngKey in detectLangs )
-				{
-					if ( languages.indexOf( detectLangs[ lngKey ] ) > -1 )
-					{
-						req.session.lang = detectLangs[ lngKey ];
-						break;
-					}
-				}
+				req.session.lang = app.i18n.language;
 			}
-
 
 			// URL ignoring
 			var ignore = i18nxt.options.ignoreRoutes;
@@ -210,21 +207,23 @@ class ExpressGo
 			if ( req.query.lang != undefined && languages.indexOf( req.query.lang ) >= 0 )
 			{
 				req.session.lang = req.query.lang;
+
 			}
 
 			// Vars
-			req.locale = req.lng = req.language = req.session.lang;
+			//req.locale = req.lng /*= req.language*/ = req.session.lang;
 			res.locals.i18n = app.i18n;
 			res.locals._t   = app.i18n.t;
 			res.locals.__   = app.i18n.t;
 
 			// Set lang if need
-			if ( req.session.lang != app.i18n.lng() )
+			if ( req.session.lang != app.i18n.language )
 			{
-				app.i18n.setLng( req.session.lang, function ()
+				app.i18n.changeLanguage( req.session.lang, function ()
 				{
 					next();
 				} );
+
 			}
 			else
 			{
@@ -286,22 +285,22 @@ class ExpressGo
 		if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
 		{
 			app.use( express.static(
-				global.public_path(),
-				{
-					etag       : false,
-					maxAge : '1y', //365 * 24 * 60 * 60,
-					dotfiles : 'ignore',
-					expires  : new Date( Date.now() + (365 * 24 * 60 * 60) ),
-					setHeaders : function ( res, path )
+					global.public_path(),
 					{
-						if ( path.indexOf( "download" ) !== -1 )
+						etag       : false,
+						maxAge : '1y', //365 * 24 * 60 * 60,
+						dotfiles : 'ignore',
+						expires  : new Date( Date.now() + (365 * 24 * 60 * 60) ),
+						setHeaders : function ( res, path )
 						{
-							res.attachment( path )
-						}
+							if ( path.indexOf( "download" ) !== -1 )
+							{
+								res.attachment( path )
+							}
 
-						res.setHeader( 'Expires', new Date( Date.now() + 31536000 * 1000 ).toUTCString() );
+							res.setHeader( 'Expires', new Date( Date.now() + 31536000 * 1000 ).toUTCString() );
+						}
 					}
-				}
 			) );
 		}
 
