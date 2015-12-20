@@ -22,6 +22,9 @@ var Router       = require( 'named-routes' );
 var router       = new Router( {} );
 var session      = require( 'express-session' );
 var i18nxt       = require( 'i18next' );
+var i18nxtFSB 	 = require('i18next-node-fs-backend');
+var i18nxtSprintf= require('i18next-sprintf-postprocessor');
+var i18nxtMiddle = require('i18next-express-middleware');
 
 var redis       = require( 'redis' );
 var redisClient = redis.createClient();
@@ -138,7 +141,11 @@ class ExpressGo
 		} );
 
 		// i18next
-		i18nxt.init( {
+		i18nxt
+			.use(i18nxtMiddle.LanguageDetector)
+			.use(i18nxtFSB)
+			.use(i18nxtSprintf)
+			.init( {
 			debug                  : process.env.APP_DEBUG,
 			//lng: 'en',
 			//supportedLngs: languages,
