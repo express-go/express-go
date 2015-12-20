@@ -9,21 +9,21 @@ var glob = require( 'glob' );
 
 var express = require( 'express' );
 
-var bodyParser   = require( 'body-parser' );
-var compress     = require( 'compression' );
-var cookieParser = require( 'cookie-parser' );
-var csrf         = require( 'csurf' );
-var favicon      = require( 'serve-favicon' );
-var forceSSL     = require( 'express-force-ssl' );
-var helmet       = require( 'helmet' );
-var logger       = require( 'morgan' );
-var nodalytics   = require( 'nodalytics' );
-var Router       = require( 'named-routes' );
-var router       = new Router( {} );
-var session      = require( 'express-session' );
-var i18nxt       = require( 'i18next' );
-var i18nxtFSB 	 = require('i18next-node-fs-backend');
-var i18nxtSprintf= require('i18next-sprintf-postprocessor');
+var bodyParser    = require( 'body-parser' );
+var compress      = require( 'compression' );
+var cookieParser  = require( 'cookie-parser' );
+var csrf          = require( 'csurf' );
+var favicon       = require( 'serve-favicon' );
+var forceSSL      = require( 'express-force-ssl' );
+var helmet        = require( 'helmet' );
+var logger        = require( 'morgan' );
+var nodalytics    = require( 'nodalytics' );
+var Router        = require( 'named-routes' );
+var router        = new Router( {} );
+var session       = require( 'express-session' );
+var i18nxt        = require( 'i18next' );
+var i18nxtFSB     = require( 'i18next-node-fs-backend' );
+var i18nxtSprintf = require( 'i18next-sprintf-postprocessor' );
 
 var redis       = require( 'redis' );
 var redisClient = redis.createClient();
@@ -143,42 +143,41 @@ class ExpressGo
 
 		// i18next
 		i18nxt
-				.use(i18nxtFSB)
-				.use(i18nxtSprintf)
-				.init( {
-					debug                  	: process.env.APP_DEBUG,
+			.use( i18nxtFSB )
+			.use( i18nxtSprintf )
+			.init( {
+				debug : process.env.APP_DEBUG,
 
-					lng						: 'en',
-					fallbackLng				: ['dev'],
+				lng         : 'en',
+				fallbackLng : [ 'dev' ],
 
-					ns                     	: langNs,
-					defaultNS				: "translation",
-					fallbackNS				: "translation",
+				ns         : langNs,
+				defaultNS : "translation",
+				fallbackNS : "translation",
 
-					whitelist 				: languages,
-					preload					: languages,
+				whitelist : languages,
+				preload   : languages,
 
 
-					keySeparator			: ".",
-					nsSeparator				: ":",
+				keySeparator : ".",
+				nsSeparator  : ":",
 
-					saveMissing				: true,
-					saveMissingTo			: "fallback",	// all, fallback, current
+				saveMissing   : true,
+				saveMissingTo : "fallback",	// all, fallback, current
 
-					// V2.x
-					backend					:
-					{
-						loadPath 	: global.lang_path( "/{{lng}}/{{ns}}.json" ),
-						addPath  	: global.lang_path( "/{{lng}}/new.{{ns}}.json" ),
-						jsonIndent	: 2
-					},
-					ignoreRoutes	: [ 'images/', 'public/', 'css/', 'js/', 'assets/', 'img/' ],
+				// V2.x
+				backend      : {
+					loadPath   : global.lang_path( "/{{lng}}/{{ns}}.json" ),
+					addPath  : global.lang_path( "/{{lng}}/new.{{ns}}.json" ),
+					jsonIndent : 2
+				},
+				ignoreRoutes : [ 'images/', 'public/', 'css/', 'js/', 'assets/', 'img/' ],
 
-					// right now there is only the integrated console logger available.
-					/*functions              : {
-					 log : require( 'debug' )( 'express-go:i18n' )
-					 },*/
-				});
+				// right now there is only the integrated console logger available.
+				/*functions              : {
+				 log : require( 'debug' )( 'express-go:i18n' )
+				 },*/
+			} );
 
 
 		app.i18n = i18nxt;
@@ -274,33 +273,35 @@ class ExpressGo
 		// Favicon
 		try
 		{
-			if ( fs.statSync( global.public_path("favicon.ico") ) )
+			if ( fs.statSync( global.public_path( "favicon.ico" ) ) )
 			{
-				app.use(favicon( global.public_path("favicon.ico") ));
+				app.use( favicon( global.public_path( "favicon.ico" ) ) );
 			}
 		}
-		catch ( e ) {}
+		catch ( e )
+		{
+		}
 
 		// Static files
 		if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
 		{
 			app.use( express.static(
-					global.public_path(),
+				global.public_path(),
+				{
+					etag       : false,
+					maxAge : '1y', //365 * 24 * 60 * 60,
+					dotfiles : 'ignore',
+					expires  : new Date( Date.now() + (365 * 24 * 60 * 60) ),
+					setHeaders : function ( res, path )
 					{
-						etag       : false,
-						maxAge : '1y', //365 * 24 * 60 * 60,
-						dotfiles : 'ignore',
-						expires  : new Date( Date.now() + (365 * 24 * 60 * 60) ),
-						setHeaders : function ( res, path )
+						if ( path.indexOf( "download" ) !== -1 )
 						{
-							if ( path.indexOf( "download" ) !== -1 )
-							{
-								res.attachment( path )
-							}
-
-							res.setHeader( 'Expires', new Date( Date.now() + 31536000 * 1000 ).toUTCString() );
+							res.attachment( path )
 						}
+
+						res.setHeader( 'Expires', new Date( Date.now() + 31536000 * 1000 ).toUTCString() );
 					}
+				}
 			) );
 		}
 
