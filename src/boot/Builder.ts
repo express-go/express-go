@@ -50,13 +50,17 @@ export namespace Boot.Builder
 				// Is object has prefix (ex: model)
 				if ( theObject.hasOwnProperty( key ) )
 				{
-					// If we use manual object booting
+					var tmpObject;
+
 					if ( typeof this._loadersPrefix[ key ].instance.register === "function" )
+						tmpObject	= this._loadersPrefix[ key ].instance.register( theObject[ key ], nameObject );
+
+					// If we use manual object booting
+					if ( !!tmpObject )
 					{
 						//theObject = this._loadersPrefix[ key ].instance.register( theObject[ key ], nameObject );
-						var tmpObject = this._loadersPrefix[ key ].instance.register( theObject[ key ], nameObject );
 
-						theObject = !!tmpObject ? tmpObject : theObject;
+						theObject   = tmpObject;
 
 						debug("Builded object: [%s] %s", key, nameObject);
 					}
