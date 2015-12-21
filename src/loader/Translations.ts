@@ -18,32 +18,69 @@ export module Loaders
 {
 	export class Translations implements LoaderInterface
 	{
-		private app : any;
-
+		/**
+		 * Constructor
+		 */
 		constructor()
 		{
 		}
 
 		/**
-		 * Trigger, when booting class file
+		 * Prefix used name for components
+		 * Ex.: module.exports.prefix = {};
+		 *
+		 * Use "null" for disable
+		 *
+		 * @returns {string}
 		 */
-		public boot( app : any ) : void
+		public exportName() : string
 		{
-			// Translations
+			return null;
+		}
+
+		/**
+		 * Load object into global namespace
+		 *
+		 * Use "false" for disable
+		 *
+		 * @returns {boolean}
+		 */
+		public exportNamespace() : boolean
+		{
+			return false;
+		}
+
+		/**
+		 * Register method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns any
+		 */
+		public register = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return false;
+		};
+
+		/**
+		 * Boot method
+		 *
+		 * @param app
+		 * @returns void
+		 */
+		public boot = ( app : any ) : void =>
+		{
 			app.locals.i18n = app.i18n;
 			app.locals._t   = app.i18n.t;
 			app.locals.__   = app.i18n.t;
 
-			this.app = app;
-		}
+			this.loadTranslations( app );
+		};
 
 		/**
-		 * Trigger, when loading class file
-		 * Override here the "require"
-		 *
-		 * @param loadPath
+		 * Loading json files
 		 */
-		public load( loadPath? : string ) : any
+		private loadTranslations( app : any )
 		{
 			// Loading translation files
 			try
@@ -54,46 +91,16 @@ export module Loaders
 					files.forEach( function ( file )
 					{
 						var partials = file.split( '.' );
-						this.app.i18n.add( file, partials[ partials.length - 2 ] );
+						app.i18n.add( file, partials[ partials.length - 2 ] );
+
 					} );
 				}
+
 			}
 			catch ( ex )
 			{
 			}
 
-			return false;
-		}
-
-		/**
-		 * Locations root path
-		 * Null is global in app and modules
-		 *
-		 * @returns {any}
-		 */
-		public getLoadPath() : string
-		{
-			return null;
-		}
-
-		/**
-		 * Finding files by postfix
-		 *
-		 * @returns {string}
-		 */
-		public getLoadPostfix() : string
-		{
-			return null;
-		}
-
-		/**
-		 * Setting files by namespace
-		 *
-		 * @returns {string[]}
-		 */
-		public getLoadNamespace() : any
-		{
-			return null;
 		}
 
 	}

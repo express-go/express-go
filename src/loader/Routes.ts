@@ -12,61 +12,69 @@ export module Loaders
 	{
 		private app;
 
+		/**
+		 * Constructor
+		 */
 		constructor()
 		{
 		}
 
 		/**
-		 * Trigger, when booting class file
-		 */
-		public boot( app : any ) : void
-		{
-			this.app          = app;
-			this.app.resource = this.setResourceRoutes;
-		}
-
-		/**
-		 * Trigger, when loading class file
-		 * Override here the "require"
+		 * Prefix used name for components
+		 * Ex.: module.exports.prefix = {};
 		 *
-		 * @param loadPath
-		 */
-		public load( loadPath? : string ) : any
-		{
-		}
-
-		/**
-		 * Locations root path
-		 * Null is global in app and modules
-		 *
-		 * @returns {any}
-		 */
-		public getLoadPath() : string
-		{
-			return global.routes_path( "", true );
-		}
-
-		/**
-		 * Finding files by postfix
+		 * Use "null" for disable
 		 *
 		 * @returns {string}
 		 */
-		public getLoadPostfix() : string
+		public exportName() : string
 		{
-			return null;
+			return 'router';
 		}
 
 		/**
-		 * Setting files by namespace
+		 * Load object into global namespace
 		 *
-		 * @returns {string[]}
+		 * Use "false" for disable
+		 *
+		 * @returns {boolean}
 		 */
-		public getLoadNamespace() : any
+		public exportNamespace() : boolean
 		{
-			return [ "Http", "Routes" ];
+			return false;
 		}
 
-		private setResourceRoutes = ( name, object ) =>
+		/**
+		 * Register method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns any
+		 */
+		public register = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return false;
+		};
+
+		/**
+		 * Boot method
+		 *
+		 * @param app
+		 * @returns void
+		 */
+		public boot = ( app : any ) : void =>
+		{
+			this.app          = app;
+			this.app.resource = this.setResourceRoutes;
+		};
+
+		/**
+		 * REST API style resource handler for controller
+		 *
+		 * @param name
+		 * @param object
+		 */
+		public setResourceRoutes = ( name, object ) =>
 		{
 			name       = object.name || name;
 			name       = name.charAt( 0 ) == '/' ? name.slice( 1 ) : name;

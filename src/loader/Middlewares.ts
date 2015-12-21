@@ -10,57 +10,59 @@ export module Loaders
 {
 	export class Middlewares implements LoaderInterface
 	{
+		/**
+		 * Constructor
+		 */
 		constructor()
 		{
 		}
 
 		/**
-		 * Trigger, when booting class file
-		 */
-		public boot( app : any ) : void
-		{
-		}
-
-		/**
-		 * Trigger, when loading class file
-		 * Override here the "require"
+		 * Prefix used name for components
+		 * Ex.: module.exports.prefix = {};
 		 *
-		 * @param loadPath
-		 */
-		public load( loadPath? : string ) : any
-		{
-		}
-
-		/**
-		 * Locations root path
-		 * Null is global in app and modules
-		 *
-		 * @returns {any}
-		 */
-		public getLoadPath() : string
-		{
-			return null;
-		}
-
-		/**
-		 * Finding files by postfix
+		 * Use "null" for disable
 		 *
 		 * @returns {string}
 		 */
-		public getLoadPostfix() : string
+		public exportName() : string
 		{
-			return "Middleware";
+			return 'middleware';
 		}
 
 		/**
-		 * Setting files by namespace
+		 * Load object into global namespace
 		 *
-		 * @returns {string[]}
+		 * Use "false" for disable
+		 *
+		 * @returns {boolean}
 		 */
-		public getLoadNamespace() : any
+		public exportNamespace() : boolean
 		{
-			return null;
+			return true;
 		}
+
+		/**
+		 * Register method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns any
+		 */
+		public register = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return loadObject;
+		};
+
+		/**
+		 * Boot method
+		 *
+		 * @param app
+		 * @returns void
+		 */
+		public boot = ( app : any ) : void =>
+		{
+		};
 
 	}
 }

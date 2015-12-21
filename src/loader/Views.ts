@@ -14,14 +14,57 @@ export module Loaders
 {
 	export class Views implements LoaderInterface
 	{
+		/**
+		 * Constructor
+		 */
 		constructor()
 		{
 		}
 
 		/**
-		 * Trigger, when booting class file
+		 * Prefix used name for components
+		 * Ex.: module.exports.prefix = {};
+		 *
+		 * Use "null" for disable
+		 *
+		 * @returns {string}
 		 */
-		public boot( app : any ) : void
+		public exportName() : string
+		{
+			return null;
+		}
+
+		/**
+		 * Load object into global namespace
+		 *
+		 * Use "false" for disable
+		 *
+		 * @returns {boolean}
+		 */
+		public exportNamespace() : boolean
+		{
+			return false;
+		}
+
+		/**
+		 * Register method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns any
+		 */
+		public register = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return false;
+		};
+
+		/**
+		 * Boot method
+		 *
+		 * @param app
+		 * @returns void
+		 */
+		public boot = ( app : any ) : void =>
 		{
 			//.setDefaults({ cache : false });
 			app.engine( process.env.VIEW_FILES, cons[ process.env.VIEW_ENGINE ] );
@@ -41,52 +84,13 @@ export module Loaders
 
 				return [ process.env.CDN_ASSETS + 'assets/build', manifest[ text ] ].join( '/' );
 			};
-		}
+		};
 
 		/**
-		 * Trigger, when loading class file
-		 * Override here the "require"
+		 * Views path
 		 *
-		 * @param loadPath
+		 * @param app
 		 */
-		public load( loadPath? : string ) : any
-		{
-			// Disable loader
-			return false;
-		}
-
-		/**
-		 * Locations root path
-		 * Null is global in app and modules
-		 *
-		 * @returns {any}
-		 */
-		public getLoadPath() : string
-		{
-			return null;
-		}
-
-		/**
-		 * Finding files by postfix
-		 *
-		 * @returns {string}
-		 */
-		public getLoadPostfix() : string
-		{
-			return null;
-		}
-
-		/**
-		 * Setting files by namespace
-		 *
-		 * @returns {string[]}
-		 */
-		public getLoadNamespace() : any
-		{
-			//return ["Http", "Sockets"];
-			return null;
-		}
-
 		private setViewsPaths( app )
 		{
 			// Get actual views path
@@ -115,6 +119,11 @@ export module Loaders
 
 		}
 
+		/**
+		 * Views cache
+		 *
+		 * @param app
+		 */
 		private setViewsCache( app )
 		{
 			process.env.VIEW_CACHE

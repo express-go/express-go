@@ -27,14 +27,57 @@ export module Loaders
 {
 	export class Models implements LoaderInterface
 	{
+		/**
+		 * Constructor
+		 */
 		constructor()
 		{
 		}
 
 		/**
-		 * Trigger, when booting class file
+		 * Prefix used name for components
+		 * Ex.: module.exports.prefix = {};
+		 *
+		 * Use "null" for disable
+		 *
+		 * @returns {string}
 		 */
-		public boot( app : any ) : void
+		public exportName() : string
+		{
+			return 'model';
+		}
+
+		/**
+		 * Load object into global namespace
+		 *
+		 * Use "false" for disable
+		 *
+		 * @returns {boolean}
+		 */
+		public exportNamespace() : boolean
+		{
+			return true;
+		}
+
+		/**
+		 * Register method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns any
+		 */
+		public register = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return sequelize.import( nameObject, loadObject );
+		};
+
+		/**
+		 * Boot method
+		 *
+		 * @param app
+		 * @returns void
+		 */
+		public boot = ( app : any ) : void =>
 		{
 			Object.keys( sequelize.models ).forEach( ( modelName ) =>
 			{
@@ -43,53 +86,12 @@ export module Loaders
 				{
 					sequelize.models[ modelName ].associate( sequelize.models );
 				}
-			} );
+
+			});
 
 			app.sequelize = sequelize;
 			app.Sequelize = Sequelize;
-		}
-
-		/**
-		 * Trigger, when loading class file
-		 * Override here the "require"
-		 *
-		 * @param loadPath
-		 */
-		public load( loadPath? : string ) : any
-		{
-			return sequelize.import( loadPath );
-		}
-
-		/**
-		 * Locations root path
-		 * Null is global in app and modules
-		 *
-		 * @returns {any}
-		 */
-		public getLoadPath() : string
-		{
-			return global.models_path( "", true );
-		}
-
-		/**
-		 * Finding files by postfix
-		 *
-		 * @returns {string}
-		 */
-		public getLoadPostfix() : string
-		{
-			return null;
-		}
-
-		/**
-		 * Setting files by namespace
-		 *
-		 * @returns {string[]}
-		 */
-		public getLoadNamespace() : any
-		{
-			return [ "Models" ];
-		}
+		};
 
 	}
 }

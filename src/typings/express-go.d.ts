@@ -3,10 +3,10 @@
  */
 export interface LoaderInterface
 {
-    boot( app : any ) : void;
-    load( loadObject? : any ) : any;
-    getLoadPath() : string;
-    getLoadNamespace() : any;
+    boot( app : any )   : void;
+    exportName()        : string;
+    exportNamespace()   : boolean;
+    register( loadObject : any, nameObject : string ) : any;
 }
 
 /**
