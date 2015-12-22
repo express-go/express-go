@@ -6,12 +6,12 @@ declare function t( path? : string );
 
 var fs    = require( 'fs' );
 var glob  = require( "glob" );
-var path = require( 'path' );
+var path  = require( 'path' );
 var redis = require( 'redis' ).createClient();
 
-var i18nxt        = require( 'i18next' );
-var i18nxtFSB     = require( 'i18next-node-fs-backend' );
-var i18nxtSprintf = require( 'i18next-sprintf-postprocessor' );
+var i18nxt        : any = require( 'i18next' );
+var i18nxtFSB     : any = require( 'i18next-node-fs-backend' );
+var i18nxtSprintf : any = require( 'i18next-sprintf-postprocessor' );
 
 // TODO
 var languageRedisCache = 'LANGUAGE_CACHE_REDIS';
