@@ -148,33 +148,36 @@ class ExpressGo
 			.init( {
 				debug : process.env.APP_DEBUG,
 
-				lng         : 'en',
-				fallbackLng : [ 'dev' ],
+				lng				: 'en',
+				fallbackLng		: [ 'dev' ],
 
-				ns         : langNs,
-				defaultNS : "translation",
-				fallbackNS : "translation",
+				ns				: langNs,
+				defaultNS		: "translation",
+				fallbackNS		: "translation",
 
-				whitelist : languages,
-				preload   : languages,
+				whitelist		: languages,
+				preload			: languages,
 
+				keySeparator	: ".",
+				nsSeparator		: ":",
 
-				keySeparator : ".",
-				nsSeparator  : ":",
-
-				saveMissing   : true,
-				saveMissingTo : "fallback",	// all, fallback, current
+				saveMissing		: true,
+				saveMissingTo	: "fallback",	// all, fallback, current
 
 				// V2.x
-				backend      : {
-					loadPath   : global.lang_path( "/{{lng}}/{{ns}}.json" ),
-					addPath  : global.lang_path( "/{{lng}}/new.{{ns}}.json" ),
-					jsonIndent : 2
+				backend			:
+				{
+					loadPath	: global.lang_path( "/{{lng}}/{{ns}}.json" ),
+					addPath		: global.lang_path( "/{{lng}}/new.{{ns}}.json" ),
+					jsonIndent	: 2
 				},
-				ignoreRoutes : [ 'images/', 'public/', 'css/', 'js/', 'assets/', 'img/' ],
+				ignoreRoutes 	:
+				[
+					'images/', 'public/', 'css/', 'js/', 'assets/', 'img/'
+				],
 
 				// right now there is only the integrated console logger available.
-				/*functions              : {
+				/*functions		: {
 				 log : require( 'debug' )( 'express-go:i18n' )
 				 },*/
 			} );
