@@ -8,13 +8,13 @@ var fs       = require( 'fs' );
 var cluster  = require( 'cluster' );
 var http     = require( 'http' );
 var https    = require( 'https' );
-var spdy     = require( 'spdy' );
-var traverse = require( 'traverse' );
-var watch    = require( 'node-watch' );
+var spdy     : any = require( 'spdy' );
+var traverse : any = require( 'traverse' );
+var watch    : any = require( 'node-watch' );
 
-var socketIOAdapter = require( 'socket.io-redis' );
-var socketIOSession = require( "socket.io.session" );
-var socketSession   = null;
+var socketIOAdapter : any = require( 'socket.io-redis' );
+var socketIOSession : any = require( "socket.io.session" );
+var socketSession 	: any = null;
 
 var debug = require( 'debug' )( 'express-go:Www' );
 
