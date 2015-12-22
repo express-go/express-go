@@ -1,7 +1,7 @@
 # express-go #
 Express-go the Node.js Express based MVC framework engine, inspirated by Laravel framework.
 
-#### Under construction, LTS package is expected at the end of December 2015. ####
+#### Under construction, STABLE package is expected at the end of December 2015. ####
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
