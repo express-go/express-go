@@ -86,7 +86,7 @@ export module Core
 
 				for ( var i = 0; i < process.env.WORKERS; i++ )
 				{
-					var worker = cluster.fork();
+					var worker : Worker = cluster.fork();
 					debug( 'worker %s started.', worker.process.pid );
 				}
 
@@ -185,6 +185,11 @@ export module Core
 			}
 		};
 
+
+		/**
+		 * Automatic service start
+		 * HTTP / HTTPS | SPDY
+		 */
 		public serveService()
 		{
 			if ( !!process.env.PORT_HTTP )
@@ -200,6 +205,10 @@ export module Core
 
 		}
 
+
+		/**
+		 * HTTP service start
+		 */
 		public serveHttp()
 		{
 			if ( !process.env.FORCE_HTTPS )
@@ -211,6 +220,10 @@ export module Core
 			this.serveListen( server, process.env.PORT_HTTP )
 		}
 
+
+		/**
+		 * HTTPS service start
+		 */
 		public serveHttps()
 		{
 			if ( !!process.env.FORCE_HTTPS )
@@ -222,6 +235,10 @@ export module Core
 			this.serveListen( server, process.env.PORT_HTTPS )
 		}
 
+
+		/**
+		 * SPDY service start
+		 */
 		public serveSpdy()
 		{
 			if ( !!process.env.FORCE_HTTPS )
@@ -231,8 +248,14 @@ export module Core
 
 			this.serveSocket( server );
 			this.serveListen( server, process.env.PORT_HTTPS )
-		};
+		}
 
+
+		/**
+		 * Socket.io service start
+		 *
+		 * @param server
+		 */
 		private serveSocket( server )
 		{
 			var io = require( 'socket.io' ).listen( server );
@@ -306,7 +329,6 @@ export module Core
 					? 'pipe ' + addr
 					: 'port ' + addr.port;
 
-			//debug('Listening on ' + bind);
 			debug( 'Listening on ' + bind );
 		}
 
@@ -325,13 +347,21 @@ export module Core
 			switch ( error.code )
 			{
 				case 'EACCES':
+				{
 					console.error( bind + ' requires elevated privileges' );
 					process.exit( 1 );
+
 					break;
+				}
+
 				case 'EADDRINUSE':
+				{
 					console.error( bind + ' is already in use' );
 					process.exit( 1 );
+
 					break;
+				}
+
 				default:
 					throw error;
 			}

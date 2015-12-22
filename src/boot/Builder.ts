@@ -4,29 +4,21 @@
 import {ExpressGoGlobal} from "../typings/express-go";
 declare var global : ExpressGoGlobal;
 
-var traverse = require('traverse');
 var debug 	 = require( 'debug' )( 'express-go:Boot.Builder' );
 
 export namespace Boot.Builder
 {
 	export class Load
 	{
-		private _app : any;
-		private _loaders : any;
-		private _loadersPrefix : any = {};
-		private _bootersList : any = [];
+		private _loaders 		: any;
+		private _loadersPrefix 	: any = {};
+		private _bootersList 	: any = [];
 
-		public getBootList()
-		{
-			return this._bootersList;
-		}
-
-		public findObjectLoader( theObject, nameObject )
-		{
-			return this.loadProjectObjects( theObject, nameObject );
-		}
-
-		//constructor( loadLoaders : any, loadProject : any )
+		/**
+		 * Constructor, start loading
+		 *
+		 * @param loadLoaders - loaded Loaders
+		 */
 		constructor( loadLoaders : any )
 		{
 			debug( "Builder Load constructor" );
@@ -35,8 +27,34 @@ export namespace Boot.Builder
 			this.loadLoadersPrefix();
 		}
 
+
 		/**
-		 * Runtime loading Components
+		 * Return boot waiting objects
+		 *
+		 * @returns {any}
+		 */
+		public getBootList()
+		{
+			return this._bootersList;
+		}
+
+
+		/**
+		 * Alias of loadProjectObjects
+		 *
+		 * @param theObject
+		 * @param nameObject
+		 * @returns {any}
+		 */
+		public findObjectLoader( theObject, nameObject )
+		{
+			return this.loadProjectObjects( theObject, nameObject );
+		}
+
+
+		/**
+		 * Runtime using booted "Loaders"
+		 * On the fly :)
 		 *
 		 * @param theObject
 		 * @param nameObject
@@ -52,15 +70,14 @@ export namespace Boot.Builder
 				{
 					var tmpObject;
 
+					// Detect and load default load method override
 					if ( typeof this._loadersPrefix[ key ].instance.register === "function" )
-						tmpObject	= this._loadersPrefix[ key ].instance.register( theObject[ key ], nameObject );
+						tmpObject = this._loadersPrefix[ key ].instance.register( theObject[ key ], nameObject );
 
 					// If we use manual object booting
 					if ( !!tmpObject )
 					{
-						//theObject = this._loadersPrefix[ key ].instance.register( theObject[ key ], nameObject );
-
-						theObject   = tmpObject;
+						theObject = tmpObject;
 
 						debug("Builded object: [%s] %s", key, nameObject);
 					}
@@ -91,6 +108,13 @@ export namespace Boot.Builder
 			return theObject;
 		}
 
+
+		/**
+		 * Collect object prefixes from "Loaders"
+		 *
+		 * Ex.: model => Loaders.Models
+		 * For: module.exports.model = ...
+		 */
 		private loadLoadersPrefix()
 		{
 			debug( "Loaders Prefix indexing" );

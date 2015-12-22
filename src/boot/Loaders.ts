@@ -43,7 +43,7 @@ export namespace Boot.Loaders
 		}
 
 		/**
-		 * Load component
+		 * Load component from "loader" dir
 		 *
 		 * @param key
 		 * @param isLoading

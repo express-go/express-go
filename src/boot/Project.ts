@@ -27,10 +27,17 @@ export namespace Boot.Project
 			}
 		}
 
+
+		/**
+		 * Loading path list
+		 *
+		 * @returns {any}
+		 */
 		public getList()
 		{
 			return this.pathList;
 		}
+
 
 		/**
 		 * Loading files into objects
@@ -45,9 +52,19 @@ export namespace Boot.Project
 			glob.sync( globPath ).forEach( ( filePath ) =>
 			{
 				this.loadFile( filePath, basePath, baseObject );
-			} );
+
+			});
+
 		}
 
+
+		/**
+		 * Loading Project file
+		 *
+		 * @param filePath
+		 * @param basePath
+		 * @param baseObject
+		 */
 		private loadFile( filePath, basePath, baseObject )
 		{
 			// Realpath
@@ -93,6 +110,7 @@ export namespace Boot.Project
 			);
 		}
 
+
 		/**
 		 * Make object from array, recursive mode
 		 *
@@ -119,6 +137,7 @@ export namespace Boot.Project
 				this.arrayToObject( array, object[ key ], value );
 			}
 		}
+
 
 		/**
 		 * Recursively merge properties of two objects

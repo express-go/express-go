@@ -17,8 +17,17 @@ var loadBuilder;
 
 export module Boot
 {
+    /**
+     * Initialization class
+     */
     export class Init
     {
+        /**
+         * Loading components, objects
+         *
+         * @param componentsList
+         * @param pathsList
+         */
         constructor( componentsList : any, pathsList : any )
         {
             debug( "Boot Init constructor" );
@@ -35,14 +44,35 @@ export module Boot
         }
     }
 
+    /**
+     * Boot class
+     */
     export class Boot
     {
+        /**
+         * Booting objects
+         *
+         * @param app
+         */
         constructor( app : any )
         {
             debug( "Boot objects" );
 
-            //this.bootLoaders( app );
+            this.bootLoaders( app );
+            this.bootObjects( app );
+
+        }
+
+
+        /**
+         * Booting object parsers, providers
+         *
+         * @param app
+         */
+        public bootLoaders = ( app : any ) =>
+        {
             debug( "Boot Loaders objects" );
+
             var bootList = loadLoaders.getList();
 
             for ( var key in bootList )
@@ -54,8 +84,19 @@ export module Boot
                 }
             }
 
-            //this.bootObjects( app );
+        };
+
+
+        /**
+         * Boot project loaded objects
+         * These objects are booted by "Loaders"
+         *
+         * @param app
+         */
+        private bootObjects = ( app : any ) =>
+        {
             debug( "Boot Project objects" );
+
             var bootList = loadBuilder.getBootList();
 
             for( var key in bootList )
@@ -63,31 +104,9 @@ export module Boot
                 debug( "Booting Project object: %s", key );
                 bootList[ key ] = bootList[key]( app );
             }
-        }
 
-        private bootLoaders( app : any )
-        {
-            var bootList = loadLoaders.getList();
+        };
 
-            for ( var key in bootList )
-            {
-                console.log( bootList[ key ] );
-                process.exit();
-            }
-
-        }
-
-        private bootObjects( app : any )
-        {
-            var bootList = loadBuilder.getBootList();
-
-            for( var key in bootList )
-            {
-                console.log( bootList[ key ] );
-                process.exit();
-                bootList[ key ] = bootList[key]( app );
-            }
-        }
     }
 
 }
