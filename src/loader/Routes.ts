@@ -3,6 +3,10 @@
 import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
 declare var global : ExpressGoGlobal;
 
+var Router : any = require( 'named-routes' );
+var router : any = new Router( {} );
+
+
 /**
  * Routes loader
  */
@@ -64,6 +68,10 @@ export module Loaders
 		 */
 		public boot = ( app : any ) : void =>
 		{
+			// Setup router
+			router.extendExpress( app );
+			router.registerAppHelpers( app );
+
 			this.app          = app;
 			this.app.resource = this.setResourceRoutes;
 		};

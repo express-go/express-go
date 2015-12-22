@@ -18,8 +18,6 @@ var forceSSL      = require( 'express-force-ssl' );
 var helmet        = require( 'helmet' );
 var logger        = require( 'morgan' );
 var nodalytics    = require( 'nodalytics' );
-var Router        = require( 'named-routes' );
-var router        = new Router( {} );
 var session       = require( 'express-session' );
 var i18nxt        = require( 'i18next' );
 var i18nxtFSB     = require( 'i18next-node-fs-backend' );
@@ -73,8 +71,6 @@ class ExpressGo
 	{
 		debug( "ExpressGo init app" );
 
-		debug( "ExpressGo init initRouter" );
-		this.initRouter();
 
 		debug( "ExpressGo init initParsers" );
 		this.initParsers();
@@ -236,15 +232,6 @@ class ExpressGo
 
 	}
 
-	/**
-	 * Named-router
-	 */
-	private initRouter()
-	{
-		// Setup router
-		router.extendExpress( app );
-		router.registerAppHelpers( app );
-	}
 
 	/**
 	 * Force SSL redirect from HTTP
