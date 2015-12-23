@@ -6,6 +6,7 @@ export interface LoaderInterface
     boot( app : any )   : void;
     exportName()        : string;
     exportNamespace()   : boolean;
+    defineNamespace?()  : string;
     register( loadObject : any, nameObject : string ) : any;
 }
 

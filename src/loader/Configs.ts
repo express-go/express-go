@@ -43,6 +43,16 @@ export module Loaders
 		}
 
 		/**
+		 * Define namespace root in global object
+		 *
+		 * @returns {string}
+		 */
+		public defineNamespace() : string
+		{
+			return "Config";
+		}
+
+		/**
 		 * Register method
 		 *
 		 * @param loadObject
