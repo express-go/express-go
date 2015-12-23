@@ -15,7 +15,7 @@ export interface LoaderInterface
  */
 export interface ExpressGoGlobal extends NodeJS.Global
 {
-	/**
+    /**
      * Global engine vars
      */
     App     : any;
@@ -27,6 +27,7 @@ export interface ExpressGoGlobal extends NodeJS.Global
      */
     base_path       (innerPath?: string) : string;
     bower_path      (innerPath?: string) : string;
+    bootstrap_path  (innerPath?: string) : string;
     npm_path        (innerPath?: string) : string;
 
     /**
