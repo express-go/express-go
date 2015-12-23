@@ -4,6 +4,7 @@
 import {ExpressGoGlobal} from "./typings/express-go";
 declare var global : ExpressGoGlobal;
 
+var fs	  = require( "fs" );
 var glob  = require( "glob" );
 var path  = require( "path" );
 var debug = require( 'debug' )( 'express-go:core' );
@@ -122,20 +123,37 @@ class Core
 			debug( "Found module name: %s", moduleName );
 
 			// Override module path for src "root" dir
-			modulePath = path.normalize( path.dirname( file ) + '/src/' );
-
-			// Results
-			filesList[ modulePath ] = pathObject[ moduleName ] = {};
+			if ( modulePath = this.pathGetIfExist( path.normalize( path.dirname( file ) + '/src/' ) ) )
+				filesList[ modulePath ] = pathObject[ moduleName ] = {};
 
 			// Override module path for src "config" dir
-			modulePath = path.normalize( path.dirname( file ) + '/config/' );
-
-			// Results
-			filesList[ modulePath ] = configObject[ moduleName ] = {};
+			if ( modulePath = this.pathGetIfExist( path.normalize( path.dirname( file ) + '/config/' ) ) )
+				filesList[ modulePath ] = configObject[ moduleName ] = {};
 
 		} );
 
 		return filesList;
+
+	}
+
+
+	/**
+	 * Detect path is exist (src, config, etc...)
+	 *
+	 * @param pathString
+	 * @returns {any}
+	 */
+	private pathGetIfExist( pathString : string ) : string
+	{
+		try
+		{
+			fs.statSync(pathString);
+			return pathString;
+		}
+		catch (err)
+		{
+			return null;
+		}
 
 	}
 
