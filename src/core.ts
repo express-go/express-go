@@ -32,19 +32,25 @@ class Core
 
 
 		// Global vars
-		global         = appGlobal;
-		global.App     = {};
-		global.Modules = {};
+		global			= appGlobal;
+		global.App		= {};
+		global.Config	= {};
+		global.Modules	= {};
 
 
 		// 1. Collecting application paths and modules
 		// Here declaring and pairing the "namespace" objects too
 		// [ "path" => Ns.Object ]
-		this.pathAndObjectList[ path.normalize( global.app_path() ) ] = global.App;
+		this.pathAndObjectList[ path.normalize( global.app_path() ) ] 	 = global.App;
+		this.pathAndObjectList[ path.normalize( global.config_path() ) ] = global.Config;
 		this.pathAndObjectMerge
 		(
 			this.pathAndObjectList,
-			this.getModulesPath( global.app_modules( "**/module-go.json" ), global.Modules )
+			this.getModulesPath(
+				global.app_modules( "**/module-go.json" ),
+				global.Modules,
+				global.Config
+			)
 		);
 		debug( "Paths list collected" );
 
@@ -96,7 +102,7 @@ class Core
 	 * @param pathObject
 	 * @returns {Array}
 	 */
-	private getModulesPath( pathRoot : string, pathObject : any )
+	private getModulesPath( pathRoot : string, pathObject : any, configObject : any )
 	{
 		debug( "Searching modules paths" );
 
@@ -121,10 +127,16 @@ class Core
 			// Results
 			filesList[ modulePath ] = pathObject[ moduleName ] = {};
 
+			// Override module path for src "config" dir
+			modulePath = path.normalize( path.dirname( file ) + '/config/' );
+
+			// Results
+			filesList[ modulePath ] = configObject[ moduleName ] = {};
+
 		} );
 
-
 		return filesList;
+
 	}
 
 }

@@ -19,6 +19,7 @@ export interface ExpressGoGlobal extends NodeJS.Global
      * Global engine vars
      */
     App     : any;
+    Config  : any;
     Modules : any;
 
     /**
