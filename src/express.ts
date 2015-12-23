@@ -9,16 +9,16 @@ var glob = require( 'glob' );
 
 var express = require( 'express' );
 
-var bodyParser    = require( 'body-parser' );
-var compress      = require( 'compression' );
-var cookieParser  = require( 'cookie-parser' );
-var csrf          = require( 'csurf' );
-var favicon       = require( 'serve-favicon' );
-var forceSSL      = require( 'express-force-ssl' );
-var helmet        = require( 'helmet' );
-var logger        = require( 'morgan' );
-var nodalytics    = require( 'nodalytics' );
-var session       = require( 'express-session' );
+var bodyParser    : any = require( 'body-parser' );
+var compress      : any = require( 'compression' );
+var cookieParser  : any = require( 'cookie-parser' );
+var csrf          : any = require( 'csurf' );
+var favicon       : any = require( 'serve-favicon' );
+var forceSSL      : any = require( 'express-force-ssl' );
+var helmet        : any = require( 'helmet' );
+var logger        : any = require( 'morgan' );
+var nodalytics    : any = require( 'nodalytics' );
+var session		  : any = require( 'express-session' );
 
 
 var redis       = require( 'redis' );

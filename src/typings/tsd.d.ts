@@ -16,3 +16,4 @@
 /// <reference path="csurf/csurf.d.ts" />
 /// <reference path="helmet/helmet.d.ts" />
 /// <reference path="assert/assert.d.ts" />
+/// <reference path="express-session/express-session.d.ts" />
