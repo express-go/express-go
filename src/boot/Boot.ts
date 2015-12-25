@@ -1,112 +1,233 @@
 ///<reference path='../typings/tsd.d.ts'/>
-///<reference path='Builder.ts'/>
-///<reference path='Loaders.ts'/>
-///<reference path='Project.ts'/>
 
-var debug  = require('debug')('express-go:Boot');
+import {ExpressGoGlobal} from "../typings/express-go";
+declare var global : ExpressGoGlobal;
 
-var Loaders = require('./Loaders').Boot.Loaders;
-var loadLoaders;
+var debug  		= require('debug')('express-go:Boot');
 
-var Project = require('./Project').Boot.Project;
-var loadProject;
+var Finder 		= require('./Finder').Boot.Finder;
+var Provider	= require('./Provider').Boot.Provider;
+var Namespace	= require('./Namespace').Boot.Namespace;
 
-var Builder = require('./Builder').Boot.Builder;
-var loadBuilder;
+var loadFinder;
+var loadProvider;
+var loadNamespace;
+var sortProvider =
+[
+	"Configs",
+	"Translations",
+	"Models",
+	"Views",
+	"Controllers",
+	"Middlewares",
+	"Routes",
+	"Sockets"
+];
+var loadUnknownFiles = true;
 
 
 export module Boot
 {
-    /**
-     * Initialization class
-     */
-    export class Init
-    {
-        /**
-         * Loading components, objects
-         *
-         * @param componentsList
-         * @param pathsList
-         */
-        constructor( componentsList : any, pathsList : any )
-        {
-            debug( "Boot Init constructor" );
+	/**
+	 * Initialization class
+	 */
+	export class Init
+	{
+		/**
+		 * Loading components, objects
+		 *
+		 * @param componentsList
+		 * @param pathsList
+		 */
+		constructor( appGlobal : any, pathsList? : any )
+		{
+			debug( "Initializing Boot" );
 
-            // Loaders
-            loadLoaders = new Loaders.Load( componentsList );
+			loadFinder    = new Finder();
+			loadProvider  = new Provider();
+			loadNamespace = new Namespace();
 
-            // Builder
-            loadBuilder = new Builder.Load( loadLoaders );
+			global = appGlobal;
 
-            // Project files
-            loadProject = new Project.Load( pathsList, loadBuilder );
-
-        }
-    }
-
-    /**
-     * Boot class
-     */
-    export class Boot
-    {
-        /**
-         * Booting objects
-         *
-         * @param app
-         */
-        constructor( app : any )
-        {
-            debug( "Boot objects" );
-
-            this.bootLoaders( app );
-            this.bootObjects( app );
-
-        }
+			global.App     = {};
+			global.Modules = {};
+			global.Config  = {};
 
 
-        /**
-         * Booting object parsers, providers
-         *
-         * @param app
-         */
-        public bootLoaders = ( app : any ) =>
-        {
-            debug( "Boot Loaders objects" );
+			this.initProviders( sortProvider );
+			this.initApplication();
+			this.initModules();
 
-            var bootList = loadLoaders.getList();
+			var mainApp : any = require( "../express" );
 
-            for ( var key in bootList )
-            {
-                debug( "Booting Loaders object: %s", key );
-                if ( typeof bootList[ key ].instance.boot === "function" )
-                {
-                    bootList[ key ].instance.boot( app );
-                }
-            }
+			this.boot( mainApp );
 
-        };
+			mainApp.boot = function ( nameProvider : string, userApp? : any )
+			{
+				debug("Booting Manual Provider");
+
+				loadProvider.bootProvider(
+					nameProvider,
+					userApp ? userApp : mainApp
+				);
+			};
+
+			return mainApp;
+
+		}
+
+		private initProviders( orderList : any )
+		{
+			debug( "Initializing Providers" );
+
+			var indexProvider;
+			var pathsProviders = [].concat
+			(
+				loadFinder.findCoreProviders(),
+				loadFinder.findApplicationProviders()
+			);
+
+			for ( indexProvider in pathsProviders )
+			{
+				loadProvider.initProvider( pathsProviders[ indexProvider ] );
+			}
+
+			loadProvider.orderProviders( orderList );
+
+		}
+
+		private initApplication()
+		{
+			debug( "Initializing Application" );
+
+			var appFiles;
+			var appIndex;
+			var appPath;
+			var fileSource;
+			var fileObject;
+			var providerObject;
+			var needNamespace;
+
+			global.App.config = {};
+
+			// Config files
+			appFiles          = loadFinder.findApplicationConfigFiles();
+
+			for ( appIndex in appFiles )
+			{
+				appPath		  = appFiles[ appIndex ];
+				fileSource	  = require( appPath );
+				needNamespace = loadUnknownFiles;
+
+				if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+				{
+					needNamespace = providerObject.provider.exportNamespace;
+					fileSource    = providerObject.fileObject;
+				}
+
+				fileObject = loadNamespace.pathToObject
+				(
+					appPath,
+					global.config_path(),
+					fileSource
+				);
+
+				global.App.config = loadNamespace.addToNamespace( global.App.config, fileObject );
+			}
+
+			// Application files
+			appFiles = loadFinder.findApplicationFiles();
+			for ( appIndex in appFiles )
+			{
+				appPath		  = appFiles[ appIndex ];
+				fileSource	  = require( appPath );
+				needNamespace = loadUnknownFiles;
+
+				if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+				{
+					needNamespace = providerObject.provider.exportNamespace;
+					fileSource    = providerObject.fileObject;
+				}
+
+				// Object in Provider, but non namespace
+				if ( needNamespace )
+				{
+					fileObject = loadNamespace.pathToObject
+					(
+						appPath,
+						global.app_path(),
+						fileSource
+					);
+
+					global.App = loadNamespace.addToNamespace( global.App, fileObject );
+				}
+
+			}
 
 
-        /**
-         * Boot project loaded objects
-         * These objects are booted by "Loaders"
-         *
-         * @param app
-         */
-        private bootObjects = ( app : any ) =>
-        {
-            debug( "Boot Project objects" );
+			//loadProvider.associateProviders(
+			//	loadFinder.findApplicationFiles()
+			//);
 
-            var bootList = loadBuilder.getBootList();
+		}
 
-            for( var key in bootList )
-            {
-                debug( "Booting Project object: %s", key );
-                bootList[ key ] = bootList[key]( app );
-            }
+		private initModules()
+		{
+			debug( "Initializing Modules" );
 
-        };
+			var indexModules : any;
+			var listModules : any = loadFinder.findModules();
+			var appFiles : any;
+			var appIndex;
+			var appPath;
+			var fileSource;
+			var fileObject;
+			var providerObject;
+			var needNamespace;
 
-    }
+			for ( indexModules in listModules )
+			{
+				appFiles                       = loadFinder.findModuleFiles( listModules[ indexModules ] );
+				global.Modules[ indexModules ] = {};
+
+				for ( appIndex in appFiles )
+				{
+					appPath       = appFiles[ appIndex ];
+					fileSource    = require( appPath );
+					needNamespace = loadUnknownFiles;
+
+					if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+					{
+						needNamespace = providerObject.provider.exportNamespace;
+						fileSource    = providerObject.fileObject;
+					}
+
+					if ( needNamespace )
+					{
+						fileObject = loadNamespace.pathToObject
+						(
+							appPath,
+							listModules[ indexModules ],
+							fileSource
+						);
+
+						global.Modules[ indexModules ] = loadNamespace.addToNamespace(
+							global.Modules[ indexModules ],
+							fileObject
+						);
+					}
+
+				}
+
+			}
+
+		}
+
+		private boot( app )
+		{
+			loadProvider.bootProviders( app );
+		}
+
+	}
 
 }

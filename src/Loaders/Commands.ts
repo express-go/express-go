@@ -45,13 +45,10 @@ export module Loaders
 		/**
 		 * Register method
 		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns any
+		 * @returns void
 		 */
-		public register = ( loadObject : any, nameObject : string ) : any =>
+		public register = ( ) : void =>
 		{
-			return loadObject;
 		};
 
 		/**
@@ -62,6 +59,20 @@ export module Loaders
 		 */
 		public boot = ( app : any ) : void =>
 		{
+		};
+
+		/**
+		 * Loader method
+		 *
+		 * You can override default object initialization method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns {any}
+		 */
+		public loader = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return null;
 		};
 
 	}

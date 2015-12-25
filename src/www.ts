@@ -52,6 +52,9 @@ export module Core
 
 		constructor( appBase, basePath )
 		{
+			//console.log("HAHA 1");
+			//process.exit();
+
 			this.app       = appBase;
 			socketSession  = socketIOSession( this.app.sessionSettings );
 			this.updateOptions( basePath );
@@ -258,7 +261,8 @@ export module Core
 		 */
 		private serveSocket( server )
 		{
-			var io = require( 'socket.io' ).listen( server );
+			var io = require( 'socket.io' );
+				io = io.listen( server );
 
 			io.adapter( socketIOAdapter( {
 				host : process.env.REDIS_HOST,
@@ -271,8 +275,18 @@ export module Core
 			this.onSocketEvents( io );
 
 
+			//this.app.io = io;
+
+			/*if ( !this.bootedSocket )
+			{
+				this.bootedSocket = true;
+				this.app.boot("Sockets");
+			}
+*/
+			this.app.boot("Sockets", io);
+
 			// Module sockets reading
-			try
+			/*try
 			{
 				traverse( global.App.Http.Sockets ).forEach( function ( httpSocket, key )
 				{
@@ -285,7 +299,7 @@ export module Core
 			}
 			catch ( ex )
 			{
-			}
+			}*/
 
 		}
 

@@ -46,16 +46,28 @@ export module Loaders
 			return false;
 		}
 
+
 		/**
 		 * Register method
 		 *
+		 * @returns void
+		 */
+		public register = ( ) : void =>
+		{
+		};
+
+		/**
+		 * Loader method
+		 *
+		 * You can override default object initialization method
+		 *
 		 * @param loadObject
 		 * @param nameObject
-		 * @returns any
+		 * @returns {any}
 		 */
-		public register = ( loadObject : any, nameObject : string ) : any =>
+		public loader = ( loadObject : any, nameObject : string ) : any =>
 		{
-			return false;
+			return null;
 		};
 
 		/**
@@ -64,7 +76,7 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : void =>
+		public boot = ( app : any ) : any =>
 		{
 			//.setDefaults({ cache : false });
 			app.engine( process.env.VIEW_FILES, cons[ process.env.VIEW_ENGINE ] );

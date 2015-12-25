@@ -3,7 +3,8 @@
  */
 export interface LoaderInterface
 {
-    boot( app : any )   : void;
+    boot( app : any, loadObject : any ) : any;
+    manualBoot?()       : boolean;
     exportName()        : string;
     exportNamespace()   : boolean;
     defineNamespace?()  : string;
@@ -15,7 +16,7 @@ export interface LoaderInterface
  */
 export interface ExpressGoGlobal extends NodeJS.Global
 {
-    /**
+	/**
      * Global engine vars
      */
     App     : any;
@@ -44,9 +45,13 @@ export interface ExpressGoGlobal extends NodeJS.Global
     app_modules     (innerPath?: string, getRelative?: boolean) : string;
     assets_path     (innerPath?: string, getRelative?: boolean) : string;
     config_path     (innerPath?: string, getRelative?: boolean) : string;
+    controllers_path(innerPath?: string, getRelative?: boolean) : string;
     lang_path       (innerPath?: string, getRelative?: boolean) : string;
+    models_path     (innerPath?: string, getRelative?: boolean) : string;
     public_path     (innerPath?: string, getRelative?: boolean) : string;
     resources_path  (innerPath?: string, getRelative?: boolean) : string;
+    routes_path     (innerPath?: string, getRelative?: boolean) : string;
+    sockets_path    (innerPath?: string, getRelative?: boolean) : string;
     views_path      (innerPath?: string, getRelative?: boolean) : string;
 }
 

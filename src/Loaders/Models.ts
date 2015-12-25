@@ -8,16 +8,8 @@ var fs   = require( 'fs' );
 var path = require( 'path' );
 var db   = {};
 
-var Sequelize = require( 'sequelize' );
-
-if ( !!process.env.DB_ENV )
-	var sequelize = new Sequelize( process.env.DB_ENV );
-else
-	var sequelize = new Sequelize( process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-		"host"    : process.env.DB_HOST,
-		"port"    : process.env.DB_PORT,
-		"dialect" : process.env.DB_TYPE
-	} );
+var Sequelize : any = require( 'sequelize' );
+var sequelize : any;
 
 
 /**
@@ -62,12 +54,44 @@ export module Loaders
 		/**
 		 * Register method
 		 *
+		 * @param app
+		 * @returns void
+		 */
+		public register = ( app : any ) : void =>
+		{
+			// Initializing
+			if ( !!process.env.DB_ENV )
+			{
+				sequelize = new Sequelize( process.env.DB_ENV );
+			}
+			else
+			{
+				sequelize = new Sequelize(
+					process.env.DB_NAME,
+					process.env.DB_USER,
+					process.env.DB_PASS,
+					{
+						"host"    : process.env.DB_HOST,
+						"port"    : process.env.DB_PORT,
+						"dialect" : process.env.DB_TYPE
+					}
+				);
+			}
+
+		};
+
+		/**
+		 * Loader method
+		 *
+		 * You can override default object initialization method
+		 *
 		 * @param loadObject
 		 * @param nameObject
-		 * @returns any
+		 * @returns {any}
 		 */
-		public register = ( loadObject : any, nameObject : string ) : any =>
+		public loader = ( loadObject : any, nameObject : string ) : any =>
 		{
+			// Use sequelize method
 			return sequelize.import( nameObject, loadObject );
 		};
 
@@ -79,6 +103,7 @@ export module Loaders
 		 */
 		public boot = ( app : any ) : void =>
 		{
+			// Loading relations
 			Object.keys( sequelize.models ).forEach( ( modelName ) =>
 			{
 				// Models associations
@@ -89,8 +114,10 @@ export module Loaders
 
 			});
 
+			// Add for app
 			app.sequelize = sequelize;
 			app.Sequelize = Sequelize;
+
 		};
 
 	}

@@ -28,7 +28,6 @@ var RedisStore  = require( "connect-redis" )( session );
 var debug = require( 'debug' )( 'express-go:Express' );
 
 
-
 debug( "Express object created" );
 var app = express();
 

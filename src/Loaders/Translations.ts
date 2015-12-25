@@ -64,13 +64,10 @@ export module Loaders
 		/**
 		 * Register method
 		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns any
+		 * @returns void
 		 */
-		public register = ( loadObject : any, nameObject : string ) : any =>
+		public register = ( ) : void =>
 		{
-			return false;
 		};
 
 		/**
@@ -82,9 +79,22 @@ export module Loaders
 		public boot = ( app : any ) : void =>
 		{
 			//
-			this.initTranslator( app );
+			this.initTranslator  ( app );
 			this.loadTranslations( app );
+		};
 
+		/**
+		 * Loader method
+		 *
+		 * You can override default object initialization method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns {any}
+		 */
+		public loader = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return null;
 		};
 
 		/**
@@ -111,7 +121,7 @@ export module Loaders
 				.use( i18nxtFSB )
 				.use( i18nxtSprintf )
 				.init( {
-					debug : process.env.APP_DEBUG,
+					debug : false,//process.env.APP_DEBUG,
 
 					lng				: 'en',
 					fallbackLng		: [ 'dev' ],

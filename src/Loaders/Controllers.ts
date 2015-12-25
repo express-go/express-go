@@ -8,7 +8,7 @@ declare var global : ExpressGoGlobal;
  */
 export module Loaders
 {
-	export class Configs implements LoaderInterface
+	export class Controllers implements LoaderInterface
 	{
 		/**
 		 * Constructor
@@ -27,7 +27,7 @@ export module Loaders
 		 */
 		public exportName() : string
 		{
-			return 'config';
+			return 'controller';
 		}
 
 		/**
@@ -39,17 +39,7 @@ export module Loaders
 		 */
 		public exportNamespace() : boolean
 		{
-			return false;
-		}
-
-		/**
-		 * Define namespace root in global object
-		 *
-		 * @returns {string}
-		 */
-		public defineNamespace() : string
-		{
-			return "Config";
+			return true;
 		}
 
 		/**
@@ -59,9 +49,22 @@ export module Loaders
 		 * @param nameObject
 		 * @returns any
 		 */
-		public register = ( loadObject : any, nameObject : string ) : any =>
+		public register = ( app : any) : void =>
 		{
-			return false;
+		};
+
+		/**
+		 * Loader method
+		 *
+		 * You can override default object initialization method
+		 *
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns {any}
+		 */
+		public loader = ( loadObject : any, nameObject : string ) : any =>
+		{
+			return null;
 		};
 
 		/**
