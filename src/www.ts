@@ -9,7 +9,6 @@ var cluster  = require( 'cluster' );
 var http     = require( 'http' );
 var https    = require( 'https' );
 var spdy     : any = require( 'spdy' );
-var traverse : any = require( 'traverse' );
 var watch    : any = require( 'node-watch' );
 
 var socketIOAdapter : any = require( 'socket.io-redis' );
@@ -272,34 +271,9 @@ export module Core
 			//parse the "/" namespace
 			io.use( socketSession.parser );
 
+			// Booting Sockets loader
 			this.onSocketEvents( io );
-
-
-			//this.app.io = io;
-
-			/*if ( !this.bootedSocket )
-			{
-				this.bootedSocket = true;
-				this.app.boot("Sockets");
-			}
-*/
 			this.app.boot("Sockets", io);
-
-			// Module sockets reading
-			/*try
-			{
-				traverse( global.App.Http.Sockets ).forEach( function ( httpSocket, key )
-				{
-					if ( typeof httpSocket == "function" )
-					{
-						var socketPrefix = this.key == "index" ? "" : this.key;
-						httpSocket( io.of("/" + socketPrefix) );
-					}
-				} );
-			}
-			catch ( ex )
-			{
-			}*/
 
 		}
 

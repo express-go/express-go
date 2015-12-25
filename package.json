@@ -35,7 +35,6 @@
     "socket.io-stream": "^0.9.0",
     "socket.io.session": "^1.0.13",
     "spdy": "^3.0.0",
-    "traverse": "^0.6.6",
     "typescript-require": "git://github.com/theblacksmith/typescript-require.git#8b756bfdcc02ec42f465a61cecb2ae027abe51db"
   },
   "devDependencies": {
