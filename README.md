@@ -25,7 +25,6 @@ $ npm install express-go --save
     * MVC file structure
     * module-go.json file
     * Loading from npm vendors (node_modules) directory
-
 * [Socket.io](https://www.npmjs.com/package/socket.io)
     * [Redis support](https://www.npmjs.com/package/socket.io-redis)
     * [Shared sessions between workers and application](https://www.npmjs.com/package/socket.io.session)
