@@ -16,12 +16,21 @@ export namespace Boot
 		private _providers 	= [];
 		private _exports	= [];
 
+		/**
+		 * Constructor
+		 *
+		 * @test BootProviderTest
+		 */
 		constructor()
 		{
-
 		}
 
 
+		/**
+		 * Booting providers
+		 *
+		 * @param app
+		 */
 		public bootProviders( app : any )
 		{
 			debug("Booting Providers");
@@ -149,40 +158,12 @@ export namespace Boot
 		}
 
 		/**
-		 * Initialized Providers list
-		 *
-		 * @returns {Array}
-		 */
-		public getProviders()
-		{
-			return this._providers;
-		}
-
-
-		/**
-		 * Initialized Providers list modify
-		 *
-		 * @returns {Array}
-		 */
-		public setProviders( providers : any )
-		{
-			this._providers = providers;
-		}
-
-
-		/**
-		 * Return providers by exportName
-		 *
-		 * @returns {Array}
-		 */
-		public getExports()
-		{
-			return this._exports;
-		}
-
-
-		/**
 		 * Parse Provider name from path
+		 *
+		 * @test BootProviderTest
+		 *
+		 * @param providerPath
+		 * @returns {*}
 		 */
 		public parseNameFromPath = ( providerPath : string ) : string =>
 		{
@@ -345,18 +326,6 @@ export namespace Boot
 				{
 					debug("Associated file [%s]: %s", indexExport, filePath);
 
-					// Helyette van a loader a boot után
-					/*var providerRegister
-					 = typeof this._exports[ indexExport ].instance.register === "function"
-					 ? this._exports[ indexExport ].instance.register
-					 (
-					 fileObject[ indexExport ],
-					 this.parseNameFromPath( filePath )
-					 )
-					 : false;
-
-					 providerRegister = !!providerRegister ? providerRegister : fileObject[ indexExport ];*/
-
 					fileObject = this._exports[ indexExport ].objects[ filePath ] = fileObject[ indexExport ];
 
 					return {
@@ -369,8 +338,11 @@ export namespace Boot
 			debug("Unprovided file: %s", filePath);
 			return null;
 		}
+
 		/**
 		 * Validating necessary functions
+		 *
+		 * @test BootProviderTest
 		 *
 		 * @param providerObject
 		 * @returns {boolean}
