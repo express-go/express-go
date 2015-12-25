@@ -18,7 +18,6 @@
     "express": "~4.13.1",
     "express-force-ssl": "^0.3.0",
     "express-session": "^1.12.1",
-    "force-ssl": "^1.0.5",
     "helmet": "^1.0.1",
     "i18next": "^2.0.5",
     "i18next-node-fs-backend": "^0.0.6",
