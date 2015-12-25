@@ -36,6 +36,9 @@ $ npm install express-go --save
 * Configurations
 * Controllers
     * *~~Listing controllers in CLI~~ [future feature]*
+* Loaders / Providers
+    * Declaring custom services and file types
+    * Ex.: module.exports.foo = {}
 * Middlewares
     * *~~Listing middlewares in CLI~~ [future feature]*
 * Models
