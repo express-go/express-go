@@ -16,20 +16,21 @@ $ npm install express-go --save
 ```
 
 ### Supported features ###
+* *Automatic cluster restart when project files are changed [beta]*
+* [Clusters and workers](https://nodejs.org/api/cluster.html)
 * Command-line interface
-* TypeScript source files
+* [Google Analytics](https://www.npmjs.com/package/nodalytics)
+* [Google SPDY](https://www.npmjs.com/package/spdy)
 * Module support
     * MVC file structure
     * module-go.json file
     * Loading from npm vendors (node_modules) directory
-* [Clusters and workers](https://nodejs.org/api/cluster.html)
-* [Google Analytics](https://www.npmjs.com/package/nodalytics)
-* [Google SPDY](https://www.npmjs.com/package/spdy)
+
 * [Socket.io](https://www.npmjs.com/package/socket.io)
     * [Redis support](https://www.npmjs.com/package/socket.io-redis)
     * [Shared sessions between workers and application](https://www.npmjs.com/package/socket.io.session)
     * *~~[Binary transfers](https://www.npmjs.com/package/socket.io-stream)~~ (in progress)*
-* Automatic cluster restart when project files are changed
+* TypeScript source files
 
 
 ### MVC support ###
