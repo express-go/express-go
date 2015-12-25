@@ -169,7 +169,7 @@ export namespace Boot
 		/**
 		 * Merge objects recursive
 		 *
-		 * @test NamespaceTest
+		 * @test BootNamespaceTest
 		 *
 		 * @param targetObject
 		 * @param sourceObject
