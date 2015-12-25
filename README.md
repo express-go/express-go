@@ -43,7 +43,7 @@ $ npm install express-go --save
     * Ex.: module.exports.foo = {}
 * Middlewares
     * *~~Listing middlewares in CLI~~ [future feature]*
-* Models
+* *Models [beta]*
     * *~~Listing models in CLI~~ [future feature]*
     * [ORM based library](https://www.npmjs.com/package/sequelize)
     * Multiple drivers (PostgreSQL, MySQL, MariaDB, SQLite, MSSQL, ...)
@@ -72,7 +72,6 @@ $ npm install express-go --save
 
 ### Roadmap ###
 * STABLE support
-* GeoIP
 * Migrations
 * Seeders
 * Providers (similar Loaders)
