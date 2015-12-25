@@ -5,9 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node bin/build",
-    "test": "mocha --compilers ts:typescript-require --reporter spec test/",
-    "test-ci": "istanbul cover node_modules/mocha/bin/_mocha --report lcovonly -- --compilers ts:typescript-require --reporter spec --check-leaks test/",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- --compilers ts:typescript-require --reporter dot --check-leaks test/"
+    "test": "mocha --compilers ts:typescript-require --reporter spec test"
   },
   "dependencies": {
     "body-parser": "~1.14.2",
@@ -41,7 +39,6 @@
   "devDependencies": {
     "debug": "^2.2.0",
     "glob": "^6.0.2",
-    "istanbul": "^0.4.1",
     "mocha": "^2.3.4",
     "rewire": "^2.5.1",
     "typescript-require": "git://github.com/theblacksmith/typescript-require.git#8b756bfdcc02ec42f465a61cecb2ae027abe51db"

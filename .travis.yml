@@ -20,5 +20,5 @@ script:
   - "test ! -z $(npm -ps ls istanbul) || npm test"
   - "test   -z $(npm -ps ls istanbul) || npm run-script test-ci"
 
-after_script:
-  - "test -e ./coverage/lcov.info && npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls"
+#after_script:
+#  - "test -e ./coverage/lcov.info && npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls"
