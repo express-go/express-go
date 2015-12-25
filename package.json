@@ -34,8 +34,7 @@
     "socket.io-redis": "^1.0.0",
     "socket.io-stream": "^0.9.0",
     "socket.io.session": "^1.0.13",
-    "spdy": "^3.0.0",
-    "typescript-require": "git://github.com/theblacksmith/typescript-require.git#8b756bfdcc02ec42f465a61cecb2ae027abe51db"
+    "spdy": "^3.0.0"
   },
   "devDependencies": {
     "mocha": "^2.3.4",
