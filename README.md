@@ -50,7 +50,7 @@ $ npm install express-go --save
 * Routes
     * Listing routes in CLI
     * [Named routing](https://www.npmjs.com/package/named-routes)
-    * Resource controller
+    * REST Resource controller
     * *~~Auto resource controller~~ [future feature]*
 * Sockets
     * *~~Listing sockets in CLI~~ [future feature]*
