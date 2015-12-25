@@ -16,7 +16,7 @@ export namespace Boot
 		/**
 		 * Constructor
 		 *
-		 * @test NamespaceTest
+		 * @test BootNamespaceTest
 		 */
 		constructor()
 		{
@@ -29,7 +29,7 @@ export namespace Boot
 		 *
 		 * Ex.: "/foo/bar/FileName" => ["foo", "bar", "FileName"]
 		 *
-		 * @test NamespaceTest
+		 * @test BootNamespaceTest
 		 *
 		 * @param pathName
 		 * @param pathBase
@@ -63,7 +63,7 @@ export namespace Boot
 		 *
 		 * Ex.: ["foo", "bar", "FileName"] => foo.bar.FileName = null
 		 *
-		 * @test NamespaceTest
+		 * @test BootNamespaceTest
 		 *
 		 * @param pathArray
 		 * @param requireValue
@@ -100,7 +100,7 @@ export namespace Boot
 		/**
 		 * Converting path to object
 		 *
-		 * @test NamespaceTest
+		 * @test BootNamespaceTest
 		 *
 		 * @param pathName
 		 * @param pathBase
@@ -121,7 +121,7 @@ export namespace Boot
 		 * Adding object to namespace
 		 * Alias of "_mergeObjectsRecursive"
 		 *
-		 * @test NamespaceTest
+		 * @test BootNamespaceTest
 		 *
 		 * @param namespaceObject
 		 * @param newObject
@@ -138,7 +138,7 @@ export namespace Boot
 		/**
 		 * Convert array to object deep helper
 		 *
-		 * @test NamespaceTest
+		 * @test BootNamespaceTest
 		 *
 		 * @param array
 		 * @param object
