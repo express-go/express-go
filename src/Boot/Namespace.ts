@@ -1,26 +1,43 @@
 ///<reference path='../typings/tsd.d.ts'/>
 
-var path  = require('path');
+var path  = require( 'path' );
+var debug = require( 'debug' )( 'express-go:Boot.Namespace' );
 
-var debug  = require('debug')('express-go:Boot.Namespace');
-
-
-export module Boot
+/**
+ * Boot namespace
+ */
+export namespace Boot
 {
 	/**
 	 * Namespace handler class
 	 */
 	export class Namespace
 	{
-
+		/**
+		 * Constructor
+		 *
+		 * @test NamespaceTest
+		 */
 		constructor()
 		{
 			debug( "Initializing Namespace" );
 		}
 
+
+		/**
+		 * Converting path to array
+		 *
+		 * Ex.: "/foo/bar/FileName" => ["foo", "bar", "FileName"]
+		 *
+		 * @test NamespaceTest
+		 *
+		 * @param pathName
+		 * @param pathBase
+		 * @returns {string[]}
+		 */
 		public pathToArray( pathName : string, pathBase? : string ) : any
 		{
-			pathName = path.normalize( pathName );;
+			pathName = path.normalize( pathName );
 
 			// Remove base path
 			if ( pathBase )
@@ -31,18 +48,32 @@ export module Boot
 
 			// Loading file in to object
 			var pathPartials = pathName.split( /[\\/]+/ ); 		// Split slashes
-				pathPartials = pathPartials.filter((e) => {	// Remove empty items
-					return !!e;
-				});
+			pathPartials = pathPartials.filter( ( e ) =>
+			{	// Remove empty items
+				return !!e;
+			} );
 
 			return pathPartials;
 		}
 
+
+		/**
+		 * Converting path array to object
+		 * Use requireValue parameter for defined value, default "null"
+		 *
+		 * Ex.: ["foo", "bar", "FileName"] => foo.bar.FileName = null
+		 *
+		 * @test NamespaceTest
+		 *
+		 * @param pathArray
+		 * @param requireValue
+		 * @returns {{}}
+		 */
 		public pathArrayToObject( pathArray : any, requireValue? : any ) : any
 		{
 			var modelActual;
 			var modelObject = {};
-			var modelPrefix = pathArray[0];
+			var modelPrefix = pathArray[ 0 ];
 
 			if ( modelPrefix == 'src' || modelPrefix == 'app' )
 			{
@@ -65,7 +96,56 @@ export module Boot
 			return modelObject;
 		}
 
-		private _arrayToObject( array, object, value )
+
+		/**
+		 * Converting path to object
+		 *
+		 * @test NamespaceTest
+		 *
+		 * @param pathName
+		 * @param pathBase
+		 * @param requireValue
+		 * @returns {any}
+		 */
+		public pathToObject( pathName : string, pathBase? : string, requireValue? : string ) : any
+		{
+			return this.pathArrayToObject
+			(
+				this.pathToArray( pathName, pathBase ),
+				requireValue
+			);
+		}
+
+
+		/**
+		 * Adding object to namespace
+		 * Alias of "_mergeObjectsRecursive"
+		 *
+		 * @test NamespaceTest
+		 *
+		 * @param namespaceObject
+		 * @param newObject
+		 * @returns {any}
+		 */
+		public addToNamespace( namespaceObject : any, newObject : any ) : any
+		{
+			debug( "Namespace object" );
+
+			return this._mergeObjectsRecursive( namespaceObject, newObject );
+		}
+
+
+		/**
+		 * Convert array to object deep helper
+		 *
+		 * @test NamespaceTest
+		 *
+		 * @param array
+		 * @param object
+		 * @param value
+		 * @private
+		 */
+		private _arrayToObject( array : any, object : any, value : any ) : any
 		{
 			if ( typeof object[ array[ 0 ] ] == "undefined" )
 			{
@@ -85,54 +165,37 @@ export module Boot
 			}
 		}
 
-		public pathToObject( pathName : string, pathBase? : string, requireValue? : string ) : any
+
+		/**
+		 * Merge objects recursive
+		 *
+		 * @test NamespaceTest
+		 *
+		 * @param targetObject
+		 * @param sourceObject
+		 * @returns {any}
+		 * @constructor
+		 */
+		public  _mergeObjectsRecursive( targetObject : any, sourceObject : any ) : any
 		{
-			return this.pathArrayToObject
-			(
-				this.pathToArray( pathName, pathBase ),
-				requireValue
-			);
-		}
+			var keyObject;
 
-		public filesToNamespace( filesList : any, pathBase : string ) : any
-		{
-			var indexFiles;
-			var valueObject = {};
-
-			for ( indexFiles in filesList )
-			{
-				valueObject = this.MergeRecursive(
-					valueObject,
-					this.pathToObject( filesList[ indexFiles ], pathBase )
-				);
-			}
-
-			return valueObject;
-
-		}
-
-		public addToNamespace( namespaceObject : any, newObject : any )
-		{
-			debug("Namespace object");
-
-			return this.MergeRecursive( namespaceObject, newObject );
-		}
-
-		public  MergeRecursive( obj1, obj2 )
-		{
-			for ( var p in obj2 )
+			for ( keyObject in sourceObject )
 			{
 				try
 				{
 					// Property in destination object set; update its value.
-					if ( obj2[ p ].constructor == Object )
+					if ( sourceObject[ keyObject ].constructor == Object )
 					{
-						obj1[ p ] = this.MergeRecursive( obj1[ p ], obj2[ p ] );
+						targetObject[ keyObject ] = this._mergeObjectsRecursive(
+							targetObject[ keyObject ],
+							sourceObject[ keyObject ]
+						);
 
 					}
 					else
 					{
-						obj1[ p ] = obj2[ p ];
+						targetObject[ keyObject ] = sourceObject[ keyObject ];
 
 					}
 
@@ -140,13 +203,14 @@ export module Boot
 				catch ( e )
 				{
 					// Property in destination object not set; create it and set its value.
-					obj1[ p ] = obj2[ p ];
+					targetObject[ keyObject ] = sourceObject[ keyObject ];
 
 				}
 			}
 
-			return obj1;
+			return targetObject;
 		}
+
 	}
 
 }
