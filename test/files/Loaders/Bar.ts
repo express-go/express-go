@@ -1,6 +1,6 @@
-///<reference path='../../src/typings/tsd.d.ts'/>
+///<reference path='../../../src/typings/tsd.d.ts'/>
 
-import {ExpressGoGlobal,LoaderInterface} from "../../src/typings/express-go";
+import {ExpressGoGlobal,LoaderInterface} from "../../../src/typings/express-go";
 declare var global : ExpressGoGlobal;
 
 /**

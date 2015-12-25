@@ -15,9 +15,26 @@ export namespace Boot
 	{
 		private _fileManager : Boot.Files;
 
+
+		private _pathApplicationProviders;
+		private _pathApplicationConfig;
+		private _pathApplicationFiles;
+		private _pathCoreProviders;
+
+
+
 		constructor()
 		{
 			this._fileManager = new Boot.Files();
+
+			if ( process.env.NODE_ENV !== "test" )
+			{
+				this._pathApplicationConfig		= global.config_path();
+				this._pathApplicationFiles 		= global.app_path();
+				this._pathApplicationProviders 	= global.bootstrap_path("Loaders");
+				this._pathCoreProviders 		= './../Loaders/';
+			}
+
 		}
 
 		/**
@@ -27,7 +44,7 @@ export namespace Boot
 		 */
 		public findCoreProviders()
 		{
-			return this._fileManager.findFiles( './../Loaders/', true );
+			return this._fileManager.findFiles( this._pathCoreProviders, true );
 		}
 
 		/**
@@ -37,17 +54,17 @@ export namespace Boot
 		 */
 		public findApplicationProviders()
 		{
-			return this._fileManager.findFiles( global.bootstrap_path("Loaders") );
+			return this._fileManager.findFiles( this._pathApplicationProviders );
 		}
 
 		public findApplicationFiles()
 		{
-			return this._fileManager.findFiles( global.app_path(), false, false );
+			return this._fileManager.findFiles( this._pathApplicationFiles, false, false );
 		}
 
 		public findApplicationConfigFiles()
 		{
-			return this._fileManager.findFiles( global.config_path(), false, false );
+			return this._fileManager.findFiles( this._pathApplicationConfig, false, false );
 		}
 
 		public findModules()
