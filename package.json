@@ -19,7 +19,7 @@
     "express-force-ssl": "^0.3.0",
     "express-session": "^1.12.1",
     "helmet": "^1.0.1",
-    "i18next": "^2.0.5",
+    "i18next": "^2.0.9",
     "i18next-node-fs-backend": "^0.0.6",
     "i18next-sprintf-postprocessor": "^0.0.6",
     "morgan": "~1.6.1",
