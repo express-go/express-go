@@ -167,6 +167,7 @@ export module Loaders
 			// ?lang=xx_yy
 			app.use( function ( req : any, res : any, next : any )
 			{
+
 				// Session lang init
 				if ( !req.session.lang )
 				{
