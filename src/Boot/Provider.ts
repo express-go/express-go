@@ -100,6 +100,48 @@ export namespace Boot
 					}
 				}
 
+
+				//console.log( typeof actProvider.instance.loader );
+				//process.exit();
+
+				if ( false)
+				{
+					// Default method
+					if ( typeof actProvider.instance.loader === "undefined" || !actProvider.instance.loader )
+					{
+						debug("[Loading default mode]");
+						actObject = actObject( app );
+					}
+
+					// Declared method
+					else if ( actProvider.instance.loader && typeof actProvider.instance.loader === "function" )
+					{
+						bootObject = actProvider.instance.loader
+						(
+							actObject,
+							this.parseNameFromPath( indexObject )
+						);
+
+						debug("[Loading loader mode]");
+						debug( typeof bootObject );
+						actObject = bootObject;
+
+						/*if ( typeof bootObject === "object" )
+						 {
+						 debug("[Loading loader mode]");
+						 actObject = bootObject;
+						 }
+						 else if ( typeof actObject === "function" )
+						 {
+						 debug("[Loading default mode]");
+						 actObject = actObject( app );
+						 }
+						 else
+						 {
+						 debug("[Loading keep mode]");
+						 }*/
+					}
+				}
 				// Else keep original object
 				actProvider.objects[ indexObject ] = actObject;
 			}
@@ -145,10 +187,10 @@ export namespace Boot
 		public parseNameFromPath = ( providerPath : string ) : string =>
 		{
 			var fileName = providerPath
-				.split( /[\\/]+/ )
-				.pop()
-				.replace(/\.[^/.]+$/, "")
-			;
+					.split( /[\\/]+/ )
+					.pop()
+					.replace(/\.[^/.]+$/, "")
+				;
 
 			return fileName;
 		};
@@ -166,9 +208,9 @@ export namespace Boot
 
 			var providerSource 	= require( providerPath );
 			var providerObject 	= typeof providerSource['loader'] !== "undefined"
-								? providerSource['loader']
-								: providerSource.Loaders[ providerName ]
-			;
+					? providerSource['loader']
+					: providerSource.Loaders[ providerName ]
+				;
 
 			if ( !providerObject )
 				throw new Error("Provider object problem: " + providerPath);
@@ -188,20 +230,20 @@ export namespace Boot
 			debug( "Initializing Provider object: %s", providerName );
 
 			var val =
-			{
-				source			: null,
-				instance 		: null,
-				booted			: false,
-				bootedFiles		: false,
-				loadedFiles		: false,
+				{
+					source			: null,
+					instance 		: null,
+					booted			: false,
+					bootedFiles		: false,
+					loadedFiles		: false,
 
-				manualBoot 		: false,
-				exportName		: null,
-				exportNamespace	: false,
-				//defineNamespace : null,
+					manualBoot 		: false,
+					exportName		: null,
+					exportNamespace	: false,
+					//defineNamespace : null,
 
-				objects  		: {},
-			};
+					objects  		: {},
+				};
 
 			val.source			= providerObject;
 			val.instance		= typeof val.source === "function" ? new val.source() : val.source;
@@ -262,4 +304,90 @@ export namespace Boot
 
 
 		/**
-		 * Associate fi
+		 * Associate files for providers
+		 *
+		 * @param fileList
+		 */
+		public associateProviders( fileList : any )
+		{
+			var indexFile;
+			var valueFile;
+
+			for ( indexFile in fileList )
+			{
+				valueFile = fileList[ indexFile ];
+				this.associateProvider( valueFile );
+			}
+		}
+
+
+		/**
+		 * Associate file with provider export prefix
+		 *
+		 * @param filePath
+		 */
+		public associateProvider( filePath : any )
+		{
+			var fileObject  = require( filePath );
+
+			this.associateProviderObject( fileObject, filePath )
+
+		}
+
+
+		public associateProviderObject( fileObject : any, filePath : string  )
+		{
+			var indexExport;
+
+			for ( indexExport in fileObject )
+			{
+				if ( indexExport in this._exports )
+				{
+					debug("Associated file [%s]: %s", indexExport, filePath);
+
+					// Helyette van a loader a boot után
+					/*var providerRegister
+					 = typeof this._exports[ indexExport ].instance.register === "function"
+					 ? this._exports[ indexExport ].instance.register
+					 (
+					 fileObject[ indexExport ],
+					 this.parseNameFromPath( filePath )
+					 )
+					 : false;
+
+					 providerRegister = !!providerRegister ? providerRegister : fileObject[ indexExport ];*/
+
+					fileObject = this._exports[ indexExport ].objects[ filePath ] = fileObject[ indexExport ];
+
+					return {
+						provider 	: this._exports[ indexExport ],
+						fileObject	: fileObject
+					};
+				}
+			}
+
+			debug("Unprovided file: %s", filePath);
+			return null;
+		}
+		/**
+		 * Validating necessary functions
+		 *
+		 * @param providerObject
+		 * @returns {boolean}
+		 */
+		public validateProviderObject( providerObject : any )
+		{
+			if (
+				typeof providerObject["boot"] === "undefined"
+				||	typeof providerObject["register"] === "undefined"
+				||	typeof providerObject["exportName"] === "undefined"
+				||	typeof providerObject["exportNamespace"] === "undefined"
+			)
+				throw new Error("Provider validate problem: " + providerObject);
+
+			return true;
+		}
+
+	}
+
+}
