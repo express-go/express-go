@@ -1,7 +1,7 @@
 /// <reference path="../src/typings/mocha/mocha.d.ts" />
 /// <reference path="../src/typings/tsd.d.ts" />
 
-process.env.NODE_ENV = 'test'
+process.env.NODE_ENV = 'test';
 
 var asserts = require( 'assert' );
 
