@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "debug": "^2.2.0",
+    "glob": "^6.0.2",
     "mocha": "^2.3.4",
     "rewire": "^2.5.1",
     "typescript-require": "git://github.com/theblacksmith/typescript-require.git#8b756bfdcc02ec42f465a61cecb2ae027abe51db"

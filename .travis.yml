@@ -1,12 +1,6 @@
 language: node_js
 node_js:
-  - "5.2"
-  - "5.0"
-  - "4.2"
-  - "4.0"
   - "0.12"
-  - "iojs"
 sudo: false
 services:
   - redis
-after_script: "npm install coveralls@2.10.0 && cat ./coverage/lcov.info | coveralls"
