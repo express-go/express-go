@@ -13,22 +13,11 @@ export namespace Boot
 {
 	export class Finder
 	{
-		_fileManager : Boot.Files;
-		_fileList = [];
+		private _fileManager : Boot.Files;
 
 		constructor()
 		{
 			this._fileManager = new Boot.Files();
-
-/*			this.findCoreProviders();
-			this.findProjectProviders();
-
-			this.findProjectFiles();
-			this.findProjectProviders();*/
-
-
-			//console.log( "+Haha", this._fileManager );
-			//process.exit();
 		}
 
 		/**
