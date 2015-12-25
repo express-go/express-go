@@ -68,15 +68,14 @@ $ npm install express-go --save
 ### Security support ###
 * [CSRF verification](https://www.npmjs.com/package/csurf)
 * [DDOS prevention](https://www.npmjs.com/package/ddos)
-* [XSS filter](https://www.npmjs.com/package/xss)
-* [Security package](https://www.npmjs.com/package/helmet)
+* [HELMET package](https://www.npmjs.com/package/helmet)
 
 ### Roadmap ###
-* LTS support
+* STABLE support
 * GeoIP
 * Migrations
 * Seeders
-* Configurations
+* Providers (similar Loaders)
 
 ## License
 
