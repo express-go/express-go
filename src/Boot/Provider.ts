@@ -285,24 +285,6 @@ export namespace Boot
 
 
 		/**
-		 * Associate files for providers
-		 *
-		 * @param fileList
-		 */
-		public associateProviders( fileList : any )
-		{
-			var indexFile;
-			var valueFile;
-
-			for ( indexFile in fileList )
-			{
-				valueFile = fileList[ indexFile ];
-				this.associateProvider( valueFile );
-			}
-		}
-
-
-		/**
 		 * Associate file with provider export prefix
 		 *
 		 * @param filePath

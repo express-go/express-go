@@ -16,6 +16,18 @@ describe( 'Boot.Provider', () =>
 		subject = new Boot.Provider();
 	} );
 
+
+	describe( '#bootProviders', () =>
+	{
+
+	} );
+
+	describe( '#bootProvider', () =>
+	{
+
+	} );
+
+
 	/**
 	 * Parse Provider name from path
 	 */
@@ -30,6 +42,32 @@ describe( 'Boot.Provider', () =>
 				throw new Error( 'Expected "foo/bar/FileName.extension" is FileName but was ' + result );
 			}
 		} );
+	} );
+
+
+	describe( '#initProvider', () =>
+	{
+
+	} );
+
+	describe( '#initProviderObject', () =>
+	{
+
+	} );
+
+	describe( '#orderProviders', () =>
+	{
+
+	} );
+
+	describe( '#associateProvider', () =>
+	{
+
+	} );
+
+	describe( '#associateProviderObject', () =>
+	{
+
 	} );
 
 
