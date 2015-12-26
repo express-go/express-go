@@ -3,6 +3,9 @@
 import {ExpressGo,LoaderInterface} from "../typings/express-go";
 declare var global : ExpressGo.Global;
 
+var socketIOSession : any = require( "socket.io.session" );
+var socketSession 	: any = null;
+
 
 /**
  * Controller loader
@@ -74,9 +77,11 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( appIo : any ) : void =>
+		public boot = ( app : any ) : void =>
 		{
-			this._io = appIo;
+			this._io = app.io;
+
+			socketSession = socketIOSession( app.sessionSettings );
 		};
 
 		/**
@@ -90,10 +95,15 @@ export module Loaders
 		 */
 		public loader = ( loadObject : any, nameObject : string ) : any =>
 		{
-			var socketPrefix = nameObject == "index" ? "" : nameObject;
+			// Socket channel
+			var socketPrefix  = nameObject == "index" ? "" : nameObject;
 
-			// Use original method
-			return loadObject( this._io.of("/" + socketPrefix) );
+			// Channel instance with session parser
+			var socketChannel = this._io.of("/" + socketPrefix);
+				socketChannel.use( socketSession.parser );
+
+			// Use original method with Socket.io object
+			return loadObject( socketChannel );
 		};
 
 

@@ -12,8 +12,7 @@ var spdy     : any = require( 'spdy' );
 var watch    : any = require( 'node-watch' );
 
 var socketIOAdapter : any = require( 'socket.io-redis' );
-var socketIOSession : any = require( "socket.io.session" );
-var socketSession 	: any = null;
+var socketServer	: any;
 
 var debug = require( 'debug' )( 'express-go:Www' );
 
@@ -55,7 +54,6 @@ export module Core
 			//process.exit();
 
 			this.app       = appBase;
-			socketSession  = socketIOSession( this.app.sessionSettings );
 			this.updateOptions( basePath );
 		}
 
@@ -260,20 +258,32 @@ export module Core
 		 */
 		private serveSocket( server )
 		{
-			var io = require( 'socket.io' );
-				io = io.listen( server );
+			// Socket.IO instance
+			if ( !socketServer )
+			{
+				// Initializing server
+				socketServer = require( 'socket.io' )();
 
-			io.adapter( socketIOAdapter( {
-				host : process.env.REDIS_HOST,
-				port : process.env.REDIS_PORT
-			} ) );
+				// Disabled client service (included gulp package)
+				socketServer.serveClient(false);
 
-			//parse the "/" namespace
-			io.use( socketSession.parser );
+				// Redis connections
+				socketServer.adapter( socketIOAdapter( {
+					host : process.env.REDIS_HOST,
+					port : process.env.REDIS_PORT
+				} ) );
 
-			// Booting Sockets loader
-			this.onSocketEvents( io );
-			this.app.boot("Sockets", io);
+				// Socket events
+				this.onSocketEvents( socketServer );
+
+				// Booting Sockets loader
+				this.app.io = socketServer;
+				this.app.boot("Sockets", this.app );
+
+			}
+
+			// Attach Socket.IO to web server
+			socketServer.attach( server );
 
 		}
 
