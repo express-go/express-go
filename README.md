@@ -28,9 +28,9 @@ $ npm install express-go --save
 * [Socket.io](https://www.npmjs.com/package/socket.io)
     * [Redis support](https://www.npmjs.com/package/socket.io-redis)
     * [Shared sessions between workers and application](https://www.npmjs.com/package/socket.io.session)
-    * *~~[Binary transfers](https://www.npmjs.com/package/socket.io-stream)~~ (in progress)*
+    * *~~[Binary transfers](https://www.npmjs.com/package/socket.io-stream)~~ [future feature]*
 * TypeScript source files
-
+* TypeScript test files *[in progress]*
 
 ### MVC support ###
 * Commands
