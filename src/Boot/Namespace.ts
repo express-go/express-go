@@ -1,7 +1,12 @@
 ///<reference path='../typings/tsd.d.ts'/>
+///<reference path='Boot.ts'/>
 
-var path  = require( 'path' );
+import {ExpressGo} from "../typings/express-go";
+declare var global : ExpressGo.Global;
+
 var debug = require( 'debug' )( 'express-go:Boot.Namespace' );
+
+var path  = require( "path" );
 
 /**
  * Boot namespace

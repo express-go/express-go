@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
 
-import {ExpressGoGlobal} from "../typings/express-go";
-declare var global : ExpressGoGlobal;
+import {ExpressGo} from "../typings/express-go";
+declare var global : ExpressGo.Global;
 
 var debug  		= require('debug')('express-go:Boot');
 
@@ -25,7 +25,9 @@ var sortProvider =
 ];
 var loadUnknownFiles = true;
 
-
+/**
+ * Boot namespace
+ */
 export module Boot
 {
 	/**

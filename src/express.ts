@@ -1,7 +1,7 @@
 ///<reference path='typings/tsd.d.ts'/>
 
-import {ExpressGoGlobal} from "./typings/express-go";
-declare var global : ExpressGoGlobal;
+import {ExpressGo} from "./typings/express-go";
+declare var global : ExpressGo.Global;
 
 var fs   = require( 'fs' );
 var path = require( 'path' );
@@ -56,7 +56,7 @@ app.sessionSettings =
 };
 
 
-class ExpressGo
+class ExpressGoCore
 {
 	constructor( app )
 	{
@@ -171,4 +171,4 @@ class ExpressGo
 
 }
 
-module.exports = new ExpressGo( app );
+module.exports = new ExpressGoCore( app );

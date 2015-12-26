@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
 
-import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
-declare var global : ExpressGoGlobal;
+import {ExpressGo,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGo.Global;
 
 /**
  * Middlewares loader

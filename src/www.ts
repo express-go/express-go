@@ -1,8 +1,8 @@
 ///<reference path='./typings/tsd.d.ts'/>
 
 import {Worker} from "cluster";
-import {ExpressGoGlobal} from "./typings/express-go";
-declare var global : ExpressGoGlobal;
+import {ExpressGo} from "./typings/express-go";
+declare var global : ExpressGo.Global;
 
 var fs       = require( 'fs' );
 var cluster  = require( 'cluster' );

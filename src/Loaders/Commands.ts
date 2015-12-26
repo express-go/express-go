@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
 
-import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
-declare var global : ExpressGoGlobal;
+import {ExpressGo,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGo.Global;
 
 /**
  * Controller loader
@@ -25,10 +25,10 @@ export module Loaders
 		 *
 		 * @returns {string}
 		 */
-		public exportName() : string
+		public exportName = () : string =>
 		{
 			return 'command';
-		}
+		};
 
 		/**
 		 * Load object into global namespace
@@ -37,10 +37,10 @@ export module Loaders
 		 *
 		 * @returns {boolean}
 		 */
-		public exportNamespace() : boolean
+		public exportNamespace = () : boolean =>
 		{
 			return true;
-		}
+		};
 
 		/**
 		 * Register method

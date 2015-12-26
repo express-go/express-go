@@ -1,14 +1,19 @@
 ///<reference path='../typings/tsd.d.ts'/>
 ///<reference path='Boot.ts'/>
 
-import {ExpressGoGlobal} from "../typings/express-go";
-declare var global : ExpressGoGlobal;
+import {ExpressGo} from "../typings/express-go";
+declare var global : ExpressGo.Global;
+
+var debug = require( "debug" )( 'express-go:Boot.FileManager' );
 
 var fs	  = require( "fs" );
 var glob  = require( "glob" );
 var path  = require( "path" );
-var debug = require( "debug" )( 'express-go:Boot.FileManager' );
 
+
+/**
+ * Boot namespace
+ */
 export namespace Boot
 {
 	/**

@@ -1,7 +1,7 @@
 ///<reference path='../typings/tsd.d.ts'/>
 
-import {ExpressGoGlobal,LoaderInterface} from "../typings/express-go";
-declare var global : ExpressGoGlobal;
+import {ExpressGo,LoaderInterface} from "../typings/express-go";
+declare var global : ExpressGo.Global;
 declare function t( path? : string );
 
 var fs    = require( 'fs' );
@@ -165,7 +165,7 @@ export module Loaders
 
 			// Use middleware to set current language
 			// ?lang=xx_yy
-			app.use( function ( req : any, res : any, next : any )
+			app.use( ( req : ExpressGo.Request, res : ExpressGo.Response, next : Function ) =>
 			{
 				// Session lang init
 				if ( !req.session.lang )
