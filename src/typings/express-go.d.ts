@@ -13,6 +13,7 @@ export interface LoaderInterface
 
     // Optional functions
     manualBoot?()       : boolean;
+    loaderCache?()      : boolean;
     loader ( loadObject : any, nameObject : string ) : any;
 
     // Maybe later
