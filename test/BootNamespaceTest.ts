@@ -149,7 +149,6 @@ describe( 'Boot.Namespace', () =>
 		} );
 	} );
 
-
 	/**
 	 * Adding object to namespace
 	 * Alias of "_mergeObjectsRecursive"
@@ -185,7 +184,6 @@ describe( 'Boot.Namespace', () =>
 			}
 		} );
 	} );
-
 
 	/**
 	 * Convert array to object deep helper
