@@ -106,16 +106,5 @@ export module Loaders
 			return loadObject( socketChannel );
 		};
 
-
-		/**
-		 * Disable saving loader object
-		 * Disable because of multiple instance (http/https)
-		 *
-		 * @returns {boolean}
-		 */
-		public loaderCache()
-		{
-			return false;
-		}
 	}
 }
