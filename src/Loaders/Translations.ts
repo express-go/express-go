@@ -66,7 +66,7 @@ export module Loaders
 		 *
 		 * @returns void
 		 */
-		public register = ( ) : void =>
+		public register = () : void =>
 		{
 		};
 
@@ -153,7 +153,7 @@ export module Loaders
 
 					// right now there is only the integrated console logger available.
 					/*functions		: {
-					 log : require( 'debug' )( 'express-go:i18n' )
+					 	log : require( 'debug' )( 'express-go:i18n' )
 					 },*/
 				});
 
@@ -167,7 +167,6 @@ export module Loaders
 			// ?lang=xx_yy
 			app.use( function ( req : any, res : any, next : any )
 			{
-
 				// Session lang init
 				if ( !req.session.lang )
 				{

@@ -3,12 +3,18 @@
  */
 export interface LoaderInterface
 {
-    boot( app : any, loadObject : any ) : any;
-    manualBoot?()       : boolean;
+    // Required functions
     exportName()        : string;
     exportNamespace()   : boolean;
-    defineNamespace?()  : string;
-    register( loadObject : any, nameObject : string ) : any;
+    register()          : void;
+    boot( app : any )   : void;
+
+    // Optional functions
+    manualBoot?()       : boolean;
+    loader ( loadObject : any, nameObject : string ) : any;
+
+    // Maybe later
+    //defineNamespace?()  : string;
 }
 
 /**

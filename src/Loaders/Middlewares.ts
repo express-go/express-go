@@ -49,7 +49,7 @@ export module Loaders
 		 * @param nameObject
 		 * @returns any
 		 */
-		public register = ( app : any) : void =>
+		public register = () : void =>
 		{
 		};
 

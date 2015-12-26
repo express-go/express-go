@@ -64,7 +64,7 @@ export module Loaders
 		 * @param app
 		 * @returns any
 		 */
-		public register = ( app : any ) : void =>
+		public register = () : void =>
 		{
 		};
 

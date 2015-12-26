@@ -57,7 +57,7 @@ export module Loaders
 		 *
 		 * @returns void
 		 */
-		public register = ( ) : void =>
+		public register = () : void =>
 		{
 		};
 

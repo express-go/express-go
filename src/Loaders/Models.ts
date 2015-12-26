@@ -57,7 +57,7 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public register = ( app : any ) : void =>
+		public register = () : void =>
 		{
 			// Initializing
 			if ( !!process.env.DB_ENV )
