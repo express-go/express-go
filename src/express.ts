@@ -60,12 +60,9 @@ class ExpressGoCore
 {
 	constructor( app )
 	{
-		debug( "ExpressGo init app" );
+		debug( "Initializing" );
 
-		debug( "ExpressGo init initParsers" );
 		this.initParsers();
-
-		debug( "ExpressGo init initStatics" );
 		this.initStatics();
 
 		return app;
@@ -76,6 +73,8 @@ class ExpressGoCore
 	 */
 	private initParsers()
 	{
+		debug( "Initializing parsers" );
+
 		// Force SSL
 		app.enable( 'trust proxy' );
 		this.initForceSSL();
@@ -128,6 +127,8 @@ class ExpressGoCore
 	 */
 	private initStatics()
 	{
+		debug( "Initializing static files" );
+
 		//
 		if ( !!process.env.APP_UA && process.env.APP_UA.indexOf( "UA-" ) === 0 )
 			app.use( nodalytics( process.env.APP_UA ) );
