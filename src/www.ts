@@ -1,7 +1,7 @@
-///<reference path='./typings/tsd.d.ts'/>
+///<reference path='../typings/tsd.d.ts'/>
 
 import {Worker} from "cluster";
-import {ExpressGo} from "./typings/express-go";
+import {ExpressGo} from "../typings/express-go";
 declare var global : ExpressGo.Global;
 
 var fs       = require( 'fs' );
@@ -128,7 +128,7 @@ export module Core
 						{
 							fn( filename );
 						}
-					}
+					};
 				};
 
 				watch( global.app_path(), filter( /\.js$|\.ts$/, ( file ) =>
@@ -138,10 +138,10 @@ export module Core
 						clearTimeout( timeOut );
 
 						var fileExt = file.substr( file.lastIndexOf( '.' ) + 1 );
-						if ( fileExt !== 'js' && fileExt !== 'ts' )
+						if ( fileExt !== "js" && fileExt !== "ts" )
 							return;
 
-						debug( ' filename provided: ' + file );
+						debug( " filename provided: " + file );
 
 						timeOut = setTimeout( restartWorkers, 2300 );
 					}
@@ -177,7 +177,7 @@ export module Core
 					callFunction();
 				} );
 
-				debug( 'Worker %d running!', cluster.worker.id );
+				debug( "Worker %d running!", cluster.worker.id );
 
 			}
 		};
@@ -209,7 +209,7 @@ export module Core
 		public serveHttp()
 		{
 			if ( !process.env.FORCE_HTTPS )
-				this.app.set( 'port', this.normalizePort( process.env.PORT_HTTP ) );
+				this.app.set( "port", this.normalizePort( process.env.PORT_HTTP ) );
 
 			var server = http.createServer( this.app );
 
@@ -224,7 +224,7 @@ export module Core
 		public serveHttps()
 		{
 			if ( !!process.env.FORCE_HTTPS )
-				this.app.set( 'port', this.normalizePort( process.env.PORT_HTTPS ) );
+				this.app.set( "port", this.normalizePort( process.env.PORT_HTTPS ) );
 
 			var server = https.createServer( this.options.https, this.app );
 
@@ -239,7 +239,7 @@ export module Core
 		public serveSpdy()
 		{
 			if ( !!process.env.FORCE_HTTPS )
-				this.app.set( 'port', this.normalizePort( process.env.PORT_HTTPS ) );
+				this.app.set( "port", this.normalizePort( process.env.PORT_HTTPS ) );
 
 			var server = spdy.createServer( this.options.https, this.app );
 

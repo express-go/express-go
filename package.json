@@ -4,6 +4,7 @@
   "description": "Express-go the Node.js Express based MVC framework engine.",
   "main": "index.js",
   "scripts": {
+    "lint": "tslint -c test/tslint.json \"src/**/*.ts\"",
     "build": "node bin/build",
     "test": "mocha --compilers ts:typescript-require --reporter spec test"
   },
@@ -41,6 +42,7 @@
     "glob": "^6.0.2",
     "mocha": "^2.3.4",
     "rewire": "^2.5.1",
+    "tslint": "^3.2.1",
     "typescript-require": "git://github.com/theblacksmith/typescript-require.git#8b756bfdcc02ec42f465a61cecb2ae027abe51db"
   },
   "repository": {

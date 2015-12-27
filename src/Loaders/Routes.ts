@@ -1,6 +1,6 @@
-///<reference path='../typings/tsd.d.ts'/>
+///<reference path='../../typings/tsd.d.ts'/>
 
-import {ExpressGo,LoaderInterface} from "../typings/express-go";
+import {ExpressGo,LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 var Router : any = require( 'named-routes' );

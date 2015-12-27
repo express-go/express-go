@@ -1,7 +1,7 @@
-///<reference path='../typings/tsd.d.ts'/>
+///<reference path='../../typings/tsd.d.ts'/>
 ///<reference path='Boot.ts'/>
 
-import {ExpressGo} from "../typings/express-go";
+import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 var debug = require( "debug" )( 'express-go:Boot.Finder  ' );

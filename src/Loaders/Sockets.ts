@@ -1,10 +1,10 @@
-///<reference path='../typings/tsd.d.ts'/>
+///<reference path='../../typings/tsd.d.ts'/>
 
-import {ExpressGo,LoaderInterface} from "../typings/express-go";
+import {ExpressGo,LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 var socketIOSession : any = require( "socket.io.session" );
-var socketSession 	: any = null;
+var socketSession : any   = null;
 
 
 /**
@@ -96,19 +96,19 @@ export module Loaders
 		public loader = ( loadObject : any, nameObject : string ) : any =>
 		{
 			// Socket channel
-			var socketPrefix  = nameObject == "index" ? "" : nameObject;
+			var socketPrefix = nameObject == "index" ? "" : nameObject;
 
 			// Channel instance with session parser
-			var socketChannel = this._io.of("/" + socketPrefix);
+			var socketChannel = this._io.of( "/" + socketPrefix );
 			socketChannel.use( socketSession.parser );
 
 			// io conection
-			socketChannel.on('connection', function ( socket )
+			socketChannel.on( 'connection', function ( socket )
 			{
 				// Use original method with Socket.io object
 				loadObject( socket );
 
-			});
+			} );
 
 		};
 
