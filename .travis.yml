@@ -3,7 +3,7 @@ language:
   - objective-c
 
 os:
-#  - linux
+  - linux
   - osx
 
 env:
