@@ -96,8 +96,8 @@ $ npm install express-go --save
 [downloads-url]: https://npmjs.org/package/express-go
 [travis-image]: https://img.shields.io/travis/express-go/express-go/master.svg?label=linux
 [travis-url]: https://travis-ci.org/express-go/express-go
-[appveyor-image]: https://img.shields.io/appveyor/ci/express-go/express-go/master.svg?label=windows
-[appveyor-url]: https://ci.appveyor.com/project/express-go/express-go
+[appveyor-image]: https://img.shields.io/appveyor/ci/sipimokus/express-go/master.svg?label=windows
+[appveyor-url]: https://ci.appveyor.com/project/sipimokus/express-go
 [deps-image]: https://img.shields.io/david/express-go/express-go.svg?label=deps
 [deps-url]: https://david-dm.org/express-go/express-go
 [devs-image]: https://img.shields.io/david/dev/express-go/express-go.svg?label=devDeps
