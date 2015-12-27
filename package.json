@@ -61,10 +61,15 @@
     "node.js"
   ],
   "author": "Bence Sipos <sipimokus@gmail.com>",
-  "license": "GPL",
+  "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/express-go/express-go/issues"
   },
   "homepage": "https://github.com/express-go/express-go",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "engines": {
+    "node": ">= 0.12.0",
+    "iojs": ">= 1.0.0",
+    "npm" : ">= 2.0.0"
+  }
 }
