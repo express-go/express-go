@@ -6,8 +6,8 @@ Express-go the Node.js Express based MVC framework engine, inspirated by Laravel
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Build Status][travis-image]][travis-url]
-[![Dependency Status](deps-image)](deps-url)
-[![devDependency Status](devs-image)](devs-url)
+[![Dependency Status][deps-image]][deps-url]
+[![devDependency Status][devs-image]][devs-url]
 
 ### Example project ###
 Please, see [express-go-project](https://github.com/express-go/express-go-project/) page for sample usage.
