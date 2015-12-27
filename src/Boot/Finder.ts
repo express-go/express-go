@@ -4,9 +4,10 @@
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
+var Files = require( "./FileManager" ).Boot;
+
 var debug = require( "debug" )( 'express-go:Boot.Finder  ' );
 
-var Files = require( "./FileManager" ).Boot;
 
 /**
  * Boot namespace
@@ -71,8 +72,16 @@ export namespace Boot
 
 		public findModules()
 		{
-			return this._fileManager.findModules();
+			return this._fileManager.findModules(
+				global.app_modules()
+			);
+		}
 
+		public findVendorModules()
+		{
+			return this._fileManager.findModules(
+				global.npm_path()
+			);
 		}
 
 		public findModuleFiles( modulePath : string )
