@@ -1,6 +1,6 @@
 ///<reference path='../../typings/tsd.d.ts'/>
 
-//import {Worker} from "Cluster";
+import {Worker} from "cluster";
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
