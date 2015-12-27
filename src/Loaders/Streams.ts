@@ -3,16 +3,17 @@
 import {ExpressGo,LoaderInterface} from "../typings/express-go";
 declare var global : ExpressGo.Global;
 
+var socketStream	: any = require( 'socket.io-stream' );
 var socketIOSession : any = require( "socket.io.session" );
 var socketSession 	: any = null;
 
 
 /**
- * Controller loader
+ * Streams loader
  */
 export module Loaders
 {
-	export class Sockets implements LoaderInterface
+	export class Streams implements LoaderInterface
 	{
 		private _io : any;
 
@@ -27,7 +28,7 @@ export module Loaders
 		 * Manual or automatic booting
 		 * Default, if not defined: false [automatic]
 		 *
-		 * Use: app.boot("Sockets")
+		 * Use: app.boot("Streams")
 		 *
 		 * @returns {boolean}
 		 */
@@ -46,7 +47,7 @@ export module Loaders
 		 */
 		public exportName() : string
 		{
-			return 'socket';
+			return 'stream';
 		}
 
 		/**
@@ -64,7 +65,6 @@ export module Loaders
 		/**
 		 * Register method
 		 *
-		 * @param app
 		 * @returns any
 		 */
 		public register = () : void =>
@@ -79,6 +79,7 @@ export module Loaders
 		 */
 		public boot = ( app : any ) : void =>
 		{
+			// Socket.io instance
 			this._io = app.io;
 
 			socketSession = socketIOSession( app.sessionSettings );
@@ -105,8 +106,8 @@ export module Loaders
 			// io conection
 			socketChannel.on('connection', function ( socket )
 			{
-				// Use original method with Socket.io object
-				loadObject( socket );
+				// Use Socket.io with Stream
+				loadObject( socketStream( socket ) );
 
 			});
 
