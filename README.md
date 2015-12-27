@@ -56,10 +56,13 @@ $ npm install express-go --save
     * *~~Auto resource controller~~ [future feature]*
 * Sockets
     * *~~Listing sockets in CLI~~ [future feature]*
+    * Use a text transmission
     * Prefixed channels
         * index.js => wss://localhost/
         * foo.js   => wss://localhost/foo
 * Streams
+    * *~~Listing streams in CLI~~ [future feature]*
+    * Use a binary transmission
     * Prefixed channels
         * index.js => wss://localhost/
         * foo.js   => wss://localhost/foo
