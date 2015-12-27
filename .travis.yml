@@ -16,6 +16,12 @@ services:
   - redis
 
 before_install:
+  - if [ $TRAVIS_OS_NAME == "darwin" ]; then
+      # nvm is not yet supported on osx, manually install
+      - git clone https://github.com/creationix/nvm.git /tmp/.nvm
+      - source /tmp/.nvm/nvm.sh
+    fi
+
   # Setup Node.js version-specific dependencies
   - "test $TRAVIS_NODE_VERSION != '0.8' || npm rm --save-dev istanbul"
 
