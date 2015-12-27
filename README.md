@@ -6,6 +6,8 @@ Express-go the Node.js Express based MVC framework engine, inspirated by Laravel
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Build Status][travis-image]][travis-url]
+[![Dependency Status](deps-image)](deps-url)
+[![devDependency Status](devs-image)](devs-url)
 
 ### Example project ###
 Please, see [express-go-project](https://github.com/express-go/express-go-project/) page for sample usage.
@@ -26,9 +28,9 @@ $ npm install express-go --save
     * module-go.json file
     * Loading from npm vendors (node_modules) directory
 * [Socket.io](https://www.npmjs.com/package/socket.io)
+    * [Binary transfers](https://www.npmjs.com/package/socket.io-stream)
     * [Redis support](https://www.npmjs.com/package/socket.io-redis)
     * [Shared sessions between workers and application](https://www.npmjs.com/package/socket.io.session)
-    * *~~[Binary transfers](https://www.npmjs.com/package/socket.io-stream)~~ [future feature]*
 * TypeScript source files
 * TypeScript test files *[in progress]*
 
@@ -54,6 +56,10 @@ $ npm install express-go --save
     * *~~Auto resource controller~~ [future feature]*
 * Sockets
     * *~~Listing sockets in CLI~~ [future feature]*
+    * Prefixed channels
+        * index.js => wss://localhost/
+        * foo.js   => wss://localhost/foo
+* Streams
     * Prefixed channels
         * index.js => wss://localhost/
         * foo.js   => wss://localhost/foo
@@ -86,3 +92,7 @@ $ npm install express-go --save
 [downloads-url]: https://npmjs.org/package/express-go
 [travis-image]: https://img.shields.io/travis/express-go/express-go/master.svg?label=linux
 [travis-url]: https://travis-ci.org/express-go/express-go
+[deps-image]: https://img.shields.io/david/express-go/express-go.svg?label=deps
+[deps-url]: https://david-dm.org/express-go/express-go
+[devs-image]: https://img.shields.io/david/dev/express-go/express-go.svg?label=devDeps
+[devs-url]: https://david-dm.org/express-go/express-go#info=devDependencies
