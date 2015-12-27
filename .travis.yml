@@ -1,9 +1,9 @@
 language:
-  - node_js
+#  - node_js
   - objective-c
 
 os:
-  - linux
+#  - linux
   - osx
 
 env:
