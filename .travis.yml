@@ -1,14 +1,22 @@
-language: node_js
+language:
+  - node_js
+  - objective-c
 
 os:
   - linux
   - osx
 
-node_js:
-  - "5.3"
-  - "4.2"
-  - "0.12"
-  - "iojs"
+env:
+  - NODE_VERSION="5.3"
+  - NODE_VERSION="4.2"
+  - NODE_VERSION="0.12"
+  - NODE_VERSION="iojs"
+
+#node_js:
+#  - "5.3"
+#  - "4.2"
+#  - "0.12"
+#  - "iojs"
 
 sudo: false
 
@@ -26,6 +34,14 @@ before_install:
 
   # Setup Node.js version-specific dependencies
   - "test $TRAVIS_NODE_VERSION != '0.8' || npm rm --save-dev istanbul"
+
+install:
+  - rm -rf ~/.nvm
+  - git clone https://github.com/creationix/nvm.git ~/.nvm
+  - source ~/.nvm/nvm.sh
+  - nvm install $NODE_VERSION
+  - node --version
+  - npm install
 
 script:
   # Run test script, depending on istanbul install
