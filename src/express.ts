@@ -29,7 +29,7 @@ var debug = require( 'debug' )( 'express-go:Express' );
 
 
 debug( "Express object created" );
-var app = express();
+var app : any = express();
 
 
 /**
