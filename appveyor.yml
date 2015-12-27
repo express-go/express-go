@@ -1,8 +1,13 @@
 environment:
   matrix:
-    - nodejs_version: 0.10.36
-    - nodejs_version: 0.12.0
-    - nodejs_version: 1.2.0
+  # node.js
+    - nodejs_version: "0.12"
+    - nodejs_version: "4.2"
+    - nodejs_version: "5.3"
+  # io.js
+    - nodejs_version: "1"
+    - nodejs_version: "2"
+    - nodejs_version: "3"
 
 platform:
   - x64
