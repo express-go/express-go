@@ -8,7 +8,7 @@ var socketSession 	: any = null;
 
 
 /**
- * Controller loader
+ * Sockets loader
  */
 export module Loaders
 {

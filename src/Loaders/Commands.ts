@@ -4,7 +4,7 @@ import {ExpressGo,LoaderInterface} from "../typings/express-go";
 declare var global : ExpressGo.Global;
 
 /**
- * Controller loader
+ * Commands loader
  */
 export module Loaders
 {

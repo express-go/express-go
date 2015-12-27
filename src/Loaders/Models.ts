@@ -13,7 +13,7 @@ var sequelize : any;
 
 
 /**
- * Model loader
+ * Models loader
  */
 export module Loaders
 {

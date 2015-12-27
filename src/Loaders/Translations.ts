@@ -23,7 +23,7 @@ var languages = [
 
 
 /**
- * Controller loader
+ * Translations loader
  */
 export module Loaders
 {

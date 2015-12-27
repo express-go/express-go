@@ -8,7 +8,7 @@ var path = require( 'path' );
 var cons = require( 'consolidate' );
 
 /**
- * Controller loader
+ * Views loader
  */
 export module Loaders
 {
