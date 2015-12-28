@@ -1,9 +1,11 @@
-///<reference path='../../typings/tsd.d.ts'/>
+'use strict';
 
-import {ExpressGo,LoaderInterface} from "../../typings/express-go";
+///<reference path="../../typings/tsd.d.ts"/>
+
+import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var socketStream	: any = require( 'socket.io-stream' );
+var socketStream	: any = require( "socket.io-stream" );
 var socketIOSession : any = require( "socket.io.session" );
 var socketSession 	: any = null;
 
@@ -11,7 +13,7 @@ var socketSession 	: any = null;
 /**
  * Streams loader
  */
-export module Loaders
+export namespace Loaders
 {
 	export class Streams implements LoaderInterface
 	{
@@ -22,6 +24,7 @@ export module Loaders
 		 */
 		constructor()
 		{
+			//
 		}
 
 		/**
@@ -47,7 +50,7 @@ export module Loaders
 		 */
 		public exportName() : string
 		{
-			return 'stream';
+			return "stream";
 		}
 
 		/**
@@ -67,9 +70,10 @@ export module Loaders
 		 *
 		 * @returns any
 		 */
-		public register = () : void =>
+		public register() : void
 		{
-		};
+			//
+		}
 
 		/**
 		 * Boot method
@@ -77,13 +81,13 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : void =>
+		public boot( app : any ) : void
 		{
 			// Socket.io instance
 			this._io = app.io;
 
 			socketSession = socketIOSession( app.sessionSettings );
-		};
+		}
 
 		/**
 		 * Loader method
@@ -94,34 +98,35 @@ export module Loaders
 		 * @param nameObject
 		 * @returns {any}
 		 */
-		public loader = ( loadObject : any, nameObject : string ) : any =>
+		public loader( loadObject : any, nameObject : string ) : any
 		{
 			// Socket channel
-			var socketPrefix  = nameObject == "index" ? "" : nameObject;
+			let socketPrefix  : string = nameObject === "index" ? "" : nameObject;
 
 			// Channel instance with session parser
-			var socketChannel = this._io.of("/" + socketPrefix);
+			var socketChannel : any = this._io.of("/" + socketPrefix);
 			socketChannel.use( socketSession.parser );
 
 			// io conection
-			socketChannel.on('connection', function ( socket )
+			socketChannel.on("connection", ( socket : any ) =>
 			{
 				// Use Socket.io with Stream
 				loadObject( socketStream( socket ) );
 
 			});
 
-		};
+		}
 
 		/**
 		 * Disable saving loader object
 		 *
 		 * @returns {boolean}
 		 */
-		public loaderCache()
+		public loaderCache() : boolean
 		{
 			return false;
 		}
 
 	}
+
 }

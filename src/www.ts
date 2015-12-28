@@ -1,13 +1,13 @@
-///<reference path='../typings/tsd.d.ts'/>
+///<reference path="../typings/tsd.d.ts"/>
 
 import {ExpressGo} from "../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var Cluster	: any = require( "./Www/Cluster" ).Www.Cluster;
-var Server	: any = require( "./Www/Server" ).Www.Server;
-var Socket	: any = require( "./Www/Socket" ).Www.Socket;
+let Cluster	: any = require( "./Www/Cluster" ).Www.Cluster;
+let Server	: any = require( "./Www/Server" ).Www.Server;
+let Socket	: any = require( "./Www/Socket" ).Www.Socket;
 
-var debug = require( 'debug' )( 'express-go:Www' );
+let debug 	: any = require( "debug" )( "express-go:Www" );
 
 
 class Www
@@ -19,6 +19,8 @@ class Www
 
 	constructor( appBase, basePath )
 	{
+		debug( "Initializing" );
+
 		this.app       = appBase;
 
 		this.Cluster= new Cluster( appBase );

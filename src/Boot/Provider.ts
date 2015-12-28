@@ -1,13 +1,13 @@
-///<reference path='../../typings/tsd.d.ts'/>
-///<reference path='Boot.ts'/>
+///<reference path="../../typings/tsd.d.ts"/>
+///<reference path="Boot.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var debug = require( "debug" )( 'express-go:Boot.Provider' );
+let debug : any = require( "debug" )( "express-go:Boot.Provider" );
 
-var glob  = require( "glob" );
-var path  = require( "path" );
+let glob  : any = require( "glob" );
+let path  : any = require( "path" );
 
 /**
  * Boot namespace
@@ -112,50 +112,9 @@ export namespace Boot
 					}
 				}
 
-
-				//console.log( typeof actProvider.instance.loader );
-				//process.exit();
-
-				if ( false)
-				{
-					// Default method
-					if ( typeof actProvider.instance.loader === "undefined" || !actProvider.instance.loader )
-					{
-						debug("[Loading default mode]");
-						actObject = actObject( app );
-					}
-
-					// Declared method
-					else if ( actProvider.instance.loader && typeof actProvider.instance.loader === "function" )
-					{
-						bootObject = actProvider.instance.loader
-						(
-							actObject,
-							this.parseNameFromPath( indexObject )
-						);
-
-						debug("[Loading loader mode]");
-						debug( typeof bootObject );
-						actObject = bootObject;
-
-						/*if ( typeof bootObject === "object" )
-						 {
-						 debug("[Loading loader mode]");
-						 actObject = bootObject;
-						 }
-						 else if ( typeof actObject === "function" )
-						 {
-						 debug("[Loading default mode]");
-						 actObject = actObject( app );
-						 }
-						 else
-						 {
-						 debug("[Loading keep mode]");
-						 }*/
-					}
-				}
 				// Else keep original object
 				actProvider.objects[ indexObject ] = actObject;
+				
 			}
 
 		}
@@ -191,8 +150,8 @@ export namespace Boot
 				providerName = this.parseNameFromPath( providerPath );
 
 			var providerSource 	= require( providerPath );
-			var providerObject 	= typeof providerSource['loader'] !== "undefined"
-					? providerSource['loader']
+			var providerObject 	= typeof providerSource["loader"] !== "undefined"
+					? providerSource["loader"]
 					: providerSource.Loaders[ providerName ]
 				;
 

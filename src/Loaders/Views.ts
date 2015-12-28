@@ -6,13 +6,12 @@ import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 var fs   : any = require( "fs" );
-var path : any = require( "path" );
 var cons : any = require( "consolidate" );
 
 /**
  * Views loader
  */
-export module Loaders
+export namespace Loaders
 {
 	export class Views implements LoaderInterface
 	{
@@ -55,10 +54,10 @@ export module Loaders
 		 *
 		 * @returns void
 		 */
-		public register = () : void =>
+		public register() : void
 		{
 			//
-		};
+		}
 
 		/**
 		 * Loader method
@@ -69,10 +68,10 @@ export module Loaders
 		 * @param nameObject
 		 * @returns {any}
 		 */
-		public loader = ( loadObject : any, nameObject : string ) : any =>
+		public loader( loadObject : any, nameObject : string ) : any
 		{
 			return null;
-		};
+		}
 
 		/**
 		 * Boot method
@@ -80,7 +79,7 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : any =>
+		public boot( app : any ) : any
 		{
 			//.setDefaults({ cache : false });
 			app.engine( process.env.VIEW_FILES, cons[ process.env.VIEW_ENGINE ] );
@@ -100,7 +99,7 @@ export module Loaders
 
 				return [ process.env.CDN_ASSETS + "assets/build", manifest[ text ] ].join( "/" );
 			};
-		};
+		}
 
 		/**
 		 * Views path
@@ -117,12 +116,12 @@ export module Loaders
 			{
 				tmpPaths = tmpViews;
 				tmpPaths.push( global.views_path() );
-			}
-			else if ( typeof tmpViews === "string" )
+
+			} else if ( typeof tmpViews === "string" )
 			{
 				tmpPaths.push( tmpViews );
-			}
-			else
+
+			} else
 			{
 				tmpPaths = [];
 				tmpPaths.push( global.views_path() );
@@ -169,5 +168,7 @@ export module Loaders
 			}
 
 		}
+
 	}
+
 }

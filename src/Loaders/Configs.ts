@@ -1,12 +1,14 @@
-///<reference path='../../typings/tsd.d.ts'/>
+'use strict';
 
-import {ExpressGo,LoaderInterface} from "../../typings/express-go";
+///<reference path="../../typings/tsd.d.ts"/>
+
+import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 /**
  * Configurations loader
  */
-export module Loaders
+export namespace Loaders
 {
 	export class Configs implements LoaderInterface
 	{
@@ -15,6 +17,7 @@ export module Loaders
 		 */
 		constructor()
 		{
+			//
 		}
 
 		/**
@@ -27,7 +30,7 @@ export module Loaders
 		 */
 		public exportName() : string
 		{
-			return 'config';
+			return "config";
 		}
 
 		/**
@@ -57,9 +60,9 @@ export module Loaders
 		 *
 		 * @returns void
 		 */
-		public register = () : void =>
+		public register() : void
 		{
-		};
+		}
 
 		/**
 		 * Boot method
@@ -67,9 +70,10 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : void =>
+		public boot( app : any ) : void
 		{
-		};
+			//
+		}
 
 		/**
 		 * Loader method
@@ -80,10 +84,11 @@ export module Loaders
 		 * @param nameObject
 		 * @returns {any}
 		 */
-		public loader = ( loadObject : any, nameObject : string ) : any =>
+		public loader( loadObject : any, nameObject : string ) : any
 		{
 			return null;
-		};
+		}
 
 	}
+
 }

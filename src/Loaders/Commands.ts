@@ -1,12 +1,14 @@
-///<reference path='../../typings/tsd.d.ts'/>
+'use strict';
 
-import {ExpressGo,LoaderInterface} from "../../typings/express-go";
+///<reference path="../../typings/tsd.d.ts"/>
+
+import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 /**
  * Commands loader
  */
-export module Loaders
+export namespace Loaders
 {
 	export class Commands implements LoaderInterface
 	{
@@ -15,6 +17,7 @@ export module Loaders
 		 */
 		constructor()
 		{
+			//
 		}
 
 		/**
@@ -25,10 +28,10 @@ export module Loaders
 		 *
 		 * @returns {string}
 		 */
-		public exportName = () : string =>
+		public exportName() : string
 		{
-			return 'command';
-		};
+			return "command";
+		}
 
 		/**
 		 * Load object into global namespace
@@ -37,19 +40,20 @@ export module Loaders
 		 *
 		 * @returns {boolean}
 		 */
-		public exportNamespace = () : boolean =>
+		public exportNamespace() : boolean
 		{
 			return true;
-		};
+		}
 
 		/**
 		 * Register method
 		 *
 		 * @returns void
 		 */
-		public register = () : void =>
+		public register() : void
 		{
-		};
+			//
+		}
 
 		/**
 		 * Boot method
@@ -57,9 +61,10 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : void =>
+		public boot( app : any ) : void
 		{
-		};
+			//
+		}
 
 		/**
 		 * Loader method
@@ -70,10 +75,11 @@ export module Loaders
 		 * @param nameObject
 		 * @returns {any}
 		 */
-		public loader = ( loadObject : any, nameObject : string ) : any =>
+		public loader( loadObject : any, nameObject : string ) : any
 		{
 			return null;
-		};
+		}
 
 	}
+
 }

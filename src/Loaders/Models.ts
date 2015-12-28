@@ -1,21 +1,23 @@
-///<reference path='../../typings/tsd.d.ts'/>
+'use strict';
 
-import {ExpressGo,LoaderInterface} from "../../typings/express-go";
+///<reference path="../../typings/tsd.d.ts"/>
+
+import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 
-var fs   = require( 'fs' );
-var path = require( 'path' );
+var fs   = require( "fs" );
+var path = require( "path" );
 var db   = {};
 
-var Sequelize : any = require( 'sequelize' );
+var Sequelize : any = require( "sequelize" );
 var sequelize : any;
 
 
 /**
  * Models loader
  */
-export module Loaders
+export namespace Loaders
 {
 	export class Models implements LoaderInterface
 	{
@@ -24,6 +26,7 @@ export module Loaders
 		 */
 		constructor()
 		{
+			//
 		}
 
 		/**
@@ -36,7 +39,7 @@ export module Loaders
 		 */
 		public exportName() : string
 		{
-			return 'model';
+			return "model";
 		}
 
 		/**
@@ -57,7 +60,7 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public register = () : void =>
+		public register() : void
 		{
 			// Initializing
 			if ( !!process.env.DB_ENV )
@@ -78,7 +81,7 @@ export module Loaders
 				);
 			}
 
-		};
+		}
 
 		/**
 		 * Loader method
@@ -89,11 +92,11 @@ export module Loaders
 		 * @param nameObject
 		 * @returns {any}
 		 */
-		public loader = ( loadObject : any, nameObject : string ) : any =>
+		public loader( loadObject : any, nameObject : string ) : any
 		{
 			// Use sequelize method
 			return sequelize.import( nameObject, loadObject );
-		};
+		}
 
 		/**
 		 * Boot method
@@ -101,7 +104,7 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : void =>
+		public boot( app : any ) : void
 		{
 			// Loading relations
 			Object.keys( sequelize.models ).forEach( ( modelName ) =>
@@ -118,7 +121,8 @@ export module Loaders
 			app.sequelize = sequelize;
 			app.Sequelize = Sequelize;
 
-		};
+		}
 
 	}
+
 }

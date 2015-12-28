@@ -1,26 +1,29 @@
-///<reference path='../../typings/tsd.d.ts'/>
+'use strict';
 
-import {ExpressGo,LoaderInterface} from "../../typings/express-go";
+///<reference path="../../typings/tsd.d.ts"/>
+
+import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var Router : any = require( 'named-routes' );
+var Router : any = require( "named-routes" );
 var router : any = new Router( {} );
 
 
 /**
  * Routes loader
  */
-export module Loaders
+export namespace Loaders
 {
 	export class Routes implements LoaderInterface
 	{
-		private app;
+		private app : any;
 
 		/**
 		 * Constructor
 		 */
 		constructor()
 		{
+			//
 		}
 
 		/**
@@ -33,7 +36,7 @@ export module Loaders
 		 */
 		public exportName() : string
 		{
-			return 'router';
+			return "router";
 		}
 
 		/**
@@ -55,9 +58,10 @@ export module Loaders
 		 * @param nameObject
 		 * @returns any
 		 */
-		public register = () : void =>
+		public register() : void
 		{
-		};
+			//
+		}
 
 		/**
 		 * Loader method
@@ -68,10 +72,10 @@ export module Loaders
 		 * @param nameObject
 		 * @returns {any}
 		 */
-		public loader = ( loadObject : any, nameObject : string ) : any =>
+		public loader( loadObject : any, nameObject : string ) : any
 		{
 			return null;
-		};
+		}
 
 		/**
 		 * Boot method
@@ -79,7 +83,7 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : void =>
+		public boot( app : any ) : void
 		{
 			// Setup router
 			router.extendExpress( app );
@@ -88,7 +92,7 @@ export module Loaders
 			this.app          = app;
 			this.app.resource = this.setResourceRoutes;
 
-		};
+		}
 
 		/**
 		 * REST API style resource handler for controller
@@ -96,62 +100,63 @@ export module Loaders
 		 * @param name
 		 * @param object
 		 */
-		public setResourceRoutes = ( name, object ) =>
+		public setResourceRoutes( name : string, object : any ) : void
 		{
 			name       = object.name || name;
-			name       = name.charAt( 0 ) == '/' ? name.slice( 1 ) : name;
-			var prefix = object.prefix || '';
+			name       = name.charAt( 0 ) === "/" ? name.slice( 1 ) : name;
+			var prefix = object.prefix || "";
 			var method;
 			var path;
+			var key;
 
-			for ( var key in object )
+			for ( key in object )
 			{
 				// "reserved" exports
-				if ( ~[ 'name', 'prefix', 'engine' ].indexOf( key ) ) continue;
+				if ( ~[ "name", "prefix", "engine" ].indexOf( key ) ) continue;
 
 				// route exports
 				switch ( key )
 				{
-					case 'index':
-						method = 'get';
-						path   = '/' + name + 's';
+					case "index":
+						method = "get";
+						path   = "/" + name + "s";
 						break;
 
-					case 'create':
-						method = 'get';
-						path   = '/' + name + '/create';
+					case "create":
+						method = "get";
+						path   = "/" + name + "/create";
 						break;
 
-					case 'store':
-						method = 'post';
-						path   = '/' + name + 's';
+					case "store":
+						method = "post";
+						path   = "/" + name + "s";
 						break;
 
-					case 'show':
-						method = 'get';
-						path   = '/' + name + '/:' + name + '_id';
+					case "show":
+						method = "get";
+						path   = "/" + name + "/:" + name + "_id";
 						break;
 
-					case 'edit':
-						method = 'get';
-						path   = '/' + name + '/:' + name + '_id/edit';
+					case "edit":
+						method = "get";
+						path   = "/" + name + "/:" + name + "_id/edit";
 						break;
 
-					case 'update':
-						method = 'put';
-						path   = '/' + name + '/:' + name + '_id';
+					case "update":
+						method = "put";
+						path   = "/" + name + "/:" + name + "_id";
 						break;
 
-					case 'destroy':
-						method = 'delete';
-						path   = '/' + name + '/:' + name + '_id';
+					case "destroy":
+						method = "delete";
+						path   = "/" + name + "/:" + name + "_id";
 						break;
 				}
 
 				if ( method && path && object[ key ] )
 				{
 					path          = prefix + path;
-					var routeName = name + '.' + key;
+					var routeName = name + "." + key;
 
 					// Module prefixing
 					//if ( this.isModule && routeName.substr(7) != "module." )
@@ -164,9 +169,11 @@ export module Loaders
 					// Controller
 					this.app[ method ]( path, routeName, object[ key ] );
 				}
+
 			}
 
 		}
 
 	}
+
 }

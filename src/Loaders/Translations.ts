@@ -1,31 +1,33 @@
-///<reference path='../../typings/tsd.d.ts'/>
+'use strict';
 
-import {ExpressGo,LoaderInterface} from "../../typings/express-go";
+///<reference path="../../typings/tsd.d.ts"/>
+
+import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 declare function t( path? : string );
 
-var fs    = require( 'fs' );
-var glob  = require( "glob" );
-var path  = require( 'path' );
-var redis = require( 'redis' ).createClient();
+let fs    : any = require( "fs" );
+let glob  : any = require( "glob" );
+let path  : any = require( "path" );
+let redis : any = require( "redis" ).createClient();
 
-var i18nxt        : any = require( 'i18next' );
-var i18nxtFSB     : any = require( 'i18next-node-fs-backend' );
-var i18nxtSprintf : any = require( 'i18next-sprintf-postprocessor' );
+let i18nxt        : any = require( "i18next" );
+let i18nxtFSB     : any = require( "i18next-node-fs-backend" );
+let i18nxtSprintf : any = require( "i18next-sprintf-postprocessor" );
 
 // TODO
-var languageRedisCache = 'LANGUAGE_CACHE_REDIS';
-var languages = [
-	'dev',
-	'hu',
-	'en'
+let languageRedisCache : string = "LANGUAGE_CACHE_REDIS";
+let languages : any = [
+	"dev",
+	"hu",
+	"en"
 ];
 
 
 /**
  * Translations loader
  */
-export module Loaders
+export namespace Loaders
 {
 	export class Translations implements LoaderInterface
 	{
@@ -34,6 +36,7 @@ export module Loaders
 		 */
 		constructor()
 		{
+			//
 		}
 
 		/**
@@ -66,9 +69,10 @@ export module Loaders
 		 *
 		 * @returns void
 		 */
-		public register = () : void =>
+		public register() : void
 		{
-		};
+			//
+		}
 
 		/**
 		 * Boot method
@@ -76,12 +80,12 @@ export module Loaders
 		 * @param app
 		 * @returns void
 		 */
-		public boot = ( app : any ) : void =>
+		public boot( app : any ) : void
 		{
 			//
 			this.initTranslator  ( app );
 			this.loadTranslations( app );
-		};
+		}
 
 		/**
 		 * Loader method
@@ -92,24 +96,24 @@ export module Loaders
 		 * @param nameObject
 		 * @returns {any}
 		 */
-		public loader = ( loadObject : any, nameObject : string ) : any =>
+		public loader( loadObject : any, nameObject : string ) : any
 		{
 			return null;
-		};
+		}
 
 		/**
 		 * Setup translator for express
 		 */
-		private initTranslator( app )
+		private initTranslator( app : any ) : void
 		{
 			// Read language files for namespaces
-			var langNs = [ "translation" ];
-			var files  = glob.sync( global.lang_path( "**/*.json" ) );
+			let langNs : any = [ "translation" ];
+			let files  : any = glob.sync( global.lang_path( "**/*.json" ) );
 
 			files.forEach( ( file ) =>
 			{
-				var tmpFile = path.basename( file ).split( '.' );
-				var tmpNs   = tmpFile[ 0 ] != 'new' ? tmpFile[ 0 ] : tmpFile[ 1 ];
+				let tmpFile	: string = path.basename( file ).split( "." );
+				let tmpNs	: string = tmpFile[ 0 ] !== "new" ? tmpFile[ 0 ] : tmpFile[ 1 ];
 
 				if ( langNs.indexOf( tmpNs ) === -1 )
 					langNs.push( tmpNs );
@@ -123,8 +127,8 @@ export module Loaders
 				.init( {
 					debug : false,//process.env.APP_DEBUG,
 
-					lng				: 'en',
-					fallbackLng		: [ 'dev' ],
+					lng				: "en",
+					fallbackLng		: [ "dev" ],
 
 					ns				: langNs,
 					defaultNS		: "translation",
@@ -148,12 +152,12 @@ export module Loaders
 					},
 					ignoreRoutes 	:
 						[
-							'images/', 'public/', 'css/', 'js/', 'assets/', 'img/'
+							"images/", "public/", "css/", "js/", "assets/", "img/"
 						],
 
 					// right now there is only the integrated console logger available.
 					/*functions		: {
-					 	log : require( 'debug' )( 'express-go:i18n' )
+					 	log : require( "debug" )( "express-go:i18n" )
 					 },*/
 				});
 
@@ -174,8 +178,8 @@ export module Loaders
 				}
 
 				// URL ignoring
-				var ignore = i18nxt.options.ignoreRoutes;
-				for ( var i = 0, len = ignore.length; i < len; i++ )
+				let ignore : any = i18nxt.options.ignoreRoutes;
+				for ( let i : number = 0, len = ignore.length; i < len; i++ )
 				{
 					if ( req.path.indexOf( ignore[ i ] ) > -1 )
 					{
@@ -184,7 +188,7 @@ export module Loaders
 				}
 
 				// Query land settings
-				if ( req.query.lang != undefined && languages.indexOf( req.query.lang ) >= 0 )
+				if ( req.query.lang !== undefined && languages.indexOf( req.query.lang ) >= 0 )
 				{
 					req.session.lang = req.query.lang;
 
@@ -197,7 +201,7 @@ export module Loaders
 				res.locals.__   = app.i18n.t;
 
 				// Set lang if need
-				if ( req.session.lang != app.i18n.language )
+				if ( req.session.lang !== app.i18n.language )
 				{
 					app.i18n.changeLanguage( req.session.lang, function ()
 					{
@@ -217,28 +221,30 @@ export module Loaders
 		/**
 		 * Loading json files
 		 */
-		private loadTranslations( app : any )
+		private loadTranslations( app : any ) : void
 		{
 			// Loading translation files
 			try
 			{
 				if ( fs.statSync( global.lang_path() ) )
 				{
-					var files = glob.sync( global.lang_path( "**/*.json" ) );
+					let files = glob.sync( global.lang_path( "**/*.json" ) );
 					files.forEach( function ( file )
 					{
-						var partials = file.split( '.' );
+						let partials = file.split( "." );
 						app.i18n.add( file, partials[ partials.length - 2 ] );
 
 					} );
 				}
 
 			}
-			catch ( ex )
+			catch ( ex : any )
 			{
+				//
 			}
 
 		}
 
 	}
+
 }

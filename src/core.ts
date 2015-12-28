@@ -4,8 +4,8 @@
 import {ExpressGo} from "../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var debug = require( "debug" )( "express-go:Core" );
-var Boot  = require( "./Boot/Boot" ).Boot;
+let debug : any = require( "debug" )( "express-go:Core" );
+let Boot  : any = require( "./Boot/Boot" ).Boot;
 
 
 class Core

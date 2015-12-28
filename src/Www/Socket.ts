@@ -1,12 +1,12 @@
-///<reference path='../../typings/tsd.d.ts'/>
+///<reference path="../../typings/tsd.d.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var socketIOAdapter : any = require( 'socket.io-redis' );
-var socketServer	: any;
+let socketIOAdapter : any = require( "socket.io-redis" );
+let socketServer : any;
 
-var debug = require( 'debug' )( 'express-go:Www.Socket ' );
+let debug = require( "debug" )( "express-go:Www.Socket " );
 
 
 export namespace Www
@@ -41,7 +41,7 @@ export namespace Www
 				// Redis connections
 				socketServer.adapter( socketIOAdapter( {
 					host : process.env.REDIS_HOST,
-					port : process.env.REDIS_PORT
+					port : process.env.REDIS_PORT,
 				} ) );
 
 				// Socket events
@@ -49,8 +49,8 @@ export namespace Www
 
 				// Booting Sockets loader
 				this.app.io = socketServer;
-				this.app.boot("Sockets", this.app );
-				this.app.boot("Streams", this.app );
+				this.app.boot( "Sockets", this.app );
+				this.app.boot( "Streams", this.app );
 
 			}
 		}
@@ -72,20 +72,21 @@ export namespace Www
 		}
 
 
-		private onSocketEvents( io )
+		private onSocketEvents( io : any ) : void
 		{
 
-			io.sockets.on( "connection", function ( socket )
+			io.sockets.on( "connection", function ( socket : any )
 			{
-				debug( 'Connection made. socket.id=' + socket.id + ' . pid = ' + process.pid );
+				debug( "Connection made. socket.id=" + socket.id + " . pid = " + process.pid );
 			} );
 
-			io.on( 'disconnect', function ( socket )
+			io.on( "disconnect", function ( socket )
 			{
-				debug( 'Lost a socket. socket.id=' + socket.id + ' . pid = ' + process.pid );
+				debug( "Lost a socket. socket.id=" + socket.id + " . pid = " + process.pid );
 			} );
 
 		}
 
 	}
+
 }

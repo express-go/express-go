@@ -1,14 +1,14 @@
-///<reference path='../../typings/tsd.d.ts'/>
+///<reference path="../../typings/tsd.d.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var fs		: any = require( 'fs' );
-var http    : any = require( 'http' );
-var https   : any = require( 'https' );
-var spdy    : any = require( 'spdy' );
+var fs		: any = require( "fs" );
+var http    : any = require( "http" );
+var https   : any = require( "https" );
+var spdy    : any = require( "spdy" );
 
-var debug = require( 'debug' )( 'express-go:Www.Server ' );
+var debug = require( "debug" )( "express-go:Www.Server " );
 
 
 export namespace Www
@@ -50,16 +50,16 @@ export namespace Www
 
 					// SPDY-specific options
 					spdy : {
-						//protocols: [ 'h2', 'spdy/3.1', ..., 'http/1.1' ],
+						//protocols: [ "h2", "spdy/3.1", ..., "http/1.1" ],
 						plain : false,
 
 						connection : {
-							windowSize : 1024 * 1024, // Server's window size
+							windowSize : 1024 * 1024, // Server"s window size
 
 							// **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
-							autoSpdy31 : false
-						}
-					}
+							autoSpdy31 : false,
+						},
+					},
 				},
 			};
 
@@ -75,30 +75,45 @@ export namespace Www
 				debug( "Create AUTO server with Socket" );
 
 				if ( !!process.env.PORT_HTTP )
+				{
 					socket.attachSocket( this.createHttp() );
+				}
 
 				if ( !!process.env.PORT_HTTPS )
 				{
 					if ( !!process.env.SPDY_HTTPS )
+					{
 						socket.attachSocket( this.createSpdy() );
-					else
+
+					} else
+					{
 						socket.attachSocket( this.createHttps() );
+					}
+
 				}
-			}
-			else
+
+			} else
 			{
 				debug( "Create AUTO server" );
 
 				if ( !!process.env.PORT_HTTP )
+				{
 					this.createHttp();
+				}
 
 				if ( !!process.env.PORT_HTTPS )
 				{
 					if ( !!process.env.SPDY_HTTPS )
+					{
 						this.createSpdy();
-					else
+
+					} else
+					{
 						this.createHttps();
+					}
+
 				}
+
 			}
 
 		}
@@ -180,12 +195,12 @@ export namespace Www
 			//
 			server.listen( port );
 
-			server.on( 'error', ( error ) =>
+			server.on( "error", ( error ) =>
 			{
 				this._onServerError( error, port );
 			} );
 
-			server.on( 'listening', () =>
+			server.on( "listening", () =>
 			{
 				this._onServerListening( server, port );
 			} );
@@ -196,29 +211,29 @@ export namespace Www
 
 		private _onServerError( error : any, port : number ) : void
 		{
-			if ( error.syscall !== 'listen' )
+			if ( error.syscall !== "listen" )
 			{
 				throw error;
 			}
 
-			var bind = typeof port === 'string'
-				? 'Pipe ' + port
-				: 'Port ' + port;
+			var bind = typeof port === "string"
+				? "Pipe " + port
+				: "Port " + port;
 
 			// handle specific listen errors with friendly messages
 			switch ( error.code )
 			{
-				case 'EACCES':
+				case "EACCES":
 				{
-					console.error( bind + ' requires elevated privileges' );
+					console.error( bind + " requires elevated privileges" );
 					process.exit( 1 );
 
 					break;
 				}
 
-				case 'EADDRINUSE':
+				case "EADDRINUSE":
 				{
-					console.error( bind + ' is already in use' );
+					console.error( bind + " is already in use" );
 					process.exit( 1 );
 
 					break;
@@ -232,11 +247,11 @@ export namespace Www
 		private _onServerListening( server : any, port : number ) : void
 		{
 			var addr = server.address();
-			var bind = typeof addr === 'string'
-				? 'pipe ' + addr
-				: 'port ' + addr.port;
+			var bind = typeof addr === "string"
+				? "pipe " + addr
+				: "port " + addr.port;
 
-			debug( 'Listening on ' + bind );
+			debug( "Listening on " + bind );
 		}
 
 		public updateOptions( basePath )
@@ -244,17 +259,18 @@ export namespace Www
 			// SSL
 			this.options.https.cert = !!this.options.https.cert
 				? this.options.https.cert
-				: fs.readFileSync( basePath + '/' + process.env.SSL_CERT );
+				: fs.readFileSync( basePath + path.delimiter + process.env.SSL_CERT );
 
 			this.options.https.ca = !!this.options.https.ca
 				? this.options.https.ca
-				: fs.readFileSync( basePath + '/' + process.env.SSL_CSR );
+				: fs.readFileSync( basePath + path.delimiter + process.env.SSL_CSR );
 
 			this.options.https.key = !!this.options.https.key
 				? this.options.https.key
-				: fs.readFileSync( basePath + '/' + process.env.SSL_KEY );
+				: fs.readFileSync( basePath + path.delimiter + process.env.SSL_KEY );
 
 		}
 
 	}
+
 }

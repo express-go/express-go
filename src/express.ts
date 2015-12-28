@@ -1,31 +1,31 @@
-///<reference path='../typings/tsd.d.ts'/>
+'use strict';
+
+///<reference path="../typings/tsd.d.ts"/>
 
 import {ExpressGo} from "../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var fs   = require( 'fs' );
-var path = require( 'path' );
-var glob = require( 'glob' );
+let fs   : any = require( "fs" );
 
-var express = require( 'express' );
+let express : any = require( "express" );
 
-var bodyParser    : any = require( 'body-parser' );
-var compress      : any = require( 'compression' );
-var cookieParser  : any = require( 'cookie-parser' );
-var csrf          : any = require( 'csurf' );
-var favicon       : any = require( 'serve-favicon' );
-var forceSSL      : any = require( 'express-force-ssl' );
-var helmet        : any = require( 'helmet' );
-var logger        : any = require( 'morgan' );
-var nodalytics    : any = require( 'nodalytics' );
-var session		  : any = require( 'express-session' );
+let bodyParser    : any = require( "body-parser" );
+let compress      : any = require( "compression" );
+let cookieParser  : any = require( "cookie-parser" );
+let csrf          : any = require( "csurf" );
+let favicon       : any = require( "serve-favicon" );
+let forceSSL      : any = require( "express-force-ssl" );
+let helmet        : any = require( "helmet" );
+let logger        : any = require( "morgan" );
+let nodalytics    : any = require( "nodalytics" );
+let session		  : any = require( "express-session" );
 
 
-var redis       = require( 'redis' );
-var redisClient = redis.createClient();
-var RedisStore  = require( "connect-redis" )( session );
+let redis       : any = require( "redis" );
+let redisClient : any = redis.createClient();
+let RedisStore  : any = require( "connect-redis" )( session );
 
-var debug = require( 'debug' )( 'express-go:Express' );
+let debug 		: any = require( "debug" )( "express-go:Express" );
 
 
 debug( "Express object created" );
@@ -47,18 +47,18 @@ app.sessionSettings =
 	saveUninitialized : false,
 	proxy             : true,
 	cookie            : {
-		"path"     : '/',
+		"path"     : "/",
 		"secure"   : true,
 		"httpOnly" : true,
 		"maxAge"   : null
 	},
-	key               : 's3ss10n'
+	key               : "s3ss10n"
 };
 
 
 class ExpressGoCore
 {
-	constructor( app )
+	constructor()
 	{
 		debug( "Initializing" );
 
@@ -76,18 +76,18 @@ class ExpressGoCore
 		debug( "Initializing parsers" );
 
 		// Force SSL
-		app.enable( 'trust proxy' );
+		app.enable( "trust proxy" );
 		this.initForceSSL();
 
 		// Source manipulation
 		app.use( compress( {} ) );
-		app.use( logger( 'dev' ) );
+		app.use( logger( "dev" ) );
 		app.use( bodyParser.json() );
 		app.use( bodyParser.urlencoded( { extended : false } ) );
 
 		// Security
-		app.disable( 'x-powered-by' );
-		app.disable( 'etag' );
+		app.disable( "x-powered-by" );
+		app.disable( "etag" );
 		app.use( helmet.noSniff() );
 		app.use( helmet.frameguard() );
 		app.use( helmet.xssFilter() );
@@ -110,13 +110,13 @@ class ExpressGoCore
 	private initForceSSL()
 	{
 		//
-		if ( process.env.FORCE_HTTPS.toLowerCase() == "true" || process.env.FORCE_HTTPS == true )
+		if ( process.env.FORCE_HTTPS.toLowerCase() === "true" || process.env.FORCE_HTTPS === true )
 		{
-			app.set( 'forceSSLOptions', {
+			app.set( "forceSSLOptions", {
 				//enable301Redirects : true,
 				//trustXFPHeader     : false,
 				httpsPort : process.env.PORT_HTTPS,
-				//sslRequiredMessage : 'SSL Required.'
+				//sslRequiredMessage : "SSL Required."
 			} );
 			app.use( forceSSL );
 		}
@@ -140,29 +140,31 @@ class ExpressGoCore
 			{
 				app.use( favicon( global.public_path( "favicon.ico" ) ) );
 			}
-		}
-		catch ( e )
+
+		} catch ( e )
 		{
+			//
 		}
 
 		// Static files
-		if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS == '/' )
+		if ( !process.env.CDN_ASSETS || process.env.CDN_ASSETS === "/" )
 		{
-			app.use( express.static(
+			app.use( express.static
+			(
 				global.public_path(),
 				{
 					etag       : false,
-					maxAge : '1y', //365 * 24 * 60 * 60,
-					dotfiles : 'ignore',
+					maxAge : "1y", //365 * 24 * 60 * 60,
+					dotfiles : "ignore",
 					expires  : new Date( Date.now() + (365 * 24 * 60 * 60) ),
-					setHeaders : function ( res, path )
+					setHeaders : function ( res, pathFile )
 					{
-						if ( path.indexOf( "download" ) !== -1 )
+						if ( pathFile.indexOf( "download" ) !== -1 )
 						{
-							res.attachment( path )
+							res.attachment( pathFile )
 						}
 
-						res.setHeader( 'Expires', new Date( Date.now() + 31536000 * 1000 ).toUTCString() );
+						res.setHeader( "Expires", new Date( Date.now() + 31536000 * 1000 ).toUTCString() );
 					}
 				}
 			) );
@@ -172,4 +174,4 @@ class ExpressGoCore
 
 }
 
-module.exports = new ExpressGoCore( app );
+module.exports = new ExpressGoCore();
