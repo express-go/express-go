@@ -23,6 +23,7 @@ export namespace Boot
 		private _pathApplicationConfig		: any;
 		private _pathApplicationFiles		: any;
 		private _pathCoreProviders			: any;
+		private _pathCoreCommands			: any;
 
 
 
@@ -36,6 +37,7 @@ export namespace Boot
 				this._pathApplicationFiles 		= global.app_path();
 				this._pathApplicationProviders 	= global.bootstrap_path("Loaders");
 				this._pathCoreProviders 		= "./../Loaders/";
+				this._pathCoreCommands			= "./../Commands/";
 			}
 
 		}
@@ -48,6 +50,16 @@ export namespace Boot
 		public findCoreProviders() : any
 		{
 			return this._fileManager.findFiles( this._pathCoreProviders, true );
+		}
+
+		/**
+		 * Finding Core Commands
+		 *
+		 * @param coreProviders
+		 */
+		public findCoreCommands() : any
+		{
+			return this._fileManager.findFiles( this._pathCoreCommands, true );
 		}
 
 		/**

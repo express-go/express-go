@@ -113,6 +113,14 @@ export namespace Boot
 
 		}
 
+		public providerByName( providerName : string ) : any
+		{
+			if ( this._providers.hasOwnProperty( providerName ) )
+			{
+				return this._providers[ providerName ];
+			}
+		}
+
 		/**
 		 * Parse Provider name from path
 		 *

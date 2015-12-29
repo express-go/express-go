@@ -37,7 +37,7 @@ $ npm install express-go --save
 
 ### MVC support ###
 * Commands
-    * *~~Extending CLI commands~~ [future feature]*
+    * Extending CLI commands
 * Configurations
 * Controllers
     * *~~Listing controllers in CLI~~ [future feature]*

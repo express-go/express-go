@@ -74,6 +74,14 @@ export namespace Boot
 				);
 			};
 
+			mainApp.provider = function ( nameProvider : string )
+			{
+				debug("Getting " + nameProvider + " Provider");
+
+				return loadProvider.providerByName( nameProvider ).instance;
+			};
+
+
 			return mainApp;
 
 		}
@@ -144,6 +152,10 @@ export namespace Boot
 
 			// Application files
 			appFiles = loadFinder.findApplicationFiles();
+
+			// Core Commands
+			appFiles = appFiles.concat( loadFinder.findCoreCommands() );
+
 			for ( let appIndex in appFiles )
 			{
 				if ( appFiles.hasOwnProperty( appIndex ) )
