@@ -1,12 +1,13 @@
-///<reference path='../../typings/tsd.d.ts'/>
-///<reference path='Boot.ts'/>
+///<reference path="../../typings/tsd.d.ts"/>
+///<reference path="Boot.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var debug = require( 'debug' )( 'express-go:Boot.Namespace' );
+let debug : any = require( "debug" )( "express-go:Boot.Namespace" );
 
-var path  = require( "path" );
+let path  : any = require( "path" );
+
 
 /**
  * Boot namespace
@@ -48,15 +49,15 @@ export namespace Boot
 			if ( pathBase )
 			{
 				pathBase = path.normalize( pathBase );
-				pathName = pathName.replace( pathBase, '' );
+				pathName = pathName.replace( pathBase, "" );
 			}
 
 			// Loading file in to object
-			var pathPartials = pathName.split( /[\\/]+/ ); 		// Split slashes
-			pathPartials = pathPartials.filter( ( e ) =>
-			{	// Remove empty items
-				return !!e;
-			} );
+			let pathPartials : any= pathName.split( /[\\/]+/ ); 		// Split slashes
+				pathPartials = pathPartials.filter( ( e ) =>
+				{	// Remove empty items
+					return !!e;
+				} );
 
 			return pathPartials;
 		}
@@ -76,16 +77,15 @@ export namespace Boot
 		 */
 		public pathArrayToObject( pathArray : any, requireValue? : any ) : any
 		{
-			var modelActual;
-			var modelObject = {};
-			var modelPrefix = pathArray[ 0 ];
+			let modelActual	: any;
+			let modelObject	: any = {};
+			let modelPrefix	: any = pathArray[ 0 ];
 
-			if ( modelPrefix == 'src' || modelPrefix == 'app' )
+			if ( modelPrefix === "src" || modelPrefix === "app" )
 			{
 				modelActual = modelObject;
 				pathArray.shift();
-			}
-			else
+			} else
 			{
 				modelActual = modelObject[ modelPrefix ] = {};
 				pathArray.shift();
@@ -152,13 +152,13 @@ export namespace Boot
 		 */
 		private _arrayToObject( array : any, object : any, value : any ) : any
 		{
-			if ( typeof object[ array[ 0 ] ] == "undefined" )
+			if ( typeof object[ array[ 0 ] ] === "undefined" )
 			{
-				var key = array[ 0 ];
+				let key : any = array[ 0 ];
 				array.shift();
 
 
-				if ( array.length == 0 )
+				if ( array.length === 0 )
 				{
 					object[ key ] = value;
 					return;
@@ -183,29 +183,25 @@ export namespace Boot
 		 */
 		public  _mergeObjectsRecursive( targetObject : any, sourceObject : any ) : any
 		{
-			var keyObject;
-
-			for ( keyObject in sourceObject )
+			for ( let keyObject in sourceObject )
 			{
 				try
 				{
 					// Property in destination object set; update its value.
-					if ( sourceObject[ keyObject ].constructor == Object )
+					if ( sourceObject[ keyObject ].constructor === Object )
 					{
 						targetObject[ keyObject ] = this._mergeObjectsRecursive(
 							targetObject[ keyObject ],
 							sourceObject[ keyObject ]
 						);
 
-					}
-					else
+					} else
 					{
 						targetObject[ keyObject ] = sourceObject[ keyObject ];
 
 					}
 
-				}
-				catch ( e )
+				} catch ( e : any )
 				{
 					// Property in destination object not set; create it and set its value.
 					targetObject[ keyObject ] = sourceObject[ keyObject ];

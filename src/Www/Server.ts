@@ -3,12 +3,12 @@
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var fs		: any = require( "fs" );
-var http    : any = require( "http" );
-var https   : any = require( "https" );
-var spdy    : any = require( "spdy" );
+let fs		: any = require( "fs" );
+let http    : any = require( "http" );
+let https   : any = require( "https" );
+let spdy    : any = require( "spdy" );
 
-var debug = require( "debug" )( "express-go:Www.Server " );
+let debug = require( "debug" )( "express-go:Www.Server " );
 
 
 export namespace Www
@@ -165,7 +165,7 @@ export namespace Www
 		 */
 		public normalizePort( val : any ) : number
 		{
-			var port = parseInt( val, 10 );
+			let port : number = parseInt( val, 10 );
 
 			if ( isNaN( port ) )
 			{
@@ -216,7 +216,7 @@ export namespace Www
 				throw error;
 			}
 
-			var bind = typeof port === "string"
+			let bind : string = typeof port === "string"
 				? "Pipe " + port
 				: "Port " + port;
 
@@ -224,20 +224,16 @@ export namespace Www
 			switch ( error.code )
 			{
 				case "EACCES":
-				{
 					console.error( bind + " requires elevated privileges" );
 					process.exit( 1 );
 
 					break;
-				}
 
 				case "EADDRINUSE":
-				{
 					console.error( bind + " is already in use" );
 					process.exit( 1 );
 
 					break;
-				}
 
 				default:
 					throw error;
@@ -246,8 +242,8 @@ export namespace Www
 
 		private _onServerListening( server : any, port : number ) : void
 		{
-			var addr = server.address();
-			var bind = typeof addr === "string"
+			let addr : string = server.address();
+			let bind : string = typeof addr === "string"
 				? "pipe " + addr
 				: "port " + addr.port;
 

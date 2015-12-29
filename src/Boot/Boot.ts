@@ -1,18 +1,20 @@
-///<reference path='../../typings/tsd.d.ts'/>
+'use strict'
+
+///<reference path="../../typings/tsd.d.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var debug  		= require('debug')('express-go:Boot');
+let debug  		: any = require("debug")("express-go:Boot");
 
-var Finder 		= require('./Finder').Boot.Finder;
-var Provider	= require('./Provider').Boot.Provider;
-var Namespace	= require('./Namespace').Boot.Namespace;
+let Finder 		: any = require("./Finder").Boot.Finder;
+let Provider	: any = require("./Provider").Boot.Provider;
+let Namespace	: any = require("./Namespace").Boot.Namespace;
 
-var loadFinder;
-var loadProvider;
-var loadNamespace;
-var sortProvider =
+let loadFinder : any;
+let loadProvider : any;
+let loadNamespace : any;
+let sortProvider  : any =
 [
 	"Configs",
 	"Translations",
@@ -21,14 +23,14 @@ var sortProvider =
 	"Controllers",
 	"Middlewares",
 	"Routes",
-	"Sockets"
+	"Sockets",
 ];
-var loadUnknownFiles = true;
+let loadUnknownFiles : boolean = true;
 
 /**
  * Boot namespace
  */
-export module Boot
+export namespace Boot
 {
 	/**
 	 * Initialization class
@@ -38,7 +40,7 @@ export module Boot
 		/**
 		 * Loading components, objects
 		 *
-		 * @param componentsList
+		 * @param appGlobal
 		 * @param pathsList
 		 */
 		constructor( appGlobal : any, pathsList? : any )
@@ -60,7 +62,7 @@ export module Boot
 			this.initApplication();
 			this.initModules();
 
-			var mainApp : any = require( "../express" );
+			let mainApp : any = require( "../express" );
 
 			this.boot( mainApp );
 
@@ -82,16 +84,18 @@ export module Boot
 		{
 			debug( "Initializing Providers" );
 
-			var indexProvider;
-			var pathsProviders = [].concat
+			let pathsProviders	: any = [].concat
 			(
 				loadFinder.findCoreProviders(),
 				loadFinder.findApplicationProviders()
 			);
 
-			for ( indexProvider in pathsProviders )
+			for ( let indexProvider in pathsProviders )
 			{
-				loadProvider.initProvider( pathsProviders[ indexProvider ] );
+				if ( pathsProviders.hasOwnProperty( indexProvider ) )
+				{
+					loadProvider.initProvider( pathsProviders[ indexProvider ] );
+				}
 			}
 
 			loadProvider.orderProviders( orderList );
@@ -102,68 +106,73 @@ export module Boot
 		{
 			debug( "Initializing Application" );
 
-			var appFiles;
-			var appIndex;
-			var appPath;
-			var fileSource;
-			var fileObject;
-			var providerObject;
-			var needNamespace;
+			let appFiles	: any;
+			let appPath		: string;
+			let fileSource	: any;
+			let fileObject	: any;
+			let providerObject	: any;
+			let needNamespace	: boolean;
 
 			global.App.config = {};
 
 			// Config files
 			appFiles          = loadFinder.findApplicationConfigFiles();
 
-			for ( appIndex in appFiles )
+			for ( let appIndex in appFiles )
 			{
-				appPath		  = appFiles[ appIndex ];
-				fileSource	  = require( appPath );
-				needNamespace = loadUnknownFiles;
-
-				if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+				if ( appFiles.hasOwnProperty( appIndex ) )
 				{
-					needNamespace = providerObject.provider.exportNamespace;
-					fileSource    = providerObject.fileObject;
+					appPath			= appFiles[ appIndex ];
+					fileSource		= require( appPath );
+					needNamespace	= loadUnknownFiles;
+					providerObject	= loadProvider.associateProviderObject( fileSource, appPath );
+
+					if ( providerObject )
+					{
+						needNamespace = providerObject.provider.exportNamespace;
+						fileSource    = providerObject.fileObject;
+					}
+
+					fileObject = loadNamespace.pathToObject
+					(
+						appPath,
+						global.config_path(),
+						fileSource
+					);
+
+					global.App.config = loadNamespace.addToNamespace( global.App.config, fileObject );
 				}
-
-				fileObject = loadNamespace.pathToObject
-				(
-					appPath,
-					global.config_path(),
-					fileSource
-				);
-
-				global.App.config = loadNamespace.addToNamespace( global.App.config, fileObject );
 			}
 
 			// Application files
 			appFiles = loadFinder.findApplicationFiles();
-			for ( appIndex in appFiles )
+			for ( let appIndex in appFiles )
 			{
-				appPath		  = appFiles[ appIndex ];
-				fileSource	  = require( appPath );
-				needNamespace = loadUnknownFiles;
-
-				if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+				if ( appFiles.hasOwnProperty( appIndex ) )
 				{
-					needNamespace = providerObject.provider.exportNamespace;
-					fileSource    = providerObject.fileObject;
+					appPath		  = appFiles[ appIndex ];
+					fileSource	  = require( appPath );
+					needNamespace = loadUnknownFiles;
+
+					if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+					{
+						needNamespace = providerObject.provider.exportNamespace;
+						fileSource    = providerObject.fileObject;
+					}
+
+					// Object in Provider, but non namespace
+					if ( needNamespace )
+					{
+						fileObject = loadNamespace.pathToObject
+						(
+							appPath,
+							global.app_path(),
+							fileSource
+						);
+
+						global.App = loadNamespace.addToNamespace( global.App, fileObject );
+					}
 				}
-
-				// Object in Provider, but non namespace
-				if ( needNamespace )
-				{
-					fileObject = loadNamespace.pathToObject
-					(
-						appPath,
-						global.app_path(),
-						fileSource
-					);
-
-					global.App = loadNamespace.addToNamespace( global.App, fileObject );
-				}
-
 			}
 
 
@@ -177,46 +186,53 @@ export module Boot
 		{
 			debug( "Initializing Modules" );
 
-			var indexModules : any;
-			var listModules : any = loadFinder.findModules();
-			var appFiles : any;
-			var appIndex;
-			var appPath;
-			var fileSource;
-			var fileObject;
-			var providerObject;
-			var needNamespace;
+			let listModules : any = loadFinder.findModules();
+			let appFiles	: any;
+			let appIndex	: any;
+			let appPath		: any;
+			let fileSource	: any;
+			let fileObject	: any;
+			let providerObject	: any;
+			let needNamespace	: any;
 
-			for ( indexModules in listModules )
+			for ( let indexModules in listModules )
 			{
-				appFiles                       = loadFinder.findModuleFiles( listModules[ indexModules ] );
-				global.Modules[ indexModules ] = {};
-
-				for ( appIndex in appFiles )
+				if ( listModules.hasOwnProperty( indexModules ) )
 				{
-					appPath       = appFiles[ appIndex ];
-					fileSource    = require( appPath );
-					needNamespace = loadUnknownFiles;
+					appFiles                       = loadFinder.findModuleFiles( listModules[ indexModules ] );
+					global.Modules[ indexModules ] = {};
 
-					if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+					for ( appIndex in appFiles )
 					{
-						needNamespace = providerObject.provider.exportNamespace;
-						fileSource    = providerObject.fileObject;
-					}
+						if ( listModules.hasOwnProperty( indexModules ) )
+						{
+							appPath       = appFiles[ appIndex ];
+							fileSource    = require( appPath );
+							needNamespace = loadUnknownFiles;
 
-					if ( needNamespace )
-					{
-						fileObject = loadNamespace.pathToObject
-						(
-							appPath,
-							listModules[ indexModules ],
-							fileSource
-						);
+							if ( providerObject = loadProvider.associateProviderObject( fileSource, appPath ) )
+							{
+								needNamespace = providerObject.provider.exportNamespace;
+								fileSource    = providerObject.fileObject;
+							}
 
-						global.Modules[ indexModules ] = loadNamespace.addToNamespace(
-							global.Modules[ indexModules ],
-							fileObject
-						);
+							if ( needNamespace )
+							{
+								fileObject = loadNamespace.pathToObject
+								(
+									appPath,
+									listModules[ indexModules ],
+									fileSource
+								);
+
+								global.Modules[ indexModules ] = loadNamespace.addToNamespace(
+									global.Modules[ indexModules ],
+									fileObject
+								);
+							}
+
+						}
+
 					}
 
 				}
@@ -225,7 +241,7 @@ export module Boot
 
 		}
 
-		private boot( app )
+		private boot( app : any )
 		{
 			loadProvider.bootProviders( app );
 		}

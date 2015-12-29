@@ -208,8 +208,7 @@ export namespace Loaders
 						next();
 					} );
 
-				}
-				else
+				} else
 				{
 					next();
 				}
@@ -237,8 +236,7 @@ export namespace Loaders
 					} );
 				}
 
-			}
-			catch ( ex : any )
+			} catch ( ex : any )
 			{
 				//
 			}

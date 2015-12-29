@@ -1,12 +1,12 @@
-///<reference path='../../typings/tsd.d.ts'/>
-///<reference path='Boot.ts'/>
+///<reference path="../../typings/tsd.d.ts"/>
+///<reference path="Boot.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var Files = require( "./FileManager" ).Boot;
+let Files : any = require( "./FileManager" ).Boot;
 
-var debug = require( "debug" )( 'express-go:Boot.Finder  ' );
+let debug : any = require( "debug" )( "express-go:Boot.Finder  " );
 
 
 /**
@@ -16,13 +16,13 @@ export namespace Boot
 {
 	export class Finder
 	{
-		private _fileManager;
+		private _fileManager : any;
 
 
-		private _pathApplicationProviders;
-		private _pathApplicationConfig;
-		private _pathApplicationFiles;
-		private _pathCoreProviders;
+		private _pathApplicationProviders	: any;
+		private _pathApplicationConfig		: any;
+		private _pathApplicationFiles		: any;
+		private _pathCoreProviders			: any;
 
 
 
@@ -35,7 +35,7 @@ export namespace Boot
 				this._pathApplicationConfig		= global.config_path();
 				this._pathApplicationFiles 		= global.app_path();
 				this._pathApplicationProviders 	= global.bootstrap_path("Loaders");
-				this._pathCoreProviders 		= './../Loaders/';
+				this._pathCoreProviders 		= "./../Loaders/";
 			}
 
 		}
@@ -45,7 +45,7 @@ export namespace Boot
 		 *
 		 * @param coreProviders
 		 */
-		public findCoreProviders()
+		public findCoreProviders() : any
 		{
 			return this._fileManager.findFiles( this._pathCoreProviders, true );
 		}
@@ -55,50 +55,52 @@ export namespace Boot
 		 *
 		 * @returns {Array}
 		 */
-		public findApplicationProviders()
+		public findApplicationProviders() : any
 		{
 			return this._fileManager.findFiles( this._pathApplicationProviders );
 		}
 
-		public findApplicationFiles()
+		public findApplicationFiles() : any
 		{
 			return this._fileManager.findFiles( this._pathApplicationFiles, false, false );
 		}
 
-		public findApplicationConfigFiles()
+		public findApplicationConfigFiles() : any
 		{
 			return this._fileManager.findFiles( this._pathApplicationConfig, false, false );
 		}
 
-		public findModules()
+		public findModules() : any
 		{
 			return this._fileManager.findModules(
 				global.app_modules()
 			);
 		}
 
-		public findVendorModules()
+		public findVendorModules() : any
 		{
 			return this._fileManager.findModules(
 				global.npm_path()
 			);
 		}
 
-		public findModuleFiles( modulePath : string )
+		public findModuleFiles( modulePath : string ) : any
 		{
 			return this._fileManager.findFiles( modulePath );
 
 		}
 
-		public findModulesFiles()
+		public findModulesFiles() : any
 		{
-			var listModules = this.findModules();
-			var pathIndex;
-			var pathList = [];
+			let listModules = this.findModules();
+			let pathList = [];
 
-			for ( pathIndex in listModules )
+			for ( let pathIndex in listModules )
 			{
-				pathList[ pathIndex ] = this.findModuleFiles( listModules[ pathIndex ] );
+				if ( listModules.hasOwnProperty( pathIndex ) )
+				{
+					pathList[ pathIndex ] = this.findModuleFiles( listModules[ pathIndex ] );
+				}
 			}
 
 			return pathList;

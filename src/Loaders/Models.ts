@@ -5,11 +5,6 @@
 import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-
-var fs   = require( "fs" );
-var path = require( "path" );
-var db   = {};
-
 var Sequelize : any = require( "sequelize" );
 var sequelize : any;
 
@@ -66,8 +61,8 @@ export namespace Loaders
 			if ( !!process.env.DB_ENV )
 			{
 				sequelize = new Sequelize( process.env.DB_ENV );
-			}
-			else
+
+			} else
 			{
 				sequelize = new Sequelize(
 					process.env.DB_NAME,
@@ -76,7 +71,7 @@ export namespace Loaders
 					{
 						"host"    : process.env.DB_HOST,
 						"port"    : process.env.DB_PORT,
-						"dialect" : process.env.DB_TYPE
+						"dialect" : process.env.DB_TYPE,
 					}
 				);
 			}

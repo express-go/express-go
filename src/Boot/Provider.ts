@@ -6,8 +6,6 @@ declare var global : ExpressGo.Global;
 
 let debug : any = require( "debug" )( "express-go:Boot.Provider" );
 
-let glob  : any = require( "glob" );
-let path  : any = require( "path" );
 
 /**
  * Boot namespace
@@ -16,8 +14,8 @@ export namespace Boot
 {
 	export class Provider
 	{
-		private _providers 	= [];
-		private _exports	= [];
+		private _providers	: any = [];
+		private _exports	: any = [];
 
 		/**
 		 * Constructor
@@ -26,6 +24,7 @@ export namespace Boot
 		 */
 		constructor()
 		{
+			//
 		}
 
 
@@ -38,9 +37,7 @@ export namespace Boot
 		{
 			debug("Booting Providers");
 
-			var indexProvider;
-
-			for ( indexProvider in this._providers )
+			for ( let indexProvider in this._providers )
 			{
 				// Manual boot
 				if ( !this._providers[ indexProvider ].manualBoot )
@@ -55,15 +52,14 @@ export namespace Boot
 		{
 			debug( "Booting Provider: %s", indexProvider );
 
-			var indexObject;
-			var bootObject;
-			var actProvider;
-			var actObject;
-			var actCache;
+			let bootObject	: any;
+			let actProvider	: any;
+			let actObject	: any;
+			let actCache	: any;
 
 			this._providers[ indexProvider ].instance.boot( app );
 
-			for ( indexObject in this._providers[ indexProvider ].objects )
+			for ( let indexObject in this._providers[ indexProvider ].objects )
 			{
 				debug("Loading Provider object: %s", indexObject);
 
@@ -92,8 +88,7 @@ export namespace Boot
 							if ( typeof actObject === "function" )
 								actObject = actObject( app );
 
-						}
-						else
+						} else
 						{
 							debug("[Loading loader mode]");
 							actObject = bootObject;
@@ -101,8 +96,7 @@ export namespace Boot
 						}
 					}
 
-				}
-				else
+				} else
 				{
 					debug("[Loading default mode]");
 					if ( actCache )
@@ -129,7 +123,7 @@ export namespace Boot
 		 */
 		public parseNameFromPath = ( providerPath : string ) : string =>
 		{
-			var fileName = providerPath
+			let fileName : string = providerPath
 					.split( /[\\/]+/ )
 					.pop()
 					.replace(/\.[^/.]+$/, "")
@@ -147,16 +141,20 @@ export namespace Boot
 		public initProvider = ( providerPath : string, providerName? : string ) : void =>
 		{
 			if ( !providerName )
+			{
 				providerName = this.parseNameFromPath( providerPath );
+			}
 
-			var providerSource 	= require( providerPath );
-			var providerObject 	= typeof providerSource["loader"] !== "undefined"
+			let providerSource 	: any = require( providerPath );
+			let providerObject 	: any = typeof providerSource["loader"] !== "undefined"
 					? providerSource["loader"]
 					: providerSource.Loaders[ providerName ]
 				;
 
 			if ( !providerObject )
+			{
 				throw new Error("Provider object problem: " + providerPath);
+			}
 
 			this.initProviderObject( providerObject, providerName );
 		};
@@ -172,7 +170,7 @@ export namespace Boot
 			//
 			debug( "Initializing Provider object: %s", providerName );
 
-			var val =
+			let val : any =
 				{
 					source			: null,
 					instance 		: null,
@@ -204,9 +202,14 @@ export namespace Boot
 			debug( "Provider register called: %s", providerName );
 
 			if ( val.exportName && typeof val.exportName === "string" )
+			{
 				this._providers[ providerName ] = this._exports[ val.exportName ] = val;
-			else
+
+			} else
+			{
 				this._providers[ providerName ] = val;
+
+			}
 
 		};
 
@@ -218,13 +221,12 @@ export namespace Boot
 		 */
 		public orderProviders( orderProviders : any)
 		{
-			var indexProvider;
-			var valueProvider;
-			var tmpProviders = [];
-			var actProviders = this._providers;
+			let valueProvider	: any;
+			let tmpProviders	: any = [];
+			let actProviders	: any = this._providers;
 
 			// Sorting by order
-			for ( indexProvider in orderProviders )
+			for ( let indexProvider in orderProviders )
 			{
 				valueProvider = orderProviders[ indexProvider ];
 				tmpProviders[ valueProvider ] = actProviders[ valueProvider ];
@@ -233,7 +235,7 @@ export namespace Boot
 			}
 
 			// Adding the rest
-			for ( indexProvider in actProviders )
+			for ( let indexProvider in actProviders )
 			{
 				if ( valueProvider = actProviders[ indexProvider ] )
 					tmpProviders[ indexProvider ] = valueProvider;
@@ -253,7 +255,7 @@ export namespace Boot
 		 */
 		public associateProvider( filePath : any )
 		{
-			var fileObject  = require( filePath );
+			let fileObject : any = require( filePath );
 
 			this.associateProviderObject( fileObject, filePath )
 
@@ -262,9 +264,7 @@ export namespace Boot
 
 		public associateProviderObject( fileObject : any, filePath : string  )
 		{
-			var indexExport;
-
-			for ( indexExport in fileObject )
+			for ( let indexExport in fileObject )
 			{
 				if ( indexExport in this._exports )
 				{
@@ -280,6 +280,7 @@ export namespace Boot
 			}
 
 			debug("Unprovided file: %s", filePath);
+
 			return null;
 		}
 

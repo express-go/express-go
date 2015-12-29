@@ -1,14 +1,14 @@
-///<reference path='../../typings/tsd.d.ts'/>
-///<reference path='Boot.ts'/>
+///<reference path="../../typings/tsd.d.ts"/>
+///<reference path="Boot.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var fs	  = require( "fs" );
-var glob  = require( "glob" );
-var path  = require( "path" );
+let fs	  : any = require( "fs" );
+let glob  : any = require( "glob" );
+let path  : any = require( "path" );
 
-var debug = require( "debug" )( 'express-go:Boot.FileManager' );
+let debug : any = require( "debug" )( "express-go:Boot.FileManager" );
 
 
 /**
@@ -28,13 +28,12 @@ export namespace Boot
 		 *
 		 * @test BootFileManagerTest
 		 */
-		public findFiles = ( basePath : string, normalizeSkip? : boolean, keepExtension? : boolean ) =>
+		public findFiles = ( basePath : string, normalizeSkip? : boolean, keepExtension? : boolean ) : any =>
 		{
-			var filePath;
-			var globIndex;
-			var globList;
-			var globPath = this.fileNormalizePath(
-				basePath + '/**/*(*.js|*.ts)',
+			let filePath : string;
+			let globList : any;
+			let globPath : string = this.fileNormalizePath(
+				basePath + "/**/*(*.js|*.ts)",
 				normalizeSkip
 			);
 
@@ -42,21 +41,19 @@ export namespace Boot
 
 			globList = this.searchFiles( globPath );
 
-			for ( globIndex in globList )
+			for ( let globIndex in globList )
 			{
-				filePath = globList[ globIndex ];
-
-				//if ( normalizeSkip )
-				//{
-				//	filePath = this.fileRealize( filePath, basePath );
-				//}
-
-				if ( !keepExtension )
+				if ( globList.hasOwnProperty( globIndex ) )
 				{
-					filePath = this.fileExtensionRemove( filePath );
-				}
+					filePath = globList[ globIndex ];
 
-				globList[ globIndex ] = filePath;
+					if ( !keepExtension )
+					{
+						filePath = this.fileExtensionRemove( filePath );
+					}
+
+					globList[ globIndex ] = filePath;
+				}
 			}
 
 			return globList;
@@ -68,16 +65,15 @@ export namespace Boot
 		 *
 		 * @test BootFileManagerTest
 		 */
-		public findModules = ( basePath : string ) =>
+		public findModules = ( basePath : string ) : any =>
 		{
-			var moduleList = [];
-			var moduleName;
-			var modulePath;
+			let moduleList : any = [];
+			let moduleName : string;
+			let modulePath : string;
 
-			var globIndex;
-			var globList;
-			var globPath = this.fileNormalizePath(
-				basePath + '/**/module-go.json'
+			let globList : any;
+			let globPath : string = this.fileNormalizePath(
+				basePath + "/**/module-go.json"
 			);
 
 			debug("Finding modules: %s", globPath);
@@ -85,16 +81,19 @@ export namespace Boot
 
 			globList = this.searchFiles( globPath );
 
-			for ( globIndex in globList )
+			for ( let globIndex in globList )
 			{
-				modulePath = globList[ globIndex ];
-				modulePath = path.dirname( modulePath );
+				if ( globList.hasOwnProperty( globIndex ) )
+				{
+					modulePath = globList[ globIndex ];
+					modulePath = path.dirname( modulePath );
 
-				moduleName = path.basename( modulePath ).replace(/\.[^/.]+$/, "");
-				moduleName = moduleName.substring( 0, 1 ).toUpperCase()
-						   + moduleName.substring( 1 ).toLowerCase();
+					moduleName = path.basename( modulePath ).replace(/\.[^/.]+$/, "");
+					moduleName = moduleName.substring( 0, 1 ).toUpperCase()
+						+ moduleName.substring( 1 ).toLowerCase();
 
-				moduleList[ moduleName ] = modulePath;
+					moduleList[ moduleName ] = modulePath;
+				}
 			}
 
 			return moduleList;
@@ -111,7 +110,7 @@ export namespace Boot
 		 */
 		public searchFiles( globPath : string ) : any
 		{
-			var fileList = [];
+			let fileList : any = [];
 
 			glob.sync( globPath ).forEach( ( filePath ) =>
 			{
@@ -151,7 +150,7 @@ export namespace Boot
 		 */
 		public fileRealize( filePath : string, basePath : string ) : string
 		{
-			var indexBase = filePath.indexOf( basePath );
+			let indexBase : number = filePath.indexOf( basePath );
 
 			if ( indexBase > -1 )
 			{
@@ -190,8 +189,8 @@ export namespace Boot
 			try
 			{
 				return !!fs.statSync(pathString);
-			}
-			catch (err)
+
+			} catch ( err : any )
 			{
 				return false;
 			}

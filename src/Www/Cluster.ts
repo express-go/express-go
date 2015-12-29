@@ -4,10 +4,10 @@ import {Worker} from "cluster";
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var cluster : any = require( "cluster" );
-var watch : any   = require( "node-watch" );
+let cluster : any = require( "cluster" );
+let watch : any   = require( "node-watch" );
 
-var debug : any = require( "debug" )( "express-go:Www.Cluster" );
+let debug : any = require( "debug" )( "express-go:Www.Cluster" );
 
 
 export namespace Www
@@ -73,8 +73,7 @@ export namespace Www
 		// Go through all workers
 		private eachWorkers( callback : any ) : void
 		{
-			var id;
-			for ( id in cluster.workers )
+			for ( let id in cluster.workers )
 			{
 				callback( cluster.workers[ id ] );
 			}
@@ -104,8 +103,8 @@ export namespace Www
 
 			// TODO
 			// Any file change
-			var timeOut : any;
-			var filter = function ( pattern : any, fn : any )
+			let timeOut : any;
+			let filter = function ( pattern : any, fn : any )
 			{
 				return function ( filename : string )
 				{

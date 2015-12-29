@@ -157,7 +157,7 @@ class ExpressGoCore
 					maxAge : "1y", //365 * 24 * 60 * 60,
 					dotfiles : "ignore",
 					expires  : new Date( Date.now() + (365 * 24 * 60 * 60) ),
-					setHeaders : function ( res, pathFile )
+					setHeaders : function ( res : any, pathFile : any )
 					{
 						if ( pathFile.indexOf( "download" ) !== -1 )
 						{

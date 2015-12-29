@@ -112,7 +112,7 @@ export namespace Loaders
 			for ( key in object )
 			{
 				// "reserved" exports
-				if ( ~[ "name", "prefix", "engine" ].indexOf( key ) ) continue;
+				if ( [ "name", "prefix", "engine" ].indexOf( key ) ) continue;
 
 				// route exports
 				switch ( key )
@@ -150,6 +150,9 @@ export namespace Loaders
 					case "destroy":
 						method = "delete";
 						path   = "/" + name + "/:" + name + "_id";
+						break;
+
+					default:
 						break;
 				}
 
