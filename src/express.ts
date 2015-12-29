@@ -1,5 +1,3 @@
-'use strict';
-
 ///<reference path="../typings/tsd.d.ts"/>
 
 import {ExpressGo} from "../typings/express-go";
@@ -141,7 +139,7 @@ class ExpressGoCore
 				app.use( favicon( global.public_path( "favicon.ico" ) ) );
 			}
 
-		} catch ( e )
+		} catch ( err )
 		{
 			//
 		}

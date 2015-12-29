@@ -4,6 +4,7 @@ import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 let fs		: any = require( "fs" );
+let path    : any = require( "path" );
 let http    : any = require( "http" );
 let https   : any = require( "https" );
 let spdy    : any = require( "spdy" );
@@ -242,7 +243,7 @@ export namespace Www
 
 		private _onServerListening( server : any, port : number ) : void
 		{
-			let addr : string = server.address();
+			let addr : any = server.address();
 			let bind : string = typeof addr === "string"
 				? "pipe " + addr
 				: "port " + addr.port;
@@ -255,15 +256,15 @@ export namespace Www
 			// SSL
 			this.options.https.cert = !!this.options.https.cert
 				? this.options.https.cert
-				: fs.readFileSync( basePath + path.delimiter + process.env.SSL_CERT );
+				: fs.readFileSync( basePath + "/" + process.env.SSL_CERT );
 
 			this.options.https.ca = !!this.options.https.ca
 				? this.options.https.ca
-				: fs.readFileSync( basePath + path.delimiter + process.env.SSL_CSR );
+				: fs.readFileSync( basePath + "/" + process.env.SSL_CSR );
 
 			this.options.https.key = !!this.options.https.key
 				? this.options.https.key
-				: fs.readFileSync( basePath + path.delimiter + process.env.SSL_KEY );
+				: fs.readFileSync( basePath + "/" + process.env.SSL_KEY );
 
 		}
 

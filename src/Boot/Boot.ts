@@ -1,5 +1,3 @@
-'use strict'
-
 ///<reference path="../../typings/tsd.d.ts"/>
 
 import {ExpressGo} from "../../typings/express-go";

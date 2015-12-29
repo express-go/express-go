@@ -236,7 +236,7 @@ export namespace Loaders
 					} );
 				}
 
-			} catch ( ex : any )
+			} catch ( err )
 			{
 				//
 			}

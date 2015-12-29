@@ -201,7 +201,7 @@ export namespace Boot
 
 					}
 
-				} catch ( e : any )
+				} catch ( err )
 				{
 					// Property in destination object not set; create it and set its value.
 					targetObject[ keyObject ] = sourceObject[ keyObject ];
