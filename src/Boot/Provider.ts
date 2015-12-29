@@ -4,7 +4,7 @@
 import {ExpressGo} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-let debug : any = require( "debug" )( "express-go:Boot.Provider" );
+let debug : any = require( "debug" )( "express-go:Boot.Provider " );
 
 
 /**
@@ -84,13 +84,13 @@ export namespace Boot
 					{
 						if ( bootObject === null )
 						{
-							debug("[Loading default mode]");
+							debug("Loading Provider default mode");
 							if ( typeof actObject === "function" )
 								actObject = actObject( app );
 
 						} else
 						{
-							debug("[Loading loader mode]");
+							debug("Loading Provider manual mode");
 							actObject = bootObject;
 
 						}
