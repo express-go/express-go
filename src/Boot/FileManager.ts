@@ -190,7 +190,7 @@ export namespace Boot
 			{
 				return !!fs.statSync(pathString);
 
-			} catch ( err : any )
+			} catch ( err )
 			{
 				return false;
 			}
