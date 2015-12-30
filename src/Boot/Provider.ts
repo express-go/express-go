@@ -108,7 +108,7 @@ export namespace Boot
 
 				// Else keep original object
 				actProvider.objects[ indexObject ] = actObject;
-				
+
 			}
 
 		}
@@ -211,6 +211,9 @@ export namespace Boot
 
 			if ( val.exportName && typeof val.exportName === "string" )
 			{
+				// Convert export name to lower case
+				val.exportName = val.exportName.toLowerCase();
+
 				this._providers[ providerName ] = this._exports[ val.exportName ] = val;
 
 			} else
@@ -274,14 +277,18 @@ export namespace Boot
 		{
 			for ( let indexExport in fileObject )
 			{
-				if ( indexExport in this._exports )
+				// Convert index to lower case
+				let lowerExport = indexExport.toLowerCase();
+
+				// Non case sensitive key pairing
+				if ( lowerExport in this._exports )
 				{
 					debug("Associated file [%s]: %s", indexExport, filePath);
 
-					fileObject = this._exports[ indexExport ].objects[ filePath ] = fileObject[ indexExport ];
+					fileObject = this._exports[ lowerExport ].objects[ filePath ] = fileObject[ indexExport ];
 
 					return {
-						provider 	: this._exports[ indexExport ],
+						provider 	: this._exports[ lowerExport ],
 						fileObject	: fileObject
 					};
 				}
