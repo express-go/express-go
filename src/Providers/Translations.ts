@@ -25,9 +25,9 @@ let languages : any = [
 
 
 /**
- * Translations loader
+ * Translations Provider
  */
-export namespace Loaders
+export namespace Providers
 {
 	export class Translations implements LoaderInterface
 	{

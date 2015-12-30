@@ -5,16 +5,12 @@
 import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
-var Sequelize : any = require( "sequelize" );
-var sequelize : any;
-
-
 /**
- * Models loader
+ * Middlewares Provider
  */
-export namespace Loaders
+export namespace Providers
 {
-	export class Models implements LoaderInterface
+	export class Middlewares implements LoaderInterface
 	{
 		/**
 		 * Constructor
@@ -34,7 +30,7 @@ export namespace Loaders
 		 */
 		public exportName() : string
 		{
-			return "model";
+			return "middleware";
 		}
 
 		/**
@@ -52,30 +48,13 @@ export namespace Loaders
 		/**
 		 * Register method
 		 *
-		 * @param app
-		 * @returns void
+		 * @param loadObject
+		 * @param nameObject
+		 * @returns any
 		 */
 		public register() : void
 		{
-			// Initializing
-			if ( !!process.env.DB_ENV )
-			{
-				sequelize = new Sequelize( process.env.DB_ENV );
-
-			} else
-			{
-				sequelize = new Sequelize(
-					process.env.DB_NAME,
-					process.env.DB_USER,
-					process.env.DB_PASS,
-					{
-						"host"    : process.env.DB_HOST,
-						"port"    : process.env.DB_PORT,
-						"dialect" : process.env.DB_TYPE,
-					}
-				);
-			}
-
+			//
 		}
 
 		/**
@@ -89,8 +68,7 @@ export namespace Loaders
 		 */
 		public loader( loadObject : any, nameObject : string ) : any
 		{
-			// Use sequelize method
-			return sequelize.import( nameObject, loadObject );
+			return null;
 		}
 
 		/**
@@ -101,21 +79,7 @@ export namespace Loaders
 		 */
 		public boot( app : any ) : void
 		{
-			// Loading relations
-			Object.keys( sequelize.models ).forEach( ( modelName ) =>
-			{
-				// Models associations
-				if ( sequelize.models[ modelName ].associate )
-				{
-					sequelize.models[ modelName ].associate( sequelize.models );
-				}
-
-			});
-
-			// Add for app
-			app.sequelize = sequelize;
-			app.Sequelize = Sequelize;
-
+			//
 		}
 
 	}

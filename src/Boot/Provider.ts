@@ -154,9 +154,13 @@ export namespace Boot
 			}
 
 			let providerSource 	: any = require( providerPath );
-			let providerObject 	: any = typeof providerSource["loader"] !== "undefined"
-					? providerSource["loader"]
-					: providerSource.Loaders[ providerName ]
+
+			// TODO
+			// NON-CAse sensitive provider key
+
+			let providerObject 	: any = typeof providerSource["provider"] !== "undefined"
+					? providerSource["provider"]
+					: providerSource.Providers[ providerName ]
 				;
 
 			if ( !providerObject )

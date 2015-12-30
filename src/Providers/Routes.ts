@@ -10,9 +10,9 @@ var router : any = new Router( {} );
 
 
 /**
- * Routes loader
+ * Routes Provider
  */
-export namespace Loaders
+export namespace Providers
 {
 	export class Routes implements LoaderInterface
 	{

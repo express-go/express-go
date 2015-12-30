@@ -35,8 +35,8 @@ export namespace Boot
 			{
 				this._pathApplicationConfig		= global.config_path();
 				this._pathApplicationFiles 		= global.app_path();
-				this._pathApplicationProviders 	= global.bootstrap_path("Loaders");
-				this._pathCoreProviders 		= "./../Loaders/";
+				this._pathApplicationProviders 	= global.bootstrap_path("Providers");
+				this._pathCoreProviders 		= "./../Providers/";
 				this._pathCoreCommands			= "./../Commands/";
 			}
 

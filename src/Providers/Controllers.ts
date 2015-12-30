@@ -6,9 +6,9 @@ import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 /**
- * Controllers loader
+ * Controllers Provider
  */
-export namespace Loaders
+export namespace Providers
 {
 	export class Controllers implements LoaderInterface
 	{

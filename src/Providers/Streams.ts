@@ -11,9 +11,9 @@ var socketSession 	: any = null;
 
 
 /**
- * Streams loader
+ * Streams Provider
  */
-export namespace Loaders
+export namespace Providers
 {
 	export class Streams implements LoaderInterface
 	{

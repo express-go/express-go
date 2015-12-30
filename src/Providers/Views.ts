@@ -9,9 +9,9 @@ var fs   : any = require( "fs" );
 var cons : any = require( "consolidate" );
 
 /**
- * Views loader
+ * Views Provider
  */
-export namespace Loaders
+export namespace Providers
 {
 	export class Views implements LoaderInterface
 	{

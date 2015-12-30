@@ -6,11 +6,11 @@ import {ExpressGo, LoaderInterface} from "../../typings/express-go";
 declare var global : ExpressGo.Global;
 
 /**
- * Middlewares loader
+ * Configurations Provider
  */
-export namespace Loaders
+export namespace Providers
 {
-	export class Middlewares implements LoaderInterface
+	export class Configs implements LoaderInterface
 	{
 		/**
 		 * Constructor
@@ -30,7 +30,7 @@ export namespace Loaders
 		 */
 		public exportName() : string
 		{
-			return "middleware";
+			return "config";
 		}
 
 		/**
@@ -46,13 +46,31 @@ export namespace Loaders
 		}
 
 		/**
+		 * Define namespace root in global object
+		 *
+		 * @returns {string}
+		 */
+		public defineNamespace() : string
+		{
+			return "Config";
+		}
+
+		/**
 		 * Register method
 		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns any
+		 * @returns void
 		 */
 		public register() : void
+		{
+		}
+
+		/**
+		 * Boot method
+		 *
+		 * @param app
+		 * @returns void
+		 */
+		public boot( app : any ) : void
 		{
 			//
 		}
@@ -69,17 +87,6 @@ export namespace Loaders
 		public loader( loadObject : any, nameObject : string ) : any
 		{
 			return null;
-		}
-
-		/**
-		 * Boot method
-		 *
-		 * @param app
-		 * @returns void
-		 */
-		public boot( app : any ) : void
-		{
-			//
 		}
 
 	}

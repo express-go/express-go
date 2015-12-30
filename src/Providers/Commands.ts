@@ -7,9 +7,9 @@ let exec = require('child_process').exec;
 
 
 /**
- * Commands loader
+ * Commands Provider
  */
-export namespace Loaders
+export namespace Providers
 {
 	export class Commands implements LoaderInterface
 	{

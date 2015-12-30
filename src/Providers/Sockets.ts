@@ -10,9 +10,9 @@ var socketSession : any   = null;
 
 
 /**
- * Sockets loader
+ * Sockets Provider
  */
-export namespace Loaders
+export namespace Providers
 {
 	export class Sockets implements LoaderInterface
 	{
