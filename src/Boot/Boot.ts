@@ -22,6 +22,8 @@ let sortProvider  : any =
 	"Middlewares",
 	"Routes",
 	"Sockets",
+	"Streams",
+	"Commands"
 ];
 let loadUnknownFiles : boolean = true;
 

@@ -100,19 +100,19 @@ export namespace Loaders
 		 * @param name
 		 * @param object
 		 */
-		public setResourceRoutes( name : string, object : any ) : void
+		public setResourceRoutes = ( name : string, object : any ) : void =>
 		{
 			name       = object.name || name;
 			name       = name.charAt( 0 ) === "/" ? name.slice( 1 ) : name;
-			var prefix = object.prefix || "";
-			var method;
-			var path;
-			var key;
+			let prefix = object.prefix || "";
 
-			for ( key in object )
+			for ( let key in object )
 			{
+				let method;
+				let path;
+
 				// "reserved" exports
-				if ( [ "name", "prefix", "engine" ].indexOf( key ) ) continue;
+				if ( [ "name", "prefix", "engine" ].indexOf( key ) > -1 ) continue;
 
 				// route exports
 				switch ( key )
