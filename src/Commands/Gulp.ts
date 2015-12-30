@@ -17,7 +17,7 @@ class Command
 					'description': "Starting default gulp process (without fonts, fast)",
 					'callMethod': function (cb)
 					{
-						cmd.node("gulp", "update", cb);
+						cmd.node("gulp", null, cb);
 					}
 				},
 
@@ -63,7 +63,7 @@ class Command
 				'description' : "Alias of gulp:start (with fonts, slow)",
 				'callMethod'  : function(cb)
 				{
-					cmd.node("gulp", "full", cb);
+					cmd.node("gulp", null, cb);
 				}
 			},
 
