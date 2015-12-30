@@ -2,12 +2,12 @@
 
 class Command
 {
-	constructor()
+	constructor( app : any, cli : any )
 	{
-		//
+		return this.commands( app, cli );
 	}
 
-	public commands( app : any, cmd : any ) : any
+	public commands( app : any, cli : any ) : any
 	{
 		return {
 			'route' :
@@ -17,9 +17,9 @@ class Command
 					'description' : "Listing routes",
 					'callMethod'  : function(cb)
 					{
-						cmd.console( " | " + cmd.lineTab("-", 8) 	+ " | -" + cmd.lineTab("-", 1) 		+ " | " + cmd.lineTab("-", 4) );
-						cmd.console( " | " + cmd.textTab("Name", 8) + " | "  + cmd.textTab("Method", 1) + " | " + cmd.textTab("Path") );
-						cmd.console( " | " + cmd.lineTab("-", 8) 	+ " | -" + cmd.lineTab("-", 1) 		+ " | " + cmd.lineTab("-", 4) );
+						cli.console( " | " + cli.lineTab("-", 8) 	+ " | -" + cli.lineTab("-", 1) 		+ " | " + cli.lineTab("-", 4) );
+						cli.console( " | " + cli.textTab("Name", 8) + " | "  + cli.textTab("Method", 1) + " | " + cli.textTab("Path") );
+						cli.console( " | " + cli.lineTab("-", 8) 	+ " | -" + cli.lineTab("-", 1) 		+ " | " + cli.lineTab("-", 4) );
 
 						Object.keys(app.namedRoutes.routesByNameAndMethod).forEach(function(routeName)
 						{
@@ -27,11 +27,11 @@ class Command
 							Object.keys(routeVal).forEach(function(routeMethod)
 							{
 								var routeData = app.namedRoutes.routesByNameAndMethod[routeName][routeMethod];
-								cmd.console( " | " + cmd.textTab(routeName, 8) + " | " + cmd.textTab(routeMethod.toUpperCase(), 1) + "  | " + cmd.textTab(routeData.path) )
+								cli.console( " | " + cli.textTab(routeName, 8) + " | " + cli.textTab(routeMethod.toUpperCase(), 1) + "  | " + cli.textTab(routeData.path) )
 							});
 						});
 
-						cmd.console( " | " + cmd.lineTab("-", 8) + "---" + cmd.lineTab("-", 1) + "---" + cmd.lineTab("-", 4) );
+						cli.console( " | " + cli.lineTab("-", 8) + "---" + cli.lineTab("-", 1) + "---" + cli.lineTab("-", 4) );
 
 						cb();
 					}
@@ -42,7 +42,7 @@ class Command
 				'description' : "Alias of route:list",
 				'callMethod'  : function( cb : any )
 				{
-					cmd.commands['route']['list'].callMethod( cb );
+					cli.commands['route']['list'].callMethod( cb );
 				}
 			},
 		};

@@ -2,12 +2,12 @@
 
 class Command
 {
-	constructor()
+	constructor( app : any, cli : any )
 	{
-		//
+		return this.commands( app, cli );
 	}
 
-	public commands( app : any, cmd : any ) : any
+	public commands( app : any, cli : any ) : any
 	{
 		return {
 			'gulp'  :
@@ -17,7 +17,7 @@ class Command
 					'description': "Starting default gulp process (without fonts, fast)",
 					'callMethod': function (cb)
 					{
-						cmd.node("gulp", null, cb);
+						cli.node("gulp", null, cb);
 					}
 				},
 
@@ -26,7 +26,7 @@ class Command
 					'description' : "Converting TTF fonts to webfonts",
 					'callMethod'  : function(cb)
 					{
-						cmd.node("gulp", "fonts", cb);
+						cli.node("gulp", "fonts", cb);
 					}
 				},
 
@@ -35,7 +35,7 @@ class Command
 					'description' : "Converting styles",
 					'callMethod'  : function(cb)
 					{
-						cmd.node("gulp", "styles", cb);
+						cli.node("gulp", "styles", cb);
 					}
 				},
 
@@ -44,7 +44,7 @@ class Command
 					'description' : "Converting scripts",
 					'callMethod'  : function(cb)
 					{
-						cmd.node("gulp", "scripts", cb);
+						cli.node("gulp", "scripts", cb);
 					}
 				},
 
@@ -53,7 +53,7 @@ class Command
 					'description' : "Starting watch gulp process",
 					'callMethod'  : function(cb)
 					{
-						cmd.node("gulp", "watch", cb);
+						cli.node("gulp", "watch", cb);
 					}
 				}
 			},
@@ -63,7 +63,7 @@ class Command
 				'description' : "Alias of gulp:start (with fonts, slow)",
 				'callMethod'  : function(cb)
 				{
-					cmd.node("gulp", null, cb);
+					cli.node("gulp", null, cb);
 				}
 			},
 

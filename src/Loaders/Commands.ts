@@ -57,7 +57,7 @@ export namespace Loaders
 		 */
 		public exportNamespace() : boolean
 		{
-			return true;
+			return false;
 		}
 
 		/**
@@ -94,10 +94,10 @@ export namespace Loaders
 		public loader( loadObject : any, nameObject : string ) : any
 		{
 			let commandObject : any;
-			let commandSource : any;
 
-			commandSource = typeof loadObject === "function" ? new loadObject() : loadObject;
-			commandObject = commandSource.commands( this._app, this._instance );
+			commandObject = typeof loadObject === "function"
+				? new loadObject( this._app, this._instance )
+				: loadObject;
 
 			this._commands = this._mergeObjectsRecursive( this._commands, commandObject );
 

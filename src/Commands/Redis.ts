@@ -5,12 +5,12 @@ var redis : any = require('redis'),
 
 class Command
 {
-	constructor()
+	constructor( app : any, cli : any )
 	{
-		//
+		return this.commands( app, cli );
 	}
 
-	public commands( app : any, cmd : any ) : any
+	public commands( app : any, cli : any ) : any
 	{
 		return {
 			'redis' :
@@ -26,7 +26,7 @@ class Command
 
 							for( let i = 0, len = keys.length; i < len; i++ )
 							{
-								cmd.console(keys[i]);
+								cli.console(keys[i]);
 							}
 
 							cb();
@@ -42,10 +42,10 @@ class Command
 						{
 							if ( didSucceed )
 							{
-								cmd.console("FlushDB ready!");
+								cli.console("FlushDB ready!");
 							} else
 							{
-								cmd.console("FlushDB error!", err);
+								cli.console("FlushDB error!", err);
 							}
 
 							cb();

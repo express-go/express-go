@@ -2,12 +2,12 @@
 
 class Command
 {
-	constructor()
+	constructor( app : any, cli : any )
 	{
-		//
+		return this.commands( app, cli );
 	}
 
-	public commands( app : any, cmd : any ) : any
+	public commands( app : any, cli : any ) : any
 	{
 		return {
 			'update' :
@@ -17,7 +17,7 @@ class Command
 					'description' : "Npm components update",
 					'callMethod'  : function(cb)
 					{
-						cmd.exec("npm update", cb);
+						cli.exec("npm update", cb);
 					}
 				},
 
@@ -26,7 +26,7 @@ class Command
 					'description' : "Bower components update",
 					'callMethod'  : function(cb)
 					{
-						cmd.node("bower", "update", cb);
+						cli.node("bower", "update", cb);
 					}
 				},
 
@@ -35,7 +35,7 @@ class Command
 					'description' : "Gulp assets and bower components",
 					'callMethod'  : function(cb)
 					{
-						cmd.node("gulp", false, cb);
+						cli.node("gulp", false, cb);
 					}
 				},
 			},
@@ -46,11 +46,11 @@ class Command
 				'callMethod'  : function(cb)
 				{
 					// For "egyketted" :D
-					cmd.commands['update']['npm'].callMethod(function()
+					cli.commands['update']['npm'].callMethod(function()
 					{
-						cmd.commands['update']['bower'].callMethod(function()
+						cli.commands['update']['bower'].callMethod(function()
 						{
-							cmd.commands['update']['gulp'].callMethod(function ()
+							cli.commands['update']['gulp'].callMethod(function ()
 							{
 								cb();
 
