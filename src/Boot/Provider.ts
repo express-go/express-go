@@ -154,14 +154,21 @@ export namespace Boot
 			}
 
 			let providerSource 	: any = require( providerPath );
+			let providerObject 	: any;
 
 			// TODO
-			// NON-CAse sensitive provider key
+			// Non case sensitive provider key find
+			for ( let indexSource in providerSource )
+			{
+				// Convert index to lower case
+				let lowerSource = indexSource.toLowerCase();
 
-			let providerObject 	: any = typeof providerSource["provider"] !== "undefined"
-					? providerSource["provider"]
-					: providerSource.Providers[ providerName ]
-				;
+				if ( indexSource.toLowerCase() === lowerSource )
+				{
+					providerObject = providerSource[ indexSource ];
+					break;
+				}
+			}
 
 			if ( !providerObject )
 			{

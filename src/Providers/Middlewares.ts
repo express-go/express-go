@@ -8,80 +8,76 @@ declare var global : ExpressGo.Global;
 /**
  * Middlewares Provider
  */
-export namespace Providers
+export class Provider implements LoaderInterface
 {
-	export class Middlewares implements LoaderInterface
+	/**
+	 * Constructor
+	 */
+	constructor()
 	{
-		/**
-		 * Constructor
-		 */
-		constructor()
-		{
-			//
-		}
+		//
+	}
 
-		/**
-		 * Prefix used name for components
-		 * Ex.: module.exports.prefix = {};
-		 *
-		 * Use "null" for disable
-		 *
-		 * @returns {string}
-		 */
-		public exportName() : string
-		{
-			return "middleware";
-		}
+	/**
+	 * Prefix used name for components
+	 * Ex.: module.exports.prefix = {};
+	 *
+	 * Use "null" for disable
+	 *
+	 * @returns {string}
+	 */
+	public exportName() : string
+	{
+		return "middleware";
+	}
 
-		/**
-		 * Load object into global namespace
-		 *
-		 * Use "false" for disable
-		 *
-		 * @returns {boolean}
-		 */
-		public exportNamespace() : boolean
-		{
-			return true;
-		}
+	/**
+	 * Load object into global namespace
+	 *
+	 * Use "false" for disable
+	 *
+	 * @returns {boolean}
+	 */
+	public exportNamespace() : boolean
+	{
+		return true;
+	}
 
-		/**
-		 * Register method
-		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns any
-		 */
-		public register() : void
-		{
-			//
-		}
+	/**
+	 * Register method
+	 *
+	 * @param loadObject
+	 * @param nameObject
+	 * @returns any
+	 */
+	public register() : void
+	{
+		//
+	}
 
-		/**
-		 * Loader method
-		 *
-		 * You can override default object initialization method
-		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns {any}
-		 */
-		public loader( loadObject : any, nameObject : string ) : any
-		{
-			return null;
-		}
+	/**
+	 * Loader method
+	 *
+	 * You can override default object initialization method
+	 *
+	 * @param loadObject
+	 * @param nameObject
+	 * @returns {any}
+	 */
+	public loader( loadObject : any, nameObject : string ) : any
+	{
+		return null;
+	}
 
-		/**
-		 * Boot method
-		 *
-		 * @param app
-		 * @returns void
-		 */
-		public boot( app : any ) : void
-		{
-			//
-		}
-
+	/**
+	 * Boot method
+	 *
+	 * @param app
+	 * @returns void
+	 */
+	public boot( app : any ) : void
+	{
+		//
 	}
 
 }

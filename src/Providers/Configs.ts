@@ -8,87 +8,83 @@ declare var global : ExpressGo.Global;
 /**
  * Configurations Provider
  */
-export namespace Providers
+export class Provider implements LoaderInterface
 {
-	export class Configs implements LoaderInterface
+	/**
+	 * Constructor
+	 */
+	constructor()
 	{
-		/**
-		 * Constructor
-		 */
-		constructor()
-		{
-			//
-		}
+		//
+	}
 
-		/**
-		 * Prefix used name for components
-		 * Ex.: module.exports.prefix = {};
-		 *
-		 * Use "null" for disable
-		 *
-		 * @returns {string}
-		 */
-		public exportName() : string
-		{
-			return "config";
-		}
+	/**
+	 * Prefix used name for components
+	 * Ex.: module.exports.prefix = {};
+	 *
+	 * Use "null" for disable
+	 *
+	 * @returns {string}
+	 */
+	public exportName() : string
+	{
+		return "config";
+	}
 
-		/**
-		 * Load object into global namespace
-		 *
-		 * Use "false" for disable
-		 *
-		 * @returns {boolean}
-		 */
-		public exportNamespace() : boolean
-		{
-			return true;
-		}
+	/**
+	 * Load object into global namespace
+	 *
+	 * Use "false" for disable
+	 *
+	 * @returns {boolean}
+	 */
+	public exportNamespace() : boolean
+	{
+		return true;
+	}
 
-		/**
-		 * Define namespace root in global object
-		 *
-		 * @returns {string}
-		 */
-		public defineNamespace() : string
-		{
-			return "Config";
-		}
+	/**
+	 * Define namespace root in global object
+	 *
+	 * @returns {string}
+	 */
+	public defineNamespace() : string
+	{
+		return "Config";
+	}
 
-		/**
-		 * Register method
-		 *
-		 * @returns void
-		 */
-		public register() : void
-		{
-		}
+	/**
+	 * Register method
+	 *
+	 * @returns void
+	 */
+	public register() : void
+	{
+	}
 
-		/**
-		 * Boot method
-		 *
-		 * @param app
-		 * @returns void
-		 */
-		public boot( app : any ) : void
-		{
-			//
-		}
+	/**
+	 * Boot method
+	 *
+	 * @param app
+	 * @returns void
+	 */
+	public boot( app : any ) : void
+	{
+		//
+	}
 
-		/**
-		 * Loader method
-		 *
-		 * You can override default object initialization method
-		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns {any}
-		 */
-		public loader( loadObject : any, nameObject : string ) : any
-		{
-			return null;
-		}
-
+	/**
+	 * Loader method
+	 *
+	 * You can override default object initialization method
+	 *
+	 * @param loadObject
+	 * @param nameObject
+	 * @returns {any}
+	 */
+	public loader( loadObject : any, nameObject : string ) : any
+	{
+		return null;
 	}
 
 }

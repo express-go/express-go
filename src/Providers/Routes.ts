@@ -12,167 +12,163 @@ var router : any = new Router( {} );
 /**
  * Routes Provider
  */
-export namespace Providers
+export class Provider implements LoaderInterface
 {
-	export class Routes implements LoaderInterface
+	private app : any;
+
+	/**
+	 * Constructor
+	 */
+	constructor()
 	{
-		private app : any;
+		//
+	}
 
-		/**
-		 * Constructor
-		 */
-		constructor()
+	/**
+	 * Prefix used name for components
+	 * Ex.: module.exports.prefix = {};
+	 *
+	 * Use "null" for disable
+	 *
+	 * @returns {string}
+	 */
+	public exportName() : string
+	{
+		return "router";
+	}
+
+	/**
+	 * Load object into global namespace
+	 *
+	 * Use "false" for disable
+	 *
+	 * @returns {boolean}
+	 */
+	public exportNamespace() : boolean
+	{
+		return false;
+	}
+
+	/**
+	 * Register method
+	 *
+	 * @param loadObject
+	 * @param nameObject
+	 * @returns any
+	 */
+	public register() : void
+	{
+		//
+	}
+
+	/**
+	 * Loader method
+	 *
+	 * You can override default object initialization method
+	 *
+	 * @param loadObject
+	 * @param nameObject
+	 * @returns {any}
+	 */
+	public loader( loadObject : any, nameObject : string ) : any
+	{
+		return null;
+	}
+
+	/**
+	 * Boot method
+	 *
+	 * @param app
+	 * @returns void
+	 */
+	public boot( app : any ) : void
+	{
+		// Setup router
+		router.extendExpress( app );
+		router.registerAppHelpers( app );
+
+		this.app          = app;
+		this.app.resource = this.setResourceRoutes;
+
+	}
+
+	/**
+	 * REST API style resource handler for controller
+	 *
+	 * @param name
+	 * @param object
+	 */
+	public setResourceRoutes = ( name : string, object : any ) : void =>
+	{
+		name       = object.name || name;
+		name       = name.charAt( 0 ) === "/" ? name.slice( 1 ) : name;
+		let prefix = object.prefix || "";
+
+		for ( let key in object )
 		{
-			//
-		}
+			let method;
+			let path;
 
-		/**
-		 * Prefix used name for components
-		 * Ex.: module.exports.prefix = {};
-		 *
-		 * Use "null" for disable
-		 *
-		 * @returns {string}
-		 */
-		public exportName() : string
-		{
-			return "router";
-		}
+			// "reserved" exports
+			if ( [ "name", "prefix", "engine" ].indexOf( key ) > -1 ) continue;
 
-		/**
-		 * Load object into global namespace
-		 *
-		 * Use "false" for disable
-		 *
-		 * @returns {boolean}
-		 */
-		public exportNamespace() : boolean
-		{
-			return false;
-		}
-
-		/**
-		 * Register method
-		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns any
-		 */
-		public register() : void
-		{
-			//
-		}
-
-		/**
-		 * Loader method
-		 *
-		 * You can override default object initialization method
-		 *
-		 * @param loadObject
-		 * @param nameObject
-		 * @returns {any}
-		 */
-		public loader( loadObject : any, nameObject : string ) : any
-		{
-			return null;
-		}
-
-		/**
-		 * Boot method
-		 *
-		 * @param app
-		 * @returns void
-		 */
-		public boot( app : any ) : void
-		{
-			// Setup router
-			router.extendExpress( app );
-			router.registerAppHelpers( app );
-
-			this.app          = app;
-			this.app.resource = this.setResourceRoutes;
-
-		}
-
-		/**
-		 * REST API style resource handler for controller
-		 *
-		 * @param name
-		 * @param object
-		 */
-		public setResourceRoutes = ( name : string, object : any ) : void =>
-		{
-			name       = object.name || name;
-			name       = name.charAt( 0 ) === "/" ? name.slice( 1 ) : name;
-			let prefix = object.prefix || "";
-
-			for ( let key in object )
+			// route exports
+			switch ( key )
 			{
-				let method;
-				let path;
+				case "index":
+					method = "get";
+					path   = "/" + name + "s";
+					break;
 
-				// "reserved" exports
-				if ( [ "name", "prefix", "engine" ].indexOf( key ) > -1 ) continue;
+				case "create":
+					method = "get";
+					path   = "/" + name + "/create";
+					break;
 
-				// route exports
-				switch ( key )
-				{
-					case "index":
-						method = "get";
-						path   = "/" + name + "s";
-						break;
+				case "store":
+					method = "post";
+					path   = "/" + name + "s";
+					break;
 
-					case "create":
-						method = "get";
-						path   = "/" + name + "/create";
-						break;
+				case "show":
+					method = "get";
+					path   = "/" + name + "/:" + name + "_id";
+					break;
 
-					case "store":
-						method = "post";
-						path   = "/" + name + "s";
-						break;
+				case "edit":
+					method = "get";
+					path   = "/" + name + "/:" + name + "_id/edit";
+					break;
 
-					case "show":
-						method = "get";
-						path   = "/" + name + "/:" + name + "_id";
-						break;
+				case "update":
+					method = "put";
+					path   = "/" + name + "/:" + name + "_id";
+					break;
 
-					case "edit":
-						method = "get";
-						path   = "/" + name + "/:" + name + "_id/edit";
-						break;
+				case "destroy":
+					method = "delete";
+					path   = "/" + name + "/:" + name + "_id";
+					break;
 
-					case "update":
-						method = "put";
-						path   = "/" + name + "/:" + name + "_id";
-						break;
+				default:
+					break;
+			}
 
-					case "destroy":
-						method = "delete";
-						path   = "/" + name + "/:" + name + "_id";
-						break;
+			if ( method && path && object[ key ] )
+			{
+				path          = prefix + path;
+				var routeName = name + "." + key;
 
-					default:
-						break;
-				}
+				// Module prefixing
+				//if ( this.isModule && routeName.substr(7) != "module." )
+				//routeName = "module." + routeName;
 
-				if ( method && path && object[ key ] )
-				{
-					path          = prefix + path;
-					var routeName = name + "." + key;
+				// Middleware
+				if ( object.before )
+					this.app[ method ]( path, routeName, object.before );
 
-					// Module prefixing
-					//if ( this.isModule && routeName.substr(7) != "module." )
-					//routeName = "module." + routeName;
-
-					// Middleware
-					if ( object.before )
-						this.app[ method ]( path, routeName, object.before );
-
-					// Controller
-					this.app[ method ]( path, routeName, object[ key ] );
-				}
-
+				// Controller
+				this.app[ method ]( path, routeName, object[ key ] );
 			}
 
 		}
